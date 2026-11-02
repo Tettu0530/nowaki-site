@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
 # Prerenders the nowaki.dev landing page to static files.
-# Output: site/public/  (deployable as-is to static hosts like Cloudflare Pages)
+# Output: public/  (deployable as-is to static hosts like Cloudflare Pages)
 #   /        -> public/index.html
 #   /ja      -> public/ja/index.html
 #   /_nowaki -> public/_nowaki/*   (content-hashed client assets)
-# Requires: `nowaki` on PATH (cargo install nowaki or the repo's
-#           target/debug/nowaki), and `pnpm install` already run in site.
+# Requires: `pnpm install` (provides the nowaki CLI). Override with NOWAKI=/path/to/nowaki.
 set -euo pipefail
 
 SITE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 PORT="${PORT:-8799}"
-NOWAKI="${NOWAKI:-nowaki}"
+NOWAKI="${NOWAKI:-$SITE_DIR/node_modules/.bin/nowaki}"
 
 cd "$SITE_DIR"
 
