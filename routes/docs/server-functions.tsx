@@ -1,5 +1,9 @@
+import { DOCS_HEAD } from "../../lib/docs-style.ts";
+import Code from "../../components/Code.tsx";
+
 export const lang = "en";
-export const title = "Nowaki docs — Server functions";
+export const title = "Nowaki docs · Server functions";
+export const head = DOCS_HEAD;
 
 export default function ServerFunctions() {
   return (
@@ -11,7 +15,7 @@ export default function ServerFunctions() {
       </p>
 
       <h2>Write one</h2>
-      <pre><code>{`// actions/todos.ts
+      <Code src={`// actions/todos.ts
 "use server";
 
 import { getContext } from "@nowaki-dev/runtime/server/functions.mjs";
@@ -26,27 +30,27 @@ export async function addTodo(text: string) {
 export async function whoami() {
   const ctx = getContext();              // request context, RPC-time only
   return ctx?.cookies?.user ?? "anonymous";
-}`}</code></pre>
+}`} />
       <p>
-        <code>getContext</code> and the framework types come from
+        <code>getContext</code> and the framework types come from{" "}
         <code>@nowaki-dev/runtime</code>:
       </p>
-      <pre><code>{`import { getContext } from "@nowaki-dev/runtime";
-import type { LoaderContext, PageProps, Meta } from "@nowaki-dev/runtime";`}</code></pre>
+      <Code src={`import { getContext } from "@nowaki-dev/runtime";
+import type { LoaderContext, PageProps, Meta } from "@nowaki-dev/runtime";`} />
 
       <h2>Call it from an island</h2>
       <p>Import and call it like a normal async function. The browser only ships the proxy.</p>
-      <pre><code>{`// islands/Todos.tsx
+      <Code src={`// islands/Todos.tsx
 import { useState } from "preact/hooks";
 import { addTodo } from "../actions/todos.ts";
 
 export default function Todos({ initial = [] }) {
   const [todos, setTodos] = useState(initial);
   return <button onClick={async () => setTodos(await addTodo("new"))}>add</button>;
-}`}</code></pre>
+}`} />
       <p>
-        On the server you can call the same function directly (no HTTP) — e.g. from a route
-        <code>loader</code> — so server-to-server calls stay in-process.
+        On the server you can call the same function directly (no HTTP), e.g. from a route{" "}
+        <code>loader</code>: so server-to-server calls stay in-process.
       </p>
 
       <h2>How it works</h2>
@@ -59,7 +63,7 @@ export default function Todos({ initial = [] }) {
       </ul>
 
       <div class="note">
-        Treat each server function like a public HTTP endpoint: <strong>validate its arguments</strong>
+        Treat each server function like a public HTTP endpoint: <strong>validate its arguments</strong>{" "}
         (they arrive as JSON from the client) and check authorization with <code>getContext()</code>.
         Errors return only <code>error.message</code> to the client, never the stack.
       </div>
@@ -70,11 +74,6 @@ export default function Todos({ initial = [] }) {
         <li>Use explicit file extensions in imports (<code>../actions/todos.ts</code>).</li>
         <li>Exports should be async functions that take JSON-serializable arguments and return JSON-serializable values.</li>
       </ul>
-
-      <div class="pager">
-        <a href="/docs/routing">← Routing &amp; data</a>
-        <a href="/docs/jetstream">Jetstream islands →</a>
-      </div>
     </>
   );
 }

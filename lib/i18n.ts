@@ -1,4 +1,4 @@
-import { LANDING_CSS, FONT_PRELOADS } from "./landing-style.ts";
+import { BASE_CSS, LANDING_CSS, FONT_PRELOADS, FAVICON } from "./landing-style.ts";
 
 export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
@@ -277,7 +277,7 @@ export function headFor(locale: Locale): string {
   return `
 <meta name="description" content="${s.desc}" />
 <meta name="theme-color" content="#0b0d10" />
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d10'/%3E%3Cpath d='M5 11c7 0 9-4 15-4s7 2 7 2M5 17c7 0 10-3 16-3s6 1 6 1M5 23c7 0 9-2 15-2s7 1 7 1' fill='none' stroke='%23d8bf86' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+${FAVICON}
 <meta property="og:type" content="website" />
 <meta property="og:title" content="${s.ogTitle}" />
 <meta property="og:description" content="${s.desc}" />
@@ -288,5 +288,5 @@ export function headFor(locale: Locale): string {
 <link rel="alternate" hreflang="ja" href="https://nowaki.dev/ja" />
 <link rel="alternate" hreflang="x-default" href="https://nowaki.dev/" />
 ${FONT_PRELOADS}
-<style>${LANDING_CSS}</style>`;
+<style>${BASE_CSS}${LANDING_CSS}</style>`;
 }

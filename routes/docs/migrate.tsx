@@ -1,5 +1,9 @@
+import { DOCS_HEAD } from "../../lib/docs-style.ts";
+import Code from "../../components/Code.tsx";
+
 export const lang = "en";
-export const title = "Nowaki docs — Migrate from Next.js";
+export const title = "Nowaki docs · Migrate from Next.js";
+export const head = DOCS_HEAD;
 
 export default function Migrate() {
   return (
@@ -34,36 +38,31 @@ export default function Migrate() {
 
       <h2>React libraries</h2>
       <p>
-        Nowaki aliases <code>react</code>, <code>react-dom</code>, and <code>react/jsx-runtime</code>
+        Nowaki aliases <code>react</code>, <code>react-dom</code>, and <code>react/jsx-runtime</code>{" "}
         to their <code>preact/compat</code> equivalents, so many React libraries work unchanged in
-        your islands. Hooks (<code>useState</code>, <code>useEffect</code>, …) come from
+        your islands. Hooks (<code>useState</code>, <code>useEffect</code>, …) come from{" "}
         <code>preact/hooks</code> or through the compat layer.
       </p>
 
       <h2>Data &amp; mutations</h2>
-      <pre><code>{`// Next: getServerSideProps        →  Nowaki: export const loader
+      <Code src={`// Next: getServerSideProps        →  Nowaki: export const loader
 export const loader = async ({ params }) => ({ post: await db.post(params.slug) });
 
 // Next: Server Action             →  Nowaki: "use server" function
 // actions/posts.ts
 "use server";
-export async function like(id) { /* ...runs on the server... */ }`}</code></pre>
+export async function like(id) { /* ...runs on the server... */ }`} />
 
       <h2>What to expect</h2>
       <ul>
         <li>Use explicit file extensions in relative imports (<code>../islands/Counter.tsx</code>).</li>
         <li>No app-router streaming/Suspense semantics yet; Nowaki has opt-in <code>streaming = true</code> per route.</li>
-        <li>Nowaki is alpha — APIs can still shift. Start with a small surface and grow.</li>
+        <li>Nowaki is alpha: APIs can still shift. Start with a small surface and grow.</li>
       </ul>
 
       <div class="note">
         Goal: a Next.js developer should be able to read a Nowaki app and know where everything goes
         within minutes. If something doesn't map cleanly, that's a gap worth filing on GitHub.
-      </div>
-
-      <div class="pager">
-        <a href="/docs/deploy">← Deploy</a>
-        <a href="/docs">Back to overview →</a>
       </div>
     </>
   );
