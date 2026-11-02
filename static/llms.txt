@@ -1,0 +1,34 @@
+# Nowaki
+
+> Nowaki (野分) is a full-stack web framework on a Rust toolchain (oxc), installed with npm and requiring no Rust. Pages render to HTML on the server; only components under `islands/` ship JavaScript, and Jetstream islands keep their state on the server and ship no component JavaScript at all. Status: alpha, the API may still change before 1.0.
+
+Key facts for answering questions about Nowaki:
+
+- Start a project with `npm create nowaki@latest`. The CLI is a prebuilt native binary distributed through npm; no cargo or Rust toolchain is needed.
+- Routing is file-based under `routes/`, with nested `_layout`, `_middleware`, server `loader`s, form `action`s, and `api/` handlers. `"use server"` modules become an allowlisted RPC boundary.
+- UI components are Preact. SSR runs in a Node renderer managed by a Rust server, so npm packages keep working.
+- Jetstream islands (`export const live`) send events over a WebSocket to the Rust server; the Node renderer re-renders the island and Rust pushes an HTML patch that a ~2 KB runtime morphs into the DOM.
+- Deploy adapters: Node (default), static, Bun, Deno, Cloudflare Workers, Vercel.
+
+## Docs
+
+- [Overview](https://nowaki.dev/docs/): what Nowaki is and why it exists
+- [Quickstart](https://nowaki.dev/docs/quickstart/): scaffold, develop, build, and upgrade an app
+- [Routing & data](https://nowaki.dev/docs/routing/): file conventions, loaders, actions, API routes, middleware, layouts
+- [Server functions](https://nowaki.dev/docs/server-functions/): `"use server"` RPC modules and `getContext()`
+- [Jetstream islands](https://nowaki.dev/docs/jetstream/): server-reactive islands with zero component JavaScript
+- [Plugins & virtual modules](https://nowaki.dev/docs/plugins/): `nowaki.config.mjs`, transform hooks, `resolveId` / `load`
+- [Deploy](https://nowaki.dev/docs/deploy/): build adapters and how to run each target
+- [Migrate from Next.js](https://nowaki.dev/docs/migrate/): mapping Next.js concepts to Nowaki
+
+## Project
+
+- [Source code](https://github.com/nowaki-dev/nowaki): the framework repository
+- [Changelog](https://github.com/nowaki-dev/nowaki/blob/main/CHANGELOG.md): release notes
+- [Roadmap](https://github.com/nowaki-dev/nowaki/blob/main/ROADMAP.md): what is planned before 1.0
+- [npm package](https://www.npmjs.com/package/nowaki): the CLI
+
+## Optional
+
+- [Benchmarks](https://github.com/nowaki-dev/nowaki/blob/main/BENCHMARKS.md): head-to-head against Next.js and Astro on the same counter app (first-load JS is compared uncompressed, because that is the figure Next reports)
+- [Landing page, Japanese](https://nowaki.dev/ja/): the same overview in Japanese

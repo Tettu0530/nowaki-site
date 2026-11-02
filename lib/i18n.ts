@@ -273,7 +273,7 @@ export const STRINGS = {
 
 export function headFor(locale: Locale): string {
   const s = STRINGS[locale];
-  const url = locale === "ja" ? "https://nowaki.dev/ja" : "https://nowaki.dev/";
+  const url = locale === "ja" ? "https://nowaki.dev/ja/" : "https://nowaki.dev/";
   return `
 <meta name="description" content="${s.desc}" />
 <meta name="theme-color" content="#0b0d10" />
@@ -285,7 +285,7 @@ ${FAVICON}
 <meta property="og:url" content="${url}" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="alternate" hreflang="en" href="https://nowaki.dev/" />
-<link rel="alternate" hreflang="ja" href="https://nowaki.dev/ja" />
+<link rel="alternate" hreflang="ja" href="https://nowaki.dev/ja/" />
 <link rel="alternate" hreflang="x-default" href="https://nowaki.dev/" />
 ${FONT_PRELOADS}
 <style>${BASE_CSS}${LANDING_CSS}</style>`;

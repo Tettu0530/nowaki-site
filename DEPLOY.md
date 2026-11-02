@@ -24,7 +24,9 @@ is interactive on a purely static host.
 
 ```bash
 npx wrangler login                  # or export CLOUDFLARE_API_TOKEN=...
-npx wrangler pages deploy public --project-name nowaki
+# The nowaki project lives in the VorEdge account; pin it when the login sees several.
+CLOUDFLARE_ACCOUNT_ID=3b79d96c12fec34121b8d6cf0918aeeb \
+  npx wrangler pages deploy public --project-name nowaki --branch main
 ```
 
 The first run creates the `nowaki` Pages project; later runs publish a new
@@ -43,3 +45,8 @@ Cloudflare dashboard → **Workers & Pages → nowaki → Custom domains** → a
   (`assets/fonts/`, Latin subsets, OFL). `pnpm prerender` copies the woff2
   files into `public/_nowaki/`, because Nowaki does not yet emit assets that
   server components import (Tettu0530/nowaki#17).
+- `static/` is copied into `public/` as-is by `scripts/finalize-public.sh`:
+  `robots.txt`, `llms.txt`, and `/.well-known/ai-catalog.json` (served as
+  `application/ai-catalog+json` via `_headers`).
+- Pages serves every page at a trailing-slash URL (`/ja/`, `/docs/routing/`)
+  and 308-redirects the bare form, so internal links use the slash.

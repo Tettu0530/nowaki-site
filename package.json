@@ -6,7 +6,7 @@
     "dev": "nowaki dev",
     "build": "nowaki build",
     "start": "nowaki start",
-    "prerender": "rm -rf dist public && nowaki prerender . --out public && cp assets/fonts/*.woff2 public/_nowaki/"
+    "prerender": "rm -rf dist public && nowaki prerender . --out public && bash scripts/finalize-public.sh"
   },
   "dependencies": {
     "@nowaki-dev/runtime": "^0.11.1",
