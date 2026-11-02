@@ -6,7 +6,7 @@ import type { Locale } from "../lib/i18n.ts";
 // so they drop the language switch.
 export default function SiteNav({ locale = "en", page }: { locale?: Locale; page: "home" | "docs" }) {
   const s = STRINGS[locale];
-  const home = locale === "ja" ? "/ja" : "/";
+  const home = locale === "ja" ? "/ja/" : "/";
   const compare = page === "home" ? "#compare" : `${home}#compare`;
   const docsCurrent = page === "docs" ? "page" : undefined;
 
@@ -15,7 +15,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
       <a href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
         EN
       </a>
-      <a href="/ja" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
+      <a href="/ja/" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
         日本語
       </a>
     </span>
@@ -28,7 +28,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
           Nowaki<small>野分</small>
         </a>
         <nav class="nav__links" aria-label="Primary">
-          <a class="hide-sm" href="/docs" aria-current={docsCurrent}>
+          <a class="hide-sm" href="/docs/" aria-current={docsCurrent}>
             {s.nav.docs}
           </a>
           <a class="hide-sm" href={compare}>
@@ -38,7 +38,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
             GitHub
           </a>
           {page === "home" ? lang("lang") : null}
-          <a class="btn btn--solid" href="/docs/quickstart">
+          <a class="btn btn--solid" href="/docs/quickstart/">
             {s.nav.start}
           </a>
           <details class="menu">
@@ -48,7 +48,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
               </svg>
             </summary>
             <div class="menu__panel">
-              <a href="/docs" aria-current={docsCurrent}>
+              <a href="/docs/" aria-current={docsCurrent}>
                 {s.nav.docs}
               </a>
               <a href={compare}>{s.nav.compare}</a>

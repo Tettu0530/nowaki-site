@@ -4,17 +4,19 @@ import SiteNav from "../../components/SiteNav.tsx";
 import { GH, NPM, CRATES } from "../../lib/i18n.ts";
 
 const NAV = [
-  { href: "/docs", label: "Overview" },
-  { href: "/docs/quickstart", label: "Quickstart" },
-  { href: "/docs/routing", label: "Routing & data" },
-  { href: "/docs/server-functions", label: "Server functions" },
-  { href: "/docs/jetstream", label: "Jetstream islands" },
-  { href: "/docs/plugins", label: "Plugins & virtual modules" },
-  { href: "/docs/deploy", label: "Deploy" },
-  { href: "/docs/migrate", label: "Migrate from Next.js" },
+  { href: "/docs/", label: "Overview" },
+  { href: "/docs/quickstart/", label: "Quickstart" },
+  { href: "/docs/routing/", label: "Routing & data" },
+  { href: "/docs/server-functions/", label: "Server functions" },
+  { href: "/docs/jetstream/", label: "Jetstream islands" },
+  { href: "/docs/plugins/", label: "Plugins & virtual modules" },
+  { href: "/docs/deploy/", label: "Deploy" },
+  { href: "/docs/migrate/", label: "Migrate from Next.js" },
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");
+// Pages serves each chapter at a trailing-slash URL; compare paths without it.
+const norm = (p: string) => p.replace(/\/+$/, "") || "/";
 
 function Arrow({ back = false }: { back?: boolean }) {
   return (
@@ -29,7 +31,7 @@ function Chapters({ path }: { path: string }) {
     <ol class="chapters">
       {NAV.map((n, i) => (
         <li>
-          <a href={n.href} aria-current={n.href === path ? "page" : undefined}>
+          <a href={n.href} aria-current={norm(n.href) === path ? "page" : undefined}>
             <i>{pad(i + 1)}</i>
             <span>{n.label}</span>
           </a>
@@ -40,10 +42,10 @@ function Chapters({ path }: { path: string }) {
 }
 
 export default function DocsLayout({ children, url }: { children: unknown; url?: URL }) {
-  const path = (url?.pathname ?? "/docs").replace(/\/+$/, "") || "/docs";
+  const path = norm(url?.pathname ?? "/docs");
   const at = Math.max(
     0,
-    NAV.findIndex((n) => n.href === path),
+    NAV.findIndex((n) => norm(n.href) === path),
   );
   const here = NAV[at];
   const prev = NAV[at - 1];

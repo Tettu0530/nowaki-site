@@ -21,6 +21,7 @@ components/   shared server components
 islands/      client islands (only the copy button; the wind is CSS)
 lib/          copy (i18n.ts), landing styles, streamlines, version and bundle size
 assets/fonts/ self-hosted Geist, Geist Mono, Geist Serif (Latin subsets, OFL)
+static/       robots.txt, llms.txt, .well-known/ai-catalog.json (copied to public/)
 scripts/      prerender.sh (manual static export)
 ```
 

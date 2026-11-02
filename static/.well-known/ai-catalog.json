@@ -1,0 +1,17 @@
+{
+  "specVersion": "1.0",
+  "host": {
+    "displayName": "Nowaki",
+    "identifier": "nowaki.dev",
+    "documentationUrl": "https://nowaki.dev/docs/"
+  },
+  "entries": [
+    {
+      "identifier": "urn:air:nowaki.dev:docs:llms-txt",
+      "displayName": "Nowaki documentation for LLMs",
+      "description": "llms.txt index of the Nowaki framework docs: what Nowaki is, key facts, and links to every docs chapter.",
+      "type": "text/markdown",
+      "url": "https://nowaki.dev/llms.txt"
+    }
+  ]
+}

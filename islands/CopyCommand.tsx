@@ -23,7 +23,7 @@ export default function CopyCommand({
   };
 
   return (
-    <button type="button" onClick={copy} class="copybar" data-copied={copied ? "" : undefined} aria-label={`${labelCopy}: ${cmd}`}>
+    <button type="button" onClick={copy} class="copybar" data-copied={copied ? "" : undefined}>
       <span class="copybar__prompt" aria-hidden="true">
         $
       </span>

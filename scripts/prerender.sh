@@ -46,13 +46,13 @@ for f in routes/docs/*.tsx; do
   curl -sf "http://127.0.0.1:$PORT$route" -o "$out/index.html"
 done
 cp -R dist/client/. public/_nowaki/
-# Fonts imported by server components are not emitted by the build yet (Tettu0530/nowaki#17).
-cp assets/fonts/*.woff2 public/_nowaki/
 
 # Cloudflare Pages: long-lived immutable caching for hashed assets
 cat > public/_headers <<'HEADERS'
 /_nowaki/*
   Cache-Control: public, max-age=31536000, immutable
 HEADERS
+
+bash scripts/finalize-public.sh
 
 echo "[prerender] done -> $SITE_DIR/public"
