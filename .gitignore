@@ -3,3 +3,5 @@ dist/
 public/
 .nowaki/
 .DS_Store
+.claude/
+.impeccable/
