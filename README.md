@@ -1,6 +1,6 @@
 # nowaki.dev
 
-The landing page and docs for [Nowaki](https://github.com/Tettu0530/nowaki), built with Nowaki itself.
+The landing page and docs for [Nowaki](https://github.com/nowaki-dev/nowaki), built with Nowaki itself.
 
 It uses the published `@nowaki-dev/runtime` and `nowaki` packages from npm, so the site also serves as a check that a released Nowaki works outside the framework's own monorepo.
 

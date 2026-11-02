@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
-# Prerenders the nowaki.dev landing page to static files.
+# Prerenders nowaki.dev (landing + docs) to static files.
+# `pnpm prerender` (nowaki prerender) is the canonical flow; this is the manual equivalent.
 # Output: public/  (deployable as-is to static hosts like Cloudflare Pages)
 #   /        -> public/index.html
 #   /ja      -> public/ja/index.html
+#   /docs/*  -> public/docs/**/index.html  (one per routes/docs/*.tsx)
 #   /_nowaki -> public/_nowaki/*   (content-hashed client assets)
 # Requires: `pnpm install` (provides the nowaki CLI). Override with NOWAKI=/path/to/nowaki.
 set -euo pipefail
@@ -31,6 +33,16 @@ rm -rf public
 mkdir -p public/ja public/_nowaki
 curl -sf "http://127.0.0.1:$PORT/" -o public/index.html
 curl -sf "http://127.0.0.1:$PORT/ja" -o public/ja/index.html
+for f in routes/docs/*.tsx; do
+  name="$(basename "$f" .tsx)"
+  case "$name" in
+    _*) continue ;;
+    index) route="/docs"; out="public/docs" ;;
+    *) route="/docs/$name"; out="public/docs/$name" ;;
+  esac
+  mkdir -p "$out"
+  curl -sf "http://127.0.0.1:$PORT$route" -o "$out/index.html"
+done
 cp -R dist/client/. public/_nowaki/
 
 # Cloudflare Pages: long-lived immutable caching for hashed assets

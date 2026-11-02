@@ -1,7 +1,7 @@
 # Deploying nowaki.dev
 
-The site is fully static — two pages, `/` and `/ja`, with no
-per-request data — so it ships to any static host. We pre-render it (with
+The site is fully static — the landing page (`/`, `/ja`) and the docs
+(`/docs/*`), with no per-request data — so it ships to any static host. We pre-render it (with
 Nowaki) and deploy to Cloudflare Pages.
 
 ## 1. Pre-render to static files
@@ -13,6 +13,7 @@ pnpm exec nowaki prerender . --out public
 (`scripts/prerender.sh` is the equivalent manual flow.) Outputs `public/`:
 
 - `index.html` (`/`), `ja/index.html` (`/ja`)
+- `docs/index.html` (`/docs`), `docs/<page>/index.html` (`/docs/<page>`)
 - `_nowaki/*` — content-hashed client assets (islands runtime + island chunks)
 - `_headers` — immutable cache for `/_nowaki/*`
 

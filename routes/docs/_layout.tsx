@@ -36,7 +36,7 @@ main .lead{font-size:1.12rem;color:var(--muted);margin-top:0}
 main code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:#eef1f4;padding:.12em .4em;border-radius:5px}
 main pre{background:var(--code-bg);color:var(--code-ink);padding:1rem 1.1rem;border-radius:11px;overflow:auto;font-size:.85rem;line-height:1.6;margin:1rem 0}
 main pre code{background:none;padding:0;color:inherit;font-size:inherit}
-main pre .c{color:#7d8aa3}.main-k{color:#8ab4f8}
+main pre .c{color:#7d8aa3}
 main pre .k{color:#c4a3ff}main pre .s{color:#8fe6a4}main pre .f{color:#86d0ff}
 table{border-collapse:collapse;width:100%;margin:1rem 0;font-size:.92rem}
 th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
