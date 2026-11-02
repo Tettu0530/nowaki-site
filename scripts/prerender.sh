@@ -16,12 +16,14 @@ NOWAKI="${NOWAKI:-$SITE_DIR/node_modules/.bin/nowaki}"
 cd "$SITE_DIR"
 
 echo "[prerender] build"
+rm -rf dist
 "$NOWAKI" build .
 
 echo "[prerender] start (port $PORT)"
 "$NOWAKI" start . --port "$PORT" >/tmp/nowaki-prerender.log 2>&1 &
 SERVER_PID=$!
-trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+# The nowaki bin is a wrapper; stop the server it spawned as well.
+trap 'pkill -P "$SERVER_PID" 2>/dev/null; kill "$SERVER_PID" 2>/dev/null || true' EXIT
 
 for _ in $(seq 1 60); do
   if curl -sf "http://127.0.0.1:$PORT/" >/dev/null 2>&1; then break; fi
@@ -44,6 +46,8 @@ for f in routes/docs/*.tsx; do
   curl -sf "http://127.0.0.1:$PORT$route" -o "$out/index.html"
 done
 cp -R dist/client/. public/_nowaki/
+# Fonts imported by server components are not emitted by the build yet (Tettu0530/nowaki#17).
+cp assets/fonts/*.woff2 public/_nowaki/
 
 # Cloudflare Pages: long-lived immutable caching for hashed assets
 cat > public/_headers <<'HEADERS'

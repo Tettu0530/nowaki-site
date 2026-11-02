@@ -18,8 +18,9 @@ pnpm dev          # http://127.0.0.1:3000
 ```
 routes/       pages: / (landing), /ja, and /docs/*
 components/   shared server components
-islands/      the few client islands (wind animation, copy button, ...)
-lib/i18n.ts   landing copy for the en and ja locales
+islands/      client islands (only the copy button; the wind is CSS)
+lib/          copy (i18n.ts), landing styles, streamlines, version and bundle size
+assets/fonts/ self-hosted Geist, Geist Mono, Geist Serif (Latin subsets, OFL)
 scripts/      prerender.sh (manual static export)
 ```
 

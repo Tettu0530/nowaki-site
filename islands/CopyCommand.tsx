@@ -3,12 +3,10 @@ import { useState } from "preact/hooks";
 // Copies the command to the clipboard on click. Under SSR the command is readable as-is.
 export default function CopyCommand({
   cmd,
-  primary = false,
   labelCopy = "copy",
-  labelCopied = "copied ✓",
+  labelCopied = "copied",
 }: {
   cmd: string;
-  primary?: boolean;
   labelCopy?: string;
   labelCopied?: string;
 }) {
@@ -25,17 +23,12 @@ export default function CopyCommand({
   };
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      class={`copybar${primary ? " copybar--primary" : ""}`}
-      aria-label={`Copy command: ${cmd}`}
-    >
+    <button type="button" onClick={copy} class="copybar" data-copied={copied ? "" : undefined} aria-label={`${labelCopy}: ${cmd}`}>
       <span class="copybar__prompt" aria-hidden="true">
         $
       </span>
       <code class="copybar__cmd">{cmd}</code>
-      <span class="copybar__state" aria-hidden="true">
+      <span class="copybar__state" aria-live="polite">
         {copied ? labelCopied : labelCopy}
       </span>
     </button>

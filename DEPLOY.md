@@ -39,5 +39,7 @@ Cloudflare dashboard → **Workers & Pages → nowaki → Custom domains** → a
 
 - Cloudflare Pages reserves `_headers` / `_redirects` / `_routes.json`; the
   `_nowaki/` asset directory is served normally.
-- Tailwind is loaded via the Play CDN and fonts via Google Fonts at runtime.
-  A follow-up can precompile Tailwind to drop the runtime CSS cost.
+- Styles are plain CSS inlined by the page; fonts are self-hosted Geist
+  (`assets/fonts/`, Latin subsets, OFL). `pnpm prerender` copies the woff2
+  files into `public/_nowaki/`, because Nowaki does not yet emit assets that
+  server components import (Tettu0530/nowaki#17).
