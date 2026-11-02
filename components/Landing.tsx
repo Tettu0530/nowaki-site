@@ -1,4 +1,5 @@
 import CopyCommand from "../islands/CopyCommand.tsx";
+import SiteNav from "./SiteNav.tsx";
 import { STRINGS, GH, CRATES, NPM } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 import { streamlines } from "../lib/streamlines.ts";
@@ -80,53 +81,7 @@ export default function Landing({ locale }: { locale: Locale }) {
         {locale === "ja" ? "本文へスキップ" : "Skip to content"}
       </a>
 
-      <header class="nav">
-        <div class="wrap nav__in">
-          <a href={home} class="brand">
-            Nowaki<small>野分</small>
-          </a>
-          <nav class="nav__links" aria-label="Primary">
-            <a class="hide-sm" href="/docs">{s.nav.docs}</a>
-            <a class="hide-sm" href="#compare">
-              {s.nav.compare}
-            </a>
-            <a class="hide-sm" href={GH}>
-              GitHub
-            </a>
-            <span class="lang" role="group" aria-label={s.nav.lang}>
-              <a href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
-                EN
-              </a>
-              <a href="/ja" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
-                日本語
-              </a>
-            </span>
-            <a class="btn btn--solid" href="/docs/quickstart">
-              {s.nav.start}
-            </a>
-            <details class="menu">
-              <summary aria-label={s.nav.menu}>
-                <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-                  <path d="M3 6h12M3 12h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                </svg>
-              </summary>
-              <div class="menu__panel">
-                <a href="/docs">{s.nav.docs}</a>
-                <a href="#compare">{s.nav.compare}</a>
-                <a href={GH}>GitHub</a>
-                <span class="menu__lang">
-                  <a href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
-                    EN
-                  </a>
-                  <a href="/ja" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
-                    日本語
-                  </a>
-                </span>
-              </div>
-            </details>
-          </nav>
-        </div>
-      </header>
+      <SiteNav locale={locale} page="home" />
 
       <main id="main">
         <section class="hero">

@@ -1,5 +1,9 @@
+import { DOCS_HEAD } from "../../lib/docs-style.ts";
+import Code from "../../components/Code.tsx";
+
 export const lang = "en";
-export const title = "Nowaki docs — Routing & data";
+export const title = "Nowaki docs · Routing & data";
+export const head = DOCS_HEAD;
 
 export default function Routing() {
   return (
@@ -29,7 +33,7 @@ export default function Routing() {
         A route can export a <code>loader</code>. It runs only on the server (so secrets and DB
         access stay there) and its result is passed to the page as <code>data</code>.
       </p>
-      <pre><code>{`// routes/blog/[slug].tsx
+      <Code src={`// routes/blog/[slug].tsx
 import type { LoaderContext, PageProps } from "@nowaki-dev/runtime";
 
 export const loader = async ({ params }: LoaderContext) => ({
@@ -38,50 +42,50 @@ export const loader = async ({ params }: LoaderContext) => ({
 
 export default function Post({ data }: PageProps<typeof loader>) {
   return <article><h1>{data.post.title}</h1></article>;   // data is fully typed
-}`}</code></pre>
+}`} />
       <p>
         The optional types ship with <code>@nowaki-dev/runtime</code>: <code>PageProps&lt;typeof
-        loader&gt;</code> infers the page's <code>data</code> from the loader's return type, and
+        loader&gt;</code> infers the page's <code>data</code> from the loader's return type, and{" "}
         <code>LoaderContext</code> types <code>params</code>, cookies, headers, and the request
         helpers. JavaScript routes work too; the types are there when you want them.
       </p>
 
       <h2>Actions handle mutations</h2>
       <p>
-        A non-GET request runs the route's <code>action</code>. Return a <code>Response</code>,
+        A non-GET request runs the route's <code>action</code>. Return a <code>Response</code>,{" "}
         <code>ctx.redirect()</code> (Post/Redirect/Get), or data to re-render the page with.
       </p>
-      <pre><code>{`// routes/guestbook.tsx
+      <Code src={`// routes/guestbook.tsx
 export async function action(ctx) {
   const form = await ctx.formData();
   ctx.setCookie("guestbook", add(form.get("msg")));
   return ctx.redirect("/guestbook");   // PRG
-}`}</code></pre>
+}`} />
 
       <h2>Layouts &amp; middleware nest</h2>
       <p>
-        <code>_layout.tsx</code> wraps every page under its directory and composes from root to leaf.
+        <code>_layout.tsx</code> wraps every page under its directory and composes from root to leaf.{" "}
         <code>_middleware.ts</code> runs before the route (root → leaf); return a <code>Response</code> to
-        short-circuit — useful for auth, redirects, and response headers.
+        short-circuit, which is useful for auth, redirects, and response headers.
       </p>
-      <pre><code>{`// routes/_middleware.ts
+      <Code src={`// routes/_middleware.ts
 export default function (ctx) {
   if (ctx.url.pathname.startsWith("/admin") && !ctx.cookies.session) {
     return ctx.redirect("/login");
   }
   ctx.setHeader("x-frame-options", "DENY");
-}`}</code></pre>
+}`} />
 
       <h2>API routes</h2>
       <p>
         Files under <code>routes/api/</code> are handlers. Export per-method functions
-        (<code>GET</code>, <code>POST</code>, …) or a <code>default</code>; return a
+        (<code>GET</code>, <code>POST</code>, …) or a <code>default</code>; return a{" "}
         <code>Response</code> (streaming supported) or a value to JSON-encode. Unmatched methods get a
         405.
       </p>
-      <pre><code>{`// routes/api/echo.ts
+      <Code src={`// routes/api/echo.ts
 export const GET = (ctx) => ctx.json({ q: ctx.url.searchParams.get("q") });
-export const POST = async (ctx) => ctx.json({ received: await ctx.bodyJson() });`}</code></pre>
+export const POST = async (ctx) => ctx.json({ received: await ctx.bodyJson() });`} />
 
       <h2>Streaming SSR</h2>
       <p>
@@ -95,10 +99,10 @@ export const POST = async (ctx) => ctx.json({ received: await ctx.bodyJson() });
         then regenerated in the background once it goes stale. The first request after the window gets
         the cached (stale) HTML while a fresh render runs, so no one waits on a slow loader.
       </p>
-      <pre><code>{`// routes/blog/[slug].tsx
+      <Code src={`// routes/blog/[slug].tsx
 export const revalidate = 60;   // cache for 60s, then revalidate
 
-export const loader = async ({ params }) => ({ post: await db.post(params.slug) });`}</code></pre>
+export const loader = async ({ params }) => ({ post: await db.post(params.slug) });`} />
       <p>
         Under <code>nowaki start</code>, the Rust front keeps the cache in memory (single-flight
         revalidation, an <code>x-nowaki-cache: HIT&#8202;|&#8202;STALE&#8202;|&#8202;MISS</code> header
@@ -110,21 +114,21 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
 
       <h2>Typed routes</h2>
       <p>
-        <code>nowaki dev</code> and <code>nowaki build</code> generate
+        <code>nowaki dev</code> and <code>nowaki build</code> generate{" "}
         <code>.nowaki/types.d.ts</code> from your <code>routes/</code> (or run <code>nowaki
         typegen</code>). It makes navigation type-safe: <code>route()</code> builds a dynamic href
         from typed params, and <code>&lt;Link&gt;</code> only accepts known paths.
       </p>
-      <pre><code>{`import { route, Link } from "@nowaki-dev/runtime/navigation";
+      <Code src={`import { route, Link } from "@nowaki-dev/runtime/navigation";
 
-<Link href="/about">About</Link>                    // ok — known static route
-<a href={route("/blog/[slug]", { slug })}>Post</a>   // ok — params typed & encoded
+<Link href="/about">About</Link>                    // ok: known static route
+<a href={route("/blog/[slug]", { slug })}>Post</a>   // ok: params typed & encoded
 
 route("/blog/[slug]");          // ✗ missing params
 route("/nope");                 // ✗ unknown route
-<Link href="/typo" />           // ✗ not a route`}</code></pre>
+<Link href="/typo" />           // ✗ not a route`} />
       <p>
-        Catch-all params are arrays: <code>route("/files/[...path]", {`{ path: ["a", "b"] }`})</code>
+        Catch-all params are arrays: <code>route("/files/[...path]", {`{ path: ["a", "b"] }`})</code>{" "}
         becomes <code>/files/a/b</code>. The generated file is gitignored; commit nothing.
       </p>
 
@@ -132,7 +136,7 @@ route("/nope");                 // ✗ unknown route
       <p>
         Pages with an island get a client router: internal links navigate by swapping the body and
         re-hydrating, so visited pages stay interactive. The router loads <em>after</em> first paint
-        (on idle), so it never weighs down initial load — first paint ships only the hydration
+        (on idle), so it never weighs down initial load: first paint ships only the hydration
         runtime, and the navigation machinery streams in behind it. Three conventions shape that
         experience, and they mirror Next.js' <code>loading.tsx</code> / <code>error.tsx</code>.
       </p>
@@ -141,7 +145,7 @@ route("/nope");                 // ✗ unknown route
         <tr><td><code>routes/loading.tsx</code></td><td>Shown while a navigation is in flight (after ~150ms, so fast navigations don't flicker). Nests by directory.</td></tr>
         <tr><td><code>routes/error.tsx</code></td><td>Shown when a navigation fails. Gets <code>{`{ error, reset }`}</code>; the router fills any <code>data-nowaki-error</code> element with the message and wires <code>data-nowaki-reset</code> to retry.</td></tr>
       </table>
-      <pre><code>{`// routes/error.tsx
+      <Code src={`// routes/error.tsx
 import type { ErrorPageProps } from "@nowaki-dev/runtime";
 
 export default function Error({ error, reset }: ErrorPageProps) {
@@ -152,20 +156,15 @@ export default function Error({ error, reset }: ErrorPageProps) {
       <button data-nowaki-reset onClick={reset}>Try again</button>
     </div>
   );
-}`}</code></pre>
+}`} />
       <p>
         The router also keeps a <strong>Router Cache</strong>: visited pages are held for ~30s (LRU),
-        so back/forward and revisits are instant with no refetch. Tune it per app with
+        so back/forward and revisits are instant with no refetch. Tune it per app with{" "}
         <code>{`<meta name="nowaki-router-cache" content="60">`}</code> (seconds, <code>0</code> disables),
         and opt a single link out with <code>data-no-router</code>. If there's no <code>loading.tsx</code>,
         a slim top progress bar is shown instead; if there's no <code>error.tsx</code>, a minimal retry
         screen appears.
       </p>
-
-      <div class="pager">
-        <a href="/docs/quickstart">← Quickstart</a>
-        <a href="/docs/server-functions">Server functions →</a>
-      </div>
     </>
   );
 }

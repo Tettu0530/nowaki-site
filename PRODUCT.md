@@ -50,7 +50,7 @@ The site is built with Nowaki itself from the published npm packages, so it doub
 
 ## Evidence on Hand
 
-- Measured numbers already in the copy: dev server ready ~90 ms on the example app; millisecond re-transforms; this page 14 KB gzip JS (2026-11 redesign); head-to-head first load ~10 KB gzip vs Next app-router ~103 KB (reproducible via `benchmarks/head-to-head.mjs` in the framework repo).
+- Measured numbers in the copy: this page's JS is computed from the build at render time (`lib/bundle.ts`, gzip -9; 14 KB in 2026-11). Head-to-head from the framework's BENCHMARKS.md, same counter app: first-load JS **uncompressed** Nowaki 21.6 KB / Astro 23.1 KB / Next 103.0 KB (Next reports only uncompressed, so never compare it with gzip figures); dev server ready (cold) 74 / 544 / 1374 ms. Reproduce with `benchmarks/head-to-head.mjs` in the framework repo.
 - Feature list, "works today" and roadmap lists in `lib/i18n.ts`.
 - No testimonials, customer logos, adoption numbers, or star counts exist. Do not fabricate them.
 
