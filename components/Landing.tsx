@@ -21,22 +21,21 @@ const timing = FLOW.map((_, i) => {
   return { d: (5.5 + r * 5).toFixed(2), o: (-q * 10).toFixed(2) };
 });
 
-// A moving streak is several dashes stacked on one path, centred on each other:
+// A moving streak is four dashes stacked on one path and centred on each other:
 // short, opaque and thicker in the middle, longer, fainter and thinner outside, so
-// the head and the tail fade and taper instead of ending in a hard cap. --sh shifts each layer back by
-// half its extra length so all layers share one centre while they travel.
-// Lengths are plain attributes and each layer has literal keyframes (gust-0..6 in
-// landing-style.ts): Firefox rejects calc() and var() inside stroke-dash properties.
+// the head and the tail fade and taper instead of ending in a hard cap. Each layer's
+// keyframes (gust-0..3 in landing-style.ts) shift it back by half its extra length so
+// all layers share one centre. Lengths are plain attributes and the offsets literal:
+// Firefox rejects calc() and var() inside stroke-dash properties. Four layers, on
+// their own SVG layer (see the hero markup), keep ~60 fps on a 4x-throttled CPU;
+// seven layers in the shared SVG dropped to 30.
 const STREAK = [
-  { len: 180, a: 0.035, w: 0.7 },
-  { len: 148, a: 0.06, w: 0.8 },
-  { len: 118, a: 0.1, w: 0.9 },
-  { len: 92, a: 0.16, w: 1 },
-  { len: 68, a: 0.26, w: 1.1 },
-  { len: 46, a: 0.42, w: 1.25 },
-  { len: 26, a: 0.8, w: 1.4 },
+  { len: 160, a: 0.07, w: 0.75 },
+  { len: 96, a: 0.2, w: 0.95 },
+  { len: 52, a: 0.45, w: 1.15 },
+  { len: 24, a: 0.9, w: 1.4 },
 ];
-const CORE = 26;
+const CORE = 24;
 const PERIOD = 1170;
 
 function Streak({ i, gold }: { i: number; gold: boolean }) {
@@ -94,13 +93,14 @@ export default function Landing({ locale }: { locale: Locale }) {
               ))}
             </defs>
           </svg>
+          {/* Static lines and moving streaks are separate SVGs, so each frame repaints only the streaks. */}
           <svg class="hero__flow" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMinYMid slice" aria-hidden="true">
             {FLOW.map((_, i) => (
               <use href={`#f${i}`} class={`sl${i % 6 === 2 ? " is-g" : ""}`} />
             ))}
-            {FLOW.map((_, i) =>
-              i % 2 === 0 ? <Streak i={i} gold={i % 6 === 2} /> : null,
-            )}
+          </svg>
+          <svg class="hero__flow streaks" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMinYMid slice" aria-hidden="true">
+            {FLOW.map((_, i) => (i % 2 === 0 ? <Streak i={i} gold={i % 6 === 2} /> : null))}
           </svg>
           <div class="wrap hero__grid">
             <div class="rel">
@@ -335,9 +335,9 @@ export default function Landing({ locale }: { locale: Locale }) {
         <section class="sec close" aria-labelledby="close-h">
           <svg class="close__flow" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
             {FLOW.map((_, i) => (i % 2 === 1 ? <use href={`#f${i}`} class={`sl${i % 6 === 3 ? " is-g" : ""}`} /> : null))}
-            {FLOW.map((_, i) =>
-              i % 4 === 1 ? <Streak i={i} gold={i % 6 === 3} /> : null,
-            )}
+          </svg>
+          <svg class="close__flow streaks" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+            {FLOW.map((_, i) => (i % 4 === 1 ? <Streak i={i} gold={i % 6 === 3} /> : null))}
           </svg>
           <div class="wrap">
             <h2 id="close-h">{s.close.h2}</h2>
