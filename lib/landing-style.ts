@@ -220,6 +220,53 @@ export const LANDING_CSS = `
 @media (prefers-reduced-motion:no-preference){@supports (animation-timeline:view()){
   .rail::after{animation:grow linear both;animation-timeline:view();animation-range:entry 30% cover 55%}
 }}
+/* Jetstream demo: zero JS. The checkbox state drives the pulse, the hop flashes
+   and the patched text. Two keyframe names per animation so every toggle restarts it. */
+@property --p{syntax:"<number>";inherits:false;initial-value:0}
+.jet{position:relative}
+.jet__toggle{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.jet__bar{display:flex;flex-wrap:wrap;align-items:center;gap:14px 28px;margin-bottom:28px}
+.jet__btn{display:inline-flex;align-items:center;gap:10px;height:44px;padding:0 18px;border:1px solid var(--line-strong);border-radius:999px;color:var(--fg);font:500 .95rem var(--sans);cursor:pointer;user-select:none;transition:border-color .2s}
+.jet__btn:hover{border-color:var(--susuki)}
+.jet__toggle:focus-visible + .jet__bar .jet__btn{outline:2px solid var(--susuki);outline-offset:3px}
+.jet__heart{color:var(--muted)}
+.jet__heart path{transition:fill-opacity .25s}
+.jet__swap{display:inline-grid}
+.jet__swap > *{grid-area:1/1;transition:opacity .25s}
+.jet__on{opacity:0}
+.jet__meta{font-size:.86rem;color:var(--muted)}
+.jet__meta code{font:400 .84rem var(--mono);color:var(--fg)}
+.jet__meta b{font:500 .86rem var(--mono);color:var(--fg)}
+.jet__note{margin-top:22px;font-size:.84rem;color:var(--muted);max-width:60ch}
+/* Patched text lands after the trip: state at Re-render (1s), DOM at Morph (2s). */
+.jet__toggle:checked + .jet__bar .jet__off{opacity:0;transition-delay:var(--td,2s)}
+.jet__toggle:checked + .jet__bar .jet__on{opacity:1;transition-delay:var(--td,2s)}
+.jet__toggle:not(:checked) + .jet__bar .jet__off{transition-delay:var(--td,2s)}
+.jet__toggle:not(:checked) + .jet__bar .jet__on{transition-delay:var(--td,2s)}
+.jet__meta .jet__swap{--td:1s}
+.jet__toggle:checked + .jet__bar .jet__heart{color:var(--susuki);transition:color .25s 2s}
+.jet__toggle:checked + .jet__bar .jet__heart path{fill-opacity:1;transition-delay:2s}
+.rail::before{content:"";position:absolute;z-index:1;top:-5px;left:calc(var(--p) * 100%);width:9px;height:9px;border-radius:50%;background:var(--fg);opacity:0;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){
+  .jet:has(.jet__toggle:checked) .rail::before{animation:pulse-a 2.3s linear}
+  .jet:has(.jet__toggle:not(:checked)) .rail::before{animation:pulse-b 2.3s linear}
+  .jet:has(.jet__toggle:checked) .hop::before{animation:flash-a .5s var(--ease) calc(var(--i) * .5s)}
+  .jet:has(.jet__toggle:not(:checked)) .hop::before{animation:flash-b .5s var(--ease) calc(var(--i) * .5s)}
+  /* The island shows the request in flight until the patch lands. */
+  .jet__toggle:checked + .jet__bar .jet__btn{animation:wait-a 2s steps(1,end)}
+  .jet__toggle:not(:checked) + .jet__bar .jet__btn{animation:wait-b 2s steps(1,end)}
+  .jet:has(.jet__toggle:checked) .hop h3{animation:ink-a .6s var(--ease) calc(var(--i) * .5s)}
+  .jet:has(.jet__toggle:not(:checked)) .hop h3{animation:ink-b .6s var(--ease) calc(var(--i) * .5s)}
+}
+@media (prefers-reduced-motion:reduce){.jet *{--td:0s;transition-delay:0s !important}}
+@keyframes pulse-a{0%{--p:0;opacity:0}5%{opacity:1}87%{--p:.8;opacity:1}100%{--p:.8;opacity:0}}
+@keyframes pulse-b{0%{--p:0;opacity:0}5%{opacity:1}87%{--p:.8;opacity:1}100%{--p:.8;opacity:0}}
+@keyframes flash-a{30%{background:var(--susuki);transform:scale(1.8)}}
+@keyframes flash-b{30%{background:var(--susuki);transform:scale(1.8)}}
+@keyframes wait-a{0%{border-color:var(--susuki);border-style:dashed}}
+@keyframes wait-b{0%{border-color:var(--susuki);border-style:dashed}}
+@keyframes ink-a{30%{color:var(--susuki)}}
+@keyframes ink-b{30%{color:var(--susuki)}}
 .only{margin-top:clamp(40px,4vw,56px);padding:20px 0 0;border-top:1px solid var(--susuki);color:var(--body);max-width:54ch}
 .only b{color:var(--fg);font-weight:600}
 
@@ -303,6 +350,7 @@ td.is-n{color:var(--fg);background:rgb(216 191 134 / .05)}
   .hop{padding:0 0 28px 24px}
   .hop::before{top:6px;left:-5px}
   .rail::after{display:none}
+  .rail::before{display:none}
 }
 @media (max-width:760px){
   .new__list,.codes,.conv,.fit,.feats,.status,.stats,.steps,.proof{grid-template-columns:1fr}

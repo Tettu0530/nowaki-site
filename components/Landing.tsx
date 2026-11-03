@@ -220,14 +220,40 @@ export default function Landing({ locale }: { locale: Locale }) {
             <h2 id="jet-h">{s.jet.h2}</h2>
             <p class="lead">{s.jet.lead}</p>
           </div>
+          {/* A zero-JS simulation: the checkbox state drives every step through CSS. */}
+          <div class="jet">
+            <input type="checkbox" id="jet-run" class="jet__toggle" aria-label={s.jet.demo.label} aria-describedby="jet-note" />
+            <div class="jet__bar">
+              <label for="jet-run" class="jet__btn" aria-hidden="true">
+                <svg class="jet__heart" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M8 13.6 2.6 8.4A3.3 3.3 0 0 1 8 4.2a3.3 3.3 0 0 1 5.4 4.2Z" fill="currentColor" fill-opacity="0" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                </svg>
+                <span class="jet__swap">
+                  <span class="jet__off">{s.jet.demo.like} · 12</span>
+                  <span class="jet__on">{s.jet.demo.liked} · 13</span>
+                </span>
+              </label>
+              <span class="jet__meta">
+                {s.jet.demo.state}{" "}
+                <code class="jet__swap">
+                  <span class="jet__off">liked: false</span>
+                  <span class="jet__on jet__on--state">liked: true</span>
+                </code>
+              </span>
+              <span class="jet__meta">
+                {s.jet.demo.js} <b>{s.jet.demo.jsVal}</b>
+              </span>
+            </div>
           <ol class="rail" style="list-style:none;margin:0;padding:0">
-            {s.jet.steps.map((h) => (
-              <li class="hop">
+            {s.jet.steps.map((h, i) => (
+              <li class="hop" style={`--i:${i}`}>
                 <h3>{h.t}</h3>
                 <p>{h.d}</p>
               </li>
             ))}
           </ol>
+          <p class="jet__note" id="jet-note">{s.jet.demo.note}</p>
+          </div>
           <p class="only">{s.jet.only}</p>
         </section>
 

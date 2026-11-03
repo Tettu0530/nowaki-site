@@ -52,7 +52,7 @@ export const STRINGS = {
     },
     jet: {
       h2: "One click, zero component JavaScript.",
-      lead: "Mark an island live and its state stays on the server. The browser gets a ~2 KB runtime and HTML patches, never the component's code. Here is one click, end to end.",
+      lead: "Mark an island live and its state stays on the server. The browser gets a ~2 KB runtime and HTML patches, never the component's code. Here is one click, end to end.",
       steps: [
         { t: "Click", d: "The browser runs only the ~2 KB runtime. The island's component code never ships." },
         { t: "WebSocket", d: "The event travels to the Rust server, which holds the connection, presence and heartbeat." },
@@ -60,6 +60,15 @@ export const STRINGS = {
         { t: "Patch", d: "Rust pushes the resulting HTML patch back down the socket." },
         { t: "Morph", d: "The runtime morphs the patch into the DOM in place. Client islands keep working beside it." },
       ],
+      demo: {
+        like: "Like",
+        liked: "Liked",
+        label: "Like (a simulated Jetstream island)",
+        state: "Server state",
+        js: "JavaScript this demo uses",
+        jsVal: "0 bytes",
+        note: "Simulated in CSS and not to scale: this page sends no event. On a real Jetstream island the same click travels over a WebSocket, and the timing depends on your network.",
+      },
       only: "LiveView's idea, applied per island. RSC re-renders still ship React; Astro's Server Islands render once and don't update. Neither does this.",
     },
     code: {
@@ -183,7 +192,7 @@ export const STRINGS = {
     },
     jet: {
       h2: "1回のクリック、コンポーネント JS はゼロ。",
-      lead: "島を live にすると、状態はサーバーに残ります。ブラウザに届くのは ~2 KB のランタイムと HTML パッチだけで、コンポーネントのコードは届きません。1回のクリックを最初から最後まで追います。",
+      lead: "島を live にすると、状態はサーバーに残ります。ブラウザに届くのは ~2 KB のランタイムと HTML パッチだけで、コンポーネントのコードは届きません。1回のクリックを最初から最後まで追います。",
       steps: [
         { t: "クリック", d: "ブラウザで動くのは ~2 KB のランタイムだけ。島のコンポーネントのコードは送られません。" },
         { t: "WebSocket", d: "イベントは Rust サーバーへ。接続・presence・ハートビートは Rust が持ちます。" },
@@ -191,6 +200,15 @@ export const STRINGS = {
         { t: "パッチ", d: "Rust が、できた HTML パッチをソケットで送り返します。" },
         { t: "反映", d: "ランタイムがパッチを DOM にその場で当てます（morph）。クライアント島は隣でそのまま動きます。" },
       ],
+      demo: {
+        like: "いいね",
+        liked: "いいね済み",
+        label: "いいね（Jetstream の島のシミュレーション）",
+        state: "サーバーの状態",
+        js: "このデモが使う JavaScript",
+        jsVal: "0 バイト",
+        note: "CSS だけで再現したシミュレーションで、時間の比率は実際とは異なります。このページはイベントを送りません。本物の Jetstream の島では、同じクリックが WebSocket で運ばれ、所要時間は回線によって変わります。",
+      },
       only: "LiveView の発想を島ごとに。RSC の再描画は React を送り、Astro の Server Islands は一度描画したら更新しません。どちらにもない仕組みです。",
     },
     code: {
