@@ -24,7 +24,7 @@ export default function Routing() {
         <tr><td><code>routes/api/posts.ts</code></td><td><code>/api/posts</code> (handler, not a page)</td></tr>
         <tr><td><code>routes/_layout.tsx</code></td><td>Wraps pages in its directory (nests)</td></tr>
         <tr><td><code>routes/_middleware.ts</code></td><td>Runs before routes (nests)</td></tr>
-        <tr><td><code>routes/_404.tsx</code> · <code>_500.tsx</code></td><td>Not-found / error pages</td></tr>
+        <tr><td><code>routes/_404.tsx</code> · <code>_500.tsx</code></td><td>Not-found / error pages (<code>_404</code> is also written as <code>404.html</code> by <code>nowaki prerender</code>)</td></tr>
       </table>
       <p>Static segments win over dynamic ones at the same depth, so <code>/users/me</code> beats <code>/users/[id]</code>, and a catch-all <code>[...path]</code> only matches once nothing more specific does.</p>
 
@@ -110,6 +110,28 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
         so the same page gets ISR for free on a CDN or edge adapter (Cloudflare, Vercel). Responses
         that set a cookie are treated as per-user and never cached, so keep ISR pages free of
         request-specific data.
+      </p>
+
+      <h2>Static paths for dynamic routes <span class="badge">v0.13</span></h2>
+      <p>
+        <code>nowaki prerender</code> and the static adapter write every static route as it is. A
+        dynamic <code>[param]</code> or <code>[...rest]</code> route is prerendered only when it
+        exports <code>staticPaths</code>: an array of params, or a sync or async function that
+        returns one. Each entry becomes one page, and the route's loader runs for it at build time.
+      </p>
+      <Code src={`// routes/blog/[slug].tsx
+import type { StaticPaths } from "@nowaki-dev/runtime";
+
+export const staticPaths: StaticPaths = async () =>
+  (await db.posts()).map((p) => ({ slug: p.slug }));   // one page per post
+
+// routes/files/[...path].tsx: a rest param takes an array
+export const staticPaths = [{ path: ["docs", "intro"] }];   // → /files/docs/intro`} />
+      <p>
+        Dynamic routes without <code>staticPaths</code> are skipped, and values that would escape
+        the output directory (<code>..</code>, <code>/</code>, an empty string) are rejected. Under{" "}
+        <code>nowaki dev</code> and <code>nowaki start</code> the export is ignored and the route
+        renders on request as usual.
       </p>
 
       <h2>Typed routes</h2>

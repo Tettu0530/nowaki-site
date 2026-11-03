@@ -210,7 +210,7 @@ export default function BuildTiles({ locale }: { locale: Locale }) {
       {b.tiles.map((tile, i) => (
         <div class="tile">
           {art[i]}
-          <a data-no-router class="tile__t" href={tile.href}>
+          <a class="tile__t" href={tile.href}>
             {tile.t}
             <Arrow />
           </a>
