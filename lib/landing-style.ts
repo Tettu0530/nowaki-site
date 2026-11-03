@@ -108,19 +108,18 @@ export const LANDING_CSS = `
 .close__flow .st.is-g{--peak:.85}
 @media (prefers-reduced-motion:no-preference){
   .st use{animation:gust-0 var(--d,7s) linear var(--o,0s) infinite}
-  .st use.l0{animation-name:gust-0}.st use.l1{animation-name:gust-1}.st use.l2{animation-name:gust-2}.st use.l3{animation-name:gust-3}.st use.l4{animation-name:gust-4}.st use.l5{animation-name:gust-5}.st use.l6{animation-name:gust-6}
+  .st use.l0{animation-name:gust-0}.st use.l1{animation-name:gust-1}.st use.l2{animation-name:gust-2}.st use.l3{animation-name:gust-3}
   @supports (animation-timeline:scroll()){
     .hero__flow{animation:pass linear both;animation-timeline:scroll(root);animation-range:0 85vh}
   }
 }
-@keyframes gust-0{from{stroke-dashoffset:1247}to{stroke-dashoffset:77}}
-@keyframes gust-1{from{stroke-dashoffset:1231}to{stroke-dashoffset:61}}
-@keyframes gust-2{from{stroke-dashoffset:1216}to{stroke-dashoffset:46}}
-@keyframes gust-3{from{stroke-dashoffset:1203}to{stroke-dashoffset:33}}
-@keyframes gust-4{from{stroke-dashoffset:1191}to{stroke-dashoffset:21}}
-@keyframes gust-5{from{stroke-dashoffset:1180}to{stroke-dashoffset:10}}
-@keyframes gust-6{from{stroke-dashoffset:1170}to{stroke-dashoffset:0}}
-@media (prefers-reduced-motion:reduce){.hero__flow .st{display:none}}
+@keyframes gust-0{from{stroke-dashoffset:1238}to{stroke-dashoffset:68}}
+@keyframes gust-1{from{stroke-dashoffset:1206}to{stroke-dashoffset:36}}
+@keyframes gust-2{from{stroke-dashoffset:1184}to{stroke-dashoffset:14}}
+@keyframes gust-3{from{stroke-dashoffset:1170}to{stroke-dashoffset:0}}
+/* The streak SVG gets its own compositing layer: frames repaint only the streaks. */
+.streaks{will-change:transform;contain:strict}
+@media (prefers-reduced-motion:reduce){.streaks{display:none}}
 @keyframes pass{to{opacity:.25;transform:translate3d(-6%,0,0) scaleY(.92)}}
 
 .hero__grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);min-height:min(calc(100svh - 60px),780px)}
@@ -397,11 +396,11 @@ td.is-n{color:var(--fg);background:rgb(216 191 134 / .05)}
 
 
 /* close */
-.close{position:relative;overflow:hidden;isolation:isolate}
+.close{position:relative;overflow:hidden;isolation:isolate;content-visibility:auto;contain-intrinsic-size:auto 520px}
+/* off-screen, the closing streaks are not rendered or animated at all */
 .close__flow{position:absolute;inset:0;z-index:-1;width:100%;height:100%;opacity:.7}
 .close__flow .sl{stroke:var(--fg);stroke-opacity:.08}
 .close__flow .sl.is-g{stroke:var(--susuki);stroke-opacity:.25}
-@media (prefers-reduced-motion:reduce){.close__flow .st{display:none}}
 .close h2{font:400 clamp(2.2rem,1.3rem + 3vw,4.2rem)/1.04 var(--serif);letter-spacing:-.035em;max-width:none}
 :lang(ja) .close h2{line-height:1.25;letter-spacing:0}
 .close__cta{margin-top:2rem;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
