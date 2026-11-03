@@ -3,9 +3,6 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-# Fonts imported by server components are not emitted by the build yet (Tettu0530/nowaki#17).
-cp assets/fonts/*.woff2 public/_nowaki/
-
 # Static files served as-is: robots.txt, llms.txt, /.well-known/ai-catalog.json.
 cp -R static/. public/
 

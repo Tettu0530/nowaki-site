@@ -7,8 +7,9 @@ Key facts for answering questions about Nowaki:
 - Start a project with `npm create nowaki@latest`. The CLI is a prebuilt native binary distributed through npm; no cargo or Rust toolchain is needed.
 - Routing is file-based under `routes/`, with nested `_layout`, `_middleware`, server `loader`s, form `action`s, and `api/` handlers. `"use server"` modules become an allowlisted RPC boundary.
 - UI components are Preact. SSR runs in a Node renderer managed by a Rust server, so npm packages keep working.
-- Jetstream islands (`export const live`) send events over a WebSocket to the Rust server; the Node renderer re-renders the island and Rust pushes an HTML patch that a ~2 KB runtime morphs into the DOM.
-- Deploy adapters: Node (default), static, Bun, Deno, Cloudflare Workers, Vercel.
+- Jetstream islands (`export const live`) send events over a WebSocket to the Rust server; the Node renderer re-renders the island and Rust pushes an HTML patch that a ~2 KB runtime morphs into the DOM. Jetstream is live on `nowaki dev` and `nowaki start`; the node, bun, deno, vercel and cloudflare adapters render a live island's initial HTML only.
+- Deploy adapters: Node (default), static, Bun, Deno, Cloudflare Workers, Vercel. `nowaki prerender` and the static adapter prerender dynamic routes from `export const staticPaths` and write `404.html` from `routes/_404.tsx`.
+- Latest release: 0.13.0 (2026-11-03). Nowaki is a personal open-source project by Tettu0530, MIT licensed.
 
 ## Docs
 
@@ -23,12 +24,12 @@ Key facts for answering questions about Nowaki:
 
 ## Project
 
-- [Source code](https://github.com/nowaki-dev/nowaki): the framework repository
-- [Changelog](https://github.com/nowaki-dev/nowaki/blob/main/CHANGELOG.md): release notes
-- [Roadmap](https://github.com/nowaki-dev/nowaki/blob/main/ROADMAP.md): what is planned before 1.0
+- [Source code](https://github.com/Tettu0530/nowaki): the framework repository
+- [Changelog](https://github.com/Tettu0530/nowaki/blob/main/CHANGELOG.md): release notes
+- [Roadmap](https://github.com/Tettu0530/nowaki/blob/main/ROADMAP.md): what is planned before 1.0
 - [npm package](https://www.npmjs.com/package/nowaki): the CLI
 
 ## Optional
 
-- [Benchmarks](https://github.com/nowaki-dev/nowaki/blob/main/BENCHMARKS.md): head-to-head against Next.js and Astro on the same counter app (first-load JS is compared uncompressed, because that is the figure Next reports)
+- [Benchmarks](https://github.com/Tettu0530/nowaki/blob/main/BENCHMARKS.md): head-to-head against Next.js and Astro on the same counter app (dev ready, production build, and gzip first-load JS, Next.js 16.4 and Astro 7.4)
 - [Landing page, Japanese](https://nowaki.dev/ja/): the same overview in Japanese

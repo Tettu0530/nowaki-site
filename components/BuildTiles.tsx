@@ -27,14 +27,14 @@ function Arrow() {
 
 function Islands({ legend }: { legend: readonly string[] }) {
   return (
-    <div class="tl tl--grid" aria-hidden="true">
+    <div class="tl tl--dots" aria-hidden="true">
       <div class="tl-legend">
         <span>
-          <i />
+          <i class="k" />
           {legend[0]}
         </span>
         <span>
-          <i class="on" />
+          <i class="k k--isl" />
           {legend[1]}
         </span>
       </div>
@@ -57,7 +57,7 @@ function Islands({ legend }: { legend: readonly string[] }) {
               <div class="tl-img__m" />
             </div>
             <div class="tl-card tl-isl" style="left:12px;top:106px;width:140px;height:60px">
-              <span class="tl-isl__tag">hydrated</span>
+              <span class="tl-isl__tag">client:visible</span>
               <span class="tl-card__name">Comments.tsx</span>
               <span class="tl-like">
                 <svg width="12" height="12" viewBox="0 0 16 16">
