@@ -376,6 +376,8 @@ A hairline-bordered 12px container that scrolls horizontally (760px minimum tabl
 ### Jetstream Rail (signature)
 Five steps on a strong hairline. A 1px susuki line grows across it, and each step is a 9px circle with a susuki outline (the first one filled). Below 1000px the rail turns vertical.
 
+The rail is also a zero-JS demo. A pill button above it (a visually hidden checkbox plus its label) plays one simulated Jetstream round trip: an fg dot runs along the rail (a registered `--p` number animated over 2.3s, linear), each step's circle flashes susuki and scales 1.8x 0.5s apart, the button border turns dashed susuki while the request is in flight, the server-state readout flips at Re-render (1s) and the button text and heart flip at Morph (2s). Every animation has two identically keyed names (`-a` for checked, `-b` for unchecked) so each toggle restarts it. Below 1000px the dot is dropped and only the steps flash. Under reduced motion the state flips at once with no animation. A muted note under the rail states it is simulated and not to scale.
+
 ### Streamline Field (signature)
 A server-rendered SVG of about 34 wind-tunnel streamlines bending around an ellipse placed behind the hero numeral, with a mirrored field in the closing section. Every sixth line is drawn in susuki. Every second line carries a short dash (70 / 1100) that flows along it using a CSS `stroke-dashoffset` animation with deterministic per-line duration (5.5 to 10.5s) and offset. Strokes do not scale with the SVG.
 
