@@ -21,6 +21,34 @@ const timing = FLOW.map((_, i) => {
   return { d: (5.5 + r * 5).toFixed(2), o: (-q * 10).toFixed(2) };
 });
 
+// A moving streak is several dashes stacked on one path, centred on each other:
+// short, opaque and thicker in the middle, longer, fainter and thinner outside, so
+// the head and the tail fade and taper instead of ending in a hard cap. --sh shifts each layer back by
+// half its extra length so all layers share one centre while they travel.
+// Lengths are plain attributes and each layer has literal keyframes (gust-0..6 in
+// landing-style.ts): Firefox rejects calc() and var() inside stroke-dash properties.
+const STREAK = [
+  { len: 180, a: 0.035, w: 0.7 },
+  { len: 148, a: 0.06, w: 0.8 },
+  { len: 118, a: 0.1, w: 0.9 },
+  { len: 92, a: 0.16, w: 1 },
+  { len: 68, a: 0.26, w: 1.1 },
+  { len: 46, a: 0.42, w: 1.25 },
+  { len: 26, a: 0.8, w: 1.4 },
+];
+const CORE = 26;
+const PERIOD = 1170;
+
+function Streak({ i, gold }: { i: number; gold: boolean }) {
+  return (
+    <g class={`st${gold ? " is-g" : ""}`} style={`--d:${timing[i].d}s;--o:${timing[i].o}s`}>
+      {STREAK.map((l, k) => (
+        <use href={`#f${i}`} class={`l${k}`} stroke-dasharray={`${l.len} ${PERIOD - l.len}`} stroke-width={l.w} style={`--a:${l.a}`} />
+      ))}
+    </g>
+  );
+}
+
 function Arrow() {
   return (
     <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-left:.35em">
@@ -71,7 +99,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               <use href={`#f${i}`} class={`sl${i % 6 === 2 ? " is-g" : ""}`} />
             ))}
             {FLOW.map((_, i) =>
-              i % 2 === 0 ? <use href={`#f${i}`} class={`st${i % 6 === 2 ? " is-g" : ""}`} style={`--d:${timing[i].d}s;--o:${timing[i].o}s`} /> : null,
+              i % 2 === 0 ? <Streak i={i} gold={i % 6 === 2} /> : null,
             )}
           </svg>
           <div class="wrap hero__grid">
@@ -308,7 +336,7 @@ export default function Landing({ locale }: { locale: Locale }) {
           <svg class="close__flow" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
             {FLOW.map((_, i) => (i % 2 === 1 ? <use href={`#f${i}`} class={`sl${i % 6 === 3 ? " is-g" : ""}`} /> : null))}
             {FLOW.map((_, i) =>
-              i % 4 === 1 ? <use href={`#f${i}`} class={`st${i % 6 === 3 ? " is-g" : ""}`} style={`--d:${timing[i].d}s;--o:${timing[i].o}s`} /> : null,
+              i % 4 === 1 ? <Streak i={i} gold={i % 6 === 3} /> : null,
             )}
           </svg>
           <div class="wrap">
