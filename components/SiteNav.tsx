@@ -7,8 +7,8 @@ import type { Locale } from "../lib/i18n.ts";
 // links into the docs and the language switch need no data-no-router.
 // Site navigation shared by the landing and the docs. Below 760px the links fold
 // into a <details> menu, so it needs no JavaScript. The docs are English only,
-// so they drop the language switch.
-export default function SiteNav({ locale = "en", page }: { locale?: Locale; page: "home" | "docs" }) {
+// so they drop the language switch; so does any other page (the 404).
+export default function SiteNav({ locale = "en", page }: { locale?: Locale; page: "home" | "docs" | "other" }) {
   const s = STRINGS[locale];
   const home = locale === "ja" ? "/ja/" : "/";
   const compare = page === "home" ? "#compare" : `${home}#compare`;
