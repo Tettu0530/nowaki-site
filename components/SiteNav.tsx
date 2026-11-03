@@ -1,4 +1,5 @@
 import { STRINGS, GH } from "../lib/i18n.ts";
+import { MARK_URL } from "../lib/landing-style.ts";
 import type { Locale } from "../lib/i18n.ts";
 
 // Links into /docs/ carry data-no-router: the docs bring their own <head> CSS,
@@ -30,6 +31,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
     <header class="nav">
       <div class="wrap nav__in">
         <a href={home} class="brand">
+          <img src={MARK_URL} alt="" width="24" height="24" />
           Nowaki<small>野分</small>
         </a>
         <nav class="nav__links" aria-label="Primary">

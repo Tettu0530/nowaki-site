@@ -1,6 +1,6 @@
 ---
 name: Nowaki
-description: Release-led dark landing and running-head docs for a Rust-toolchain web framework; ink ground, hairline grids, one susuki accent, wind-tunnel streamlines.
+description: Release-led dark landing and running-head docs for a Rust-toolchain web framework; ink ground, hairline grids, one susuki accent, an island map on a dot lattice.
 colors:
   ground: "#0b0d10"
   raise: "#12151a"
@@ -114,6 +114,15 @@ typography:
     fontSize: "0.78rem"
     fontWeight: 400
     fontFeature: "tnum"
+  mono-island:
+    fontFamily: "\"Geist Mono\", ui-monospace, SFMono-Regular, Menlo, monospace"
+    fontSize: "0.74rem"
+    fontWeight: 400
+    lineHeight: 1
+  map-key:
+    fontFamily: "Geist, ui-sans-serif, system-ui, \"Hiragino Sans\", \"Noto Sans JP\", sans-serif"
+    fontSize: "0.78rem"
+    fontWeight: 400
 rounded:
   inline-code: "5px"
   xs: "6px"
@@ -139,7 +148,7 @@ spacing:
   doc-measure: "56ch"
   plate-max: "58rem"
   opener-band: "190px"
-  opener-strip: "48px"
+  brand-mark: "24px"
 components:
   button-solid:
     backgroundColor: "{colors.fg}"
@@ -220,27 +229,36 @@ components:
     padding: "1px 9px"
   pager-label:
     textColor: "{colors.muted}"
+  island-frame:
+    rounded: "{rounded.xs}"
+  island-tag:
+    textColor: "{colors.muted}"
+    typography: "{typography.mono-island}"
+  map-key:
+    textColor: "{colors.muted}"
+    typography: "{typography.map-key}"
 ---
 
 # Design System: Nowaki
 
 ## Overview
 
-**Creative North Star: "The Wind Tunnel at Night"**
+**Creative North Star: "The Island Map at Night"**
 
-A dark, quiet instrument room where one warm reading matters. The ground is cool ink, structure is drawn in hairlines rather than boxed in cards, and the only warmth on screen is susuki, the colour of autumn pampas grass bent by 野分. Streamlines flow across the hero and the closing section like smoke lines in a wind tunnel, bending around whatever is being measured. The page reads like release notes written by engineers: a large serif numeral, a plain claim, and then the evidence. The docs carry the same world into Read mode as a running-head technical manual: a numbered chapter rail, a running head that always says where you are and what comes next, a still chapter opener where the wind bends around a large susuki chapter numeral, and code set as wide ink plates.
+A dark, quiet chart room where one warm reading matters. The ground is cool ink, structure is drawn in hairlines rather than boxed in cards, and the only warmth on screen is susuki, the colour of autumn pampas grass bent by 野分. The page draws itself as a map: a 24px dot lattice is the sea of static HTML, and a few lattice-snapped islands, each tagged with its literal directive, light up in susuki as they hydrate; one Jetstream island stays live over a wire to the server. The page reads like release notes written by engineers: a large serif numeral, a plain claim, and then the evidence. The docs carry the same world into Read mode as a running-head technical manual: a numbered chapter rail, a running head that always says where you are and what comes next, a still chapter opener where a patch of the same lattice sits beside a large susuki chapter numeral framed like an island, and code set as wide ink plates.
 
 Density is moderate and editorial. Wide two-column grids (5/12 and 7/12) ruled by vertical and horizontal hairlines carry the content; rows are separated by 1px lines, not by surfaces. Serif display type gives the page a voice; sans carries the UI and body text; mono shows up only where something is literally code or literally measured.
 
 The world rejects glass and backdrop-filter, Chromium-only effects, animation libraries, eyebrow or kicker labels, gradient text, and cards used as layout structure.
 
 **Key Characteristics:**
-- Cool ink ground, three tonal steps, no colour gradients on surfaces or text (gradients appear only as ground-coloured fades that mask the streamline field).
-- One accent (susuki), used for the release numeral, active streamlines, emphasis, and measured highlights.
+- Cool ink ground, three tonal steps, no colour gradients on surfaces or text (gradients appear only as ground-coloured fades and masks that thin the dot lattice).
+- One accent (susuki), used for the release numeral, hydrated islands, emphasis, and measured highlights.
+- The island map: static HTML is a dot-lattice sea; islands are hairline-framed and lattice-snapped, dashed while dormant and solid once hydrated.
 - Hairline-ruled grids instead of cards.
 - Geist Serif display, Geist sans UI, Geist Mono for code and measured values only.
 - Motion uses CSS only and turns off completely under reduced motion. The docs do not move at all.
-- The landing and the docs share one base (fonts, tokens, base elements, site nav, buttons, favicon); the docs ship zero client JS.
+- The landing and the docs share one base (fonts, tokens, base elements, site nav with the Nowaki mark, buttons, favicon); the docs ship zero client JS.
 - Works in English and Japanese: ja headings use phrase-aware line breaking and fall back to a system Mincho.
 
 ## Colors
@@ -248,16 +266,16 @@ The world rejects glass and backdrop-filter, Chromium-only effects, animation li
 A near-monochrome cool ink palette with one warm accent the colour of dry grass.
 
 ### Primary
-- **Susuki** (#d8bf86): the release numeral, the second line of the hero headline, the active streamlines, link underlines, the focus ring, text selection, measured bar fills, the Jetstream rail and nodes, check marks, and string tokens in landing code panels. In the docs: the current chapter number, the running-head position, the chapter numeral, the opener's single lead streamline, link underlines, the note's top rule, and the version badge. It is the only hue on the page.
+- **Susuki** (#d8bf86): the release numeral, the word "Islands" in the hero headline (only that word, in both locales), hydrated islands (frame at 50%, dots inside, a 5% wash, corner marks), the directive in each island tag, the live island's dashed wire and its returning patch packet, the map key's island marks, the Nowaki mark, link underlines, the focus ring, text selection, measured bar fills, the Jetstream rail and nodes, check marks, and string tokens in landing code panels. In the docs: the current chapter number, the running-head position, the chapter numeral with its 30% frame and corner marks, link underlines, the note's top rule, and the version badge. It is the only hue on the page.
 
 ### Neutral
 - **Ink Ground** (#0b0d10): page background and nav. Also used as text on susuki or fg fills (susuki-ink).
 - **Raise** (#12151a): first raised layer: the copy command, the mobile menu panel, and landing comparison-table header cells.
 - **Raise Two** (#171b21): second raised layer: hover states, the active language pill, inline code chips, and bar tracks.
 - **Code Ground** (#0e1115): landing code panels and docs code plates only. Sits just above ground so code blocks read as inset rather than lifted.
-- **Paper Fg** (#eceef1): headings, primary text, the solid button fill, and the base colour for neutral streamlines.
+- **Paper Fg** (#eceef1): headings, primary text, the solid button fill, the lattice dots (drawn at 20 to 24%), a dormant island's dashed frame (22%), and the outgoing event packet on the live wire.
 - **Body Grey** (#c9cdd3): running body text.
-- **Muted Grey** (#9ba3ae): secondary copy, nav links at rest, captions, table cells for competitors, and "not yet" lists.
+- **Muted Grey** (#9ba3ae): secondary copy, nav links at rest, captions, table cells for competitors, "not yet" lists, island tags around the directive, the live endpoint label, and the map key. The key's final "Illustration" item drops to the code-comment grey (#7b838f).
 - **Hairline** (fg at 9%): every structural rule: section separators, grid column rules, row borders, card-free table borders.
 - **Strong Hairline** (fg at 18%): borders on interactive controls (outline button, copy command, menu trigger) and the Jetstream rail base.
 - **Track Off** (#3a404a): the fill of a measured bar that is shown for comparison, not as Nowaki's own number.
@@ -265,7 +283,7 @@ A near-monochrome cool ink palette with one warm accent the colour of dry grass.
 ### Named Rules
 **The One Susuki Rule.** Susuki is the only accent. No second hue enters the UI; anything that needs to stand out uses fg against muted, or susuki.
 
-**The Quiet Column Rule.** In the docs, susuki never colours running prose or code. Inside the reading column it appears only as hairline marks (link underlines, the note's top rule) and the version badge; inside code plates it does not appear at all. The opener's susuki numeral and lead streamline stay right of and above the text column.
+**The Quiet Column Rule.** In the docs, susuki never colours running prose or code. Inside the reading column it appears only as hairline marks (link underlines, the note's top rule) and the version badge; inside code plates it does not appear at all. The opener's susuki numeral and its frame stay right of the text column.
 
 **The Ink, Not Black Rule.** Surfaces step up through ground, raise, raise-2 by lightness alone. Pure #000 is never a surface, and #fff only appears as the hover state of the solid button.
 
@@ -291,10 +309,12 @@ All three are self-hosted variable woff2 files (OFL) with `font-display: swap`. 
 - **Doc heading** (serif 400, clamp 1.5rem to 1.9rem, 1.2, -0.02em): docs h2s. Docs h3s are sans 500 at 1.04rem. Geist Serif is used for docs h1 and h2 only.
 - **Chapter numeral** (serif 400, 8.5rem, 0.86, -0.03em, lining figures, susuki): the docs opener's chapter number ("03"), decorative and hidden from assistive tech. One per page.
 - **Mono index** (400, 0.78rem, tabular figures): chapter numbers in the rail ("01" to "08") and the running-head position ("3 / 8").
+- **Island tag** (mono 400, 0.74rem, line-height 1, muted with the directive in susuki 500): sits 10px above an island's top-left corner. The endpoint label is mono 0.72rem muted.
+- **Map key** (sans 400, 0.78rem, muted): the hero's key, sentence case.
 - **Mono value** (500, 1rem, tabular figures): measured numbers such as KB and ms. **Mono code** (0.84rem, 1.75) is used in code panels, install commands, package versions, and file conventions. **Mono plate** (0.85rem, 1.75) sets docs code plates.
 
 ### Named Rules
-**The Mono Is Evidence Rule.** Geist Mono appears only on literal code, commands, package versions, measured values, and the docs' chapter and position numbers (which state reading order). It is never used for decoration, labels, or a technical look.
+**The Mono Is Evidence Rule.** Geist Mono appears only on literal code, commands, package versions, measured values, island tags (which spell the literal component and directive, `<Likes live />`) and the live endpoint (`/__nowaki/live`), and the docs' chapter and position numbers (which state reading order). It is never used for decoration, labels, or a technical look. Map keys and tile legends are sans, sentence case.
 
 **The No Kicker Rule.** No eyebrow or kicker label sits above a heading. A heading starts its own section; context goes in the lead paragraph beside it.
 
@@ -308,11 +328,13 @@ Content sits in a single centred wrap (1248px content plus a fluid gutter on eac
 
 Section rhythm is fluid (72px to 136px block padding). Inside a section, the head-to-content gap is 36px to 56px, horizontal grid gaps run from 24px to 80px, and list rows sit on 10px to 28px vertical padding with a hairline between each. Stat and step rows are three columns divided by vertical hairlines with 24px cell padding.
 
-Responsive behaviour: below 1000px the 5/7 grids stack and the Jetstream rail turns vertical. Below 760px every multi-column grid collapses to one column, vertical dividers become horizontal ones, CTA rows stack, and Docs, Compare, and GitHub move into a no-JS `<details>` menu. Below 420px the language switch moves into that menu. Below 360px the brand's kanji is dropped and the install command wraps.
+The hero's island map is anchored to the page centre, not the wrap: the lattice is centred horizontally on a 24px cell, and islands are placed in whole cells from the centre column (and from the top, or up from the bottom edge, snapped down to the lattice where CSS `round()` exists), so frames always fall between dots. The map key sits 18px from the top, right-aligned to the wrap edge, on a ground backing.
+
+Responsive behaviour: below 1000px the 5/7 grids stack and the Jetstream rail turns vertical; on the map only the live island stays (moved to its own phone column under the CTA, with 168px reserved below the pitch), the other hero islands and the closing island are dropped, and the key collapses to its muted "Illustration" item at the bottom of the hero. Below 760px every multi-column grid collapses to one column, vertical dividers become horizontal ones, CTA rows stack, and Docs, Compare, and GitHub move into a no-JS `<details>` menu. Below 420px the language switch moves into that menu. Below 360px the brand's kanji is dropped and the install command wraps.
 
 The docs use their own frame inside the same max width: a left chapter rail (236px plus the gutter, sticky under the nav at 61px, ruled off by a vertical hairline) and a doc column with its own fluid side padding (20px to 72px). The doc column opens with a 40px running head ruled below, then a 190px opener band holding the h1 and lead, closed by the lead's hairline, which runs the full width of the column. Running prose, list items, and notes are capped at 56ch; the lead's text stops at 54ch while its rule runs on. Code plates, tables, and the pager extend to 58rem. Sections inside a chapter open with 56px above each h2, 32px above each h3, and the pager sits 80px below the last block.
 
-Docs responsive behaviour: below 1100px the chapter numeral is dropped. Below 860px the rail collapses into a no-JS `<details>` chapter disclosure that shows the position ("03 / 08") and the chapter title with a chevron; the running head right-aligns and shows only "Next: Title" with its arrow (and disappears on the last chapter); the opener shrinks to a 48px streamline strip above the title; table cells tighten to 9px 10px and inline code may wrap.
+Docs responsive behaviour: below 1100px the chapter numeral is dropped. Below 860px the rail collapses into a no-JS `<details>` chapter disclosure that shows the position ("03 / 08") and the chapter title with a chevron; the running head right-aligns and shows only "Next: Title" with its arrow (and disappears on the last chapter); the opener drops its lattice entirely (the title gets 64px above it and no strip); table cells tighten to 9px 10px and inline code may wrap.
 
 **The Docs Measure Rule.** Docs reading text runs at 56ch. Only artifacts (code plates, tables, the pager) widen to 58rem.
 
@@ -320,19 +342,19 @@ Docs responsive behaviour: below 1100px the chapter numeral is dropped. Below 86
 
 ## Elevation & Depth
 
-The system is flat and uses tonal layering. Depth comes from three lightness steps (ground, raise, raise-2) and from hairline borders, not shadows. The streamline field gives the page atmospheric depth: neutral lines at 8 to 10% fg and accent lines at 25 to 30% susuki sit behind the content on their own layer (`isolation: isolate`, z-index -1). The docs opener uses a static version as a CSS background image: 16 lines at 9% fg bending around an ellipse under the chapter numeral, one lead line in susuki at 55%, faded to ground by a horizontal mask (solid ground to 52% of the width, clear by 74%) and a vertical one (clear to 45%, ground at the band's foot).
+The system is flat and uses tonal layering. Depth comes from three lightness steps (ground, raise, raise-2) and from hairline borders, not shadows. The island map gives the page its one layer of atmosphere: the dot lattice (1.15px fg dots on a 24px cell, layer at 24%) and its islands sit behind the content (`isolation: isolate`, z-index -1, no pointer events). In the hero, a radial mask thins the lattice to 22% of its strength behind the headline and sub; in the closing section, a mask fades it in from the right so the heading sits on clear ground. A hydrated island reads as a raised patch of sea by tone alone: a 5% susuki wash under 1.7px susuki dots, never a shadow. The docs opener uses a static lattice as a CSS background image (1.15px fg dots at 22% on 24px, anchored right), faded to ground by a horizontal mask (solid ground to 52% of the width, clear by 74%) and a vertical one (clear to 45%, ground at the band's foot).
 
 ### Shadow Vocabulary
 - **Popover** (`box-shadow: 0 12px 32px -12px rgb(0 0 0 / .7)`): the mobile menu panel only, because it actually floats over the content.
 
 ### Named Rules
-**The Still Page Rule.** Nothing moves or sits behind reading text. The docs run no animation (only 0.2s colour transitions and the disclosure chevron's turn), and the opener's streamlines are masked to ground before they reach the title and lead.
+**The Still Page Rule.** Nothing moves or sits behind reading text. The docs run no animation (only 0.2s colour transitions and the disclosure chevron's turn), and the opener's lattice is masked to ground before it reaches the title and lead.
 
 **The No Glass Rule.** No `backdrop-filter`, no translucent panels, and no Chromium-only visual effects. The nav is opaque ground. If an effect does not render the same way in WebKit and Firefox, it does not ship.
 
 ## Shapes
 
-Corners are softly rounded and get larger as the object gets bigger: inline code chips at 5px, small toggles and bar tracks at 6 to 7px, buttons at 9px, the command bar and menu at 10px, code panels and the comparison table at 12px. Full pills are reserved for two hairline susuki chips: the Jetstream tag and the docs version badge. Lines are the main form: 1px hairlines everywhere, a 1px susuki line for the Jetstream rail and the "only Nowaki" callout, and 9px circular nodes along the rail. Icons are inline SVG, hand-drawn at 12 to 18px with 1.2 to 1.5px round-capped strokes in `currentColor` or susuki; the docs' arrow (14px, mirrored for "Previous") and chevron follow the same recipe. The favicon is the brand in miniature: an ink square (7px radius on 32px) carrying three susuki streamlines at a 2.2px round-capped stroke.
+Corners are softly rounded and get larger as the object gets bigger: inline code chips at 5px, small toggles and bar tracks at 6 to 7px, buttons at 9px, the command bar and menu at 10px, code panels and the comparison table at 12px. Full pills are reserved for two hairline susuki chips: the Jetstream tag and the docs version badge. Lines are the main form: 1px hairlines everywhere, a 1px susuki line for the Jetstream rail and the "only Nowaki" callout, and 9px circular nodes along the rail. Islands are lattice-snapped rectangles with a 6px radius and a 1px frame (dashed fg at 22% while dormant, solid susuki at 50% once hydrated) plus corner marks: four 10px L-shaped 1px susuki ticks set 5px outside the frame. The docs chapter numeral takes the same frame (susuki at 30%, 8px radius) and the same corner marks; illustrated tiles use 8px ticks. Map key marks are 12px: a 3px dot for the sea, a 3px-radius susuki-framed square with a susuki centre for an island, and the same square with a short dashed tail for Jetstream. Icons are inline SVG, hand-drawn at 12 to 18px with 1.2 to 1.5px round-capped strokes in `currentColor` or susuki; the docs' arrow (14px, mirrored for "Previous") and chevron follow the same recipe. The brand mark is the Nowaki mark (a diagonally split N around a typhoon eye, solid susuki on transparent), shown at 24px. The favicon is that mark at 26px centred on a 32px ink square with a 7px radius.
 
 ## Components
 
@@ -350,7 +372,7 @@ The primary call to action is the install command, not a button.
 - **States:** on hover the border turns susuki and the fill moves to raise-2. When copied, the state label turns susuki for 1.6s. Under 760px it fills the full width.
 
 ### Navigation
-- Sticky, opaque ground, 60px, with a hairline bottom border. The brand is "Nowaki" in sans 600 with 野分 in small serif muted.
+- Sticky, opaque ground, 60px, with a hairline bottom border. The brand is the 24px Nowaki mark (vertically centred, decorative, empty alt), then "Nowaki" in sans 600 with 野分 in small serif muted. The footer repeats the same lockup.
 - Links are sans at 0.92rem, muted at rest and fg on hover or when current. The language switch is a 1px-hairline segmented control with a raise-2 active pill.
 - On mobile, a no-JS `<details>` menu (38px square trigger) opens a raise panel with 10px radius and the popover shadow.
 - One shared site nav serves the landing and the docs. On the docs, "Docs" is marked current (fg) and the language switch is dropped, because the docs are English only.
@@ -376,13 +398,13 @@ A hairline-bordered 12px container that scrolls horizontally (760px minimum tabl
 ### Jetstream Rail (signature)
 Five steps on a strong hairline. A 1px susuki line grows across it, and each step is a 9px circle with a susuki outline (the first one filled). Below 1000px the rail turns vertical.
 
-The rail is also a zero-JS demo. A pill button above it (a visually hidden checkbox plus its label) plays one simulated Jetstream round trip: an fg dot runs along the rail (a registered `--p` number animated over 2.3s, linear), each step's circle flashes susuki and scales 1.8x 0.5s apart, the button border turns dashed susuki while the request is in flight, the server-state readout flips at Re-render (1s) and the button text and heart flip at Morph (2s). Every animation has two identically keyed names (`-a` for checked, `-b` for unchecked) so each toggle restarts it. Below 1000px the dot is dropped and only the steps flash. Under reduced motion the state flips at once with no animation. A muted note under the rail states it is simulated and not to scale.
+The rail is also a zero-JS demo. A pill button above it (a visually hidden checkbox plus its label) plays one simulated Jetstream round trip: an fg dot runs along the rail (a registered `--p` number animated over 2.3s, linear; `--p` belongs to this demo only, the island map positions with its own unregistered `--cell`), each step's circle flashes susuki and scales 1.8x 0.5s apart, the button border turns dashed susuki while the request is in flight, the server-state readout flips at Re-render (1s) and the button text and heart flip at Morph (2s). Every animation has two identically keyed names (`-a` for checked, `-b` for unchecked) so each toggle restarts it. Below 1000px the dot is dropped and only the steps flash. Under reduced motion the state flips at once with no animation. A muted note under the rail states it is simulated and not to scale.
 
 ### Illustrated Tiles (landing)
-Three tiles under "Write a route. Mark an island. Ship.": a 300px panel (hairline border, 12px radius, ink ground; tiles 1 and 3 add a 36px hairline grid at 5%) holding a fixed 360x250 stage, then the title link in fg 500 with the authored arrow and a muted one-line caption. Each stage is a small schematic that loops slowly, CSS only: (1) a browser window scanned in by a susuki line, a `Comments.js` chip flying along a dashed susuki wire to the one island card, which takes a dashed ring, a "hydrated" pill and a heart/count patch, 8s; (2) a URL typed with `steps()` into a bar, the matching file lit in a hairline tree, and a Resolver panel showing params or method, two requests per 10s; (3) four source chips feeding particles along curves into an `oxc` ring whose stage label cycles parse/transform/bundle/hash, then hashed files written on the right, 8s. Geometry rule: wires end on fixed coordinates and chips are anchored by the edge a wire touches (inputs by the right edge, outputs by the left), so font metrics can never detach a wire. Three columns from 1180px, one below; the stage scales to 0.88/0.75 on phones. Reduced motion shows each tile's end state. File names and hashes in the tiles are illustrative.
+Three tiles under "Write a route. Mark an island. Ship.": a 300px panel (hairline border, 12px radius, ink ground; tile 1 carries the 24px dot lattice at 20%, tile 3 a 36px hairline grid at 5%) holding a fixed 360x250 stage, then the title link in fg 500 with the authored arrow and a muted one-line caption. Each stage is a small schematic that loops slowly, CSS only: (1) in the hero's island grammar: a browser window scanned in by a susuki line, a `Comments.js` chip flying along a dashed susuki wire to the one island card, which starts dashed (fg at 22%) and hydrates to a solid susuki frame with 8px corner marks while its mono `client:visible` tag turns susuki and a heart/count patch lands, 8s; its legend (top left, on a ground backing) reuses the hero key's sea and island marks with sans sentence-case labels; (2) a URL typed with `steps()` into a bar, the matching file lit in a hairline tree, and a Resolver panel showing params or method, two requests per 10s; (3) four source chips feeding particles along curves into an `oxc` ring whose stage label cycles parse/transform/bundle/hash, then hashed files written on the right, 8s. Geometry rule: wires end on fixed coordinates and chips are anchored by the edge a wire touches (inputs by the right edge, outputs by the left), so font metrics can never detach a wire. Three columns from 1180px, one below; the stage scales to 0.88/0.75 on phones. Reduced motion shows each tile's end state. File names and hashes in the tiles are illustrative.
 
-### Streamline Field (signature)
-A server-rendered SVG of about 34 wind-tunnel streamlines bending around an ellipse placed behind the hero numeral, with a mirrored field in the closing section. Every sixth line is drawn in susuki. Every second line carries a streak that flows along it using a CSS `stroke-dashoffset` animation with deterministic per-line duration (5.5 to 10.5s) and offset. A streak is four dashes stacked on the same path and centred on each other (lengths 24 / 52 / 96 / 160 in a 1170 period, opacity 0.9 / 0.45 / 0.2 / 0.07 of the line's peak, stroke 1.4 / 1.15 / 0.95 / 0.75), so it fades and tapers at both ends instead of ending in a hard cap. Dash lengths are attributes and each layer has literal keyframes, because Firefox rejects calc() and var() in stroke-dash properties. Streaks live in their own SVG (`.streaks`, its own compositing layer) above the static lines, and the closing section uses `content-visibility: auto`, so frames repaint only visible streaks: about 60 fps on a 4x-throttled CPU. More layers in a shared SVG measured 30 fps there. Strokes do not scale with the SVG.
+### Island Map (signature)
+A server-rendered map of the page, HTML and CSS only (no SVG scene, no client JS), behind the hero and the closing section. The sea is the 24px dot lattice (see Elevation & Depth). Islands are placed in lattice cells through custom properties (column from centre, row from top or bottom, width and height in cells, a hydration delay), so every frame lands between dots. Each island has three layers: the lit fill (susuki dots on a 5% wash), the frame with its corner marks, and a mono tag spelling the component and directive. The hero carries three, hydrating in directive order: `<Search client:load />` at 0.9s, `<Comments client:visible />` at 1.8s, and `<Likes live />` at 2.7s. The live island extends a dashed susuki wire (4px on, 4px off, at 50%) off the right edge of the viewport, labelled `/__nowaki/live` in mono muted; along it a 5px fg event packet travels out and a 5px susuki patch packet comes back, and the island's wash flashes to 22% as each patch lands, on a 3.6s loop. A map key at the top right names the marks in sans ("HTML, 0 KB JS", "Island, hydrates", "Jetstream, stays live"), then a hairline divider and a muted "Illustration" item. The closing section repeats one island, `<Counter client:visible />`, on a lattice fading in from the right. The map is decorative and hidden from assistive tech.
 
 ### Chapter Rail (docs)
 An ordered list of eight chapters, each a mono index ("01" to "08", tabular) in a 26px column beside the title, 7px row padding, sans 0.92rem. Rest is muted, hover and current are fg, and the current chapter's number turns susuki. GitHub, npm, and crates.io sit below a hairline in muted 0.86rem. Below 860px it becomes the chapter disclosure.
@@ -391,7 +413,7 @@ An ordered list of eight chapters, each a mono index ("01" to "08", tabular) in 
 A 40px band ruled below, sans 0.84rem in muted. Left: "Docs / Title" with the title in fg 500. Right: the position "n / 8" in mono susuki, then "Next: Title" and the authored arrow, which turns fg on hover. On phones only the Next link remains.
 
 ### Chapter Opener (docs, signature)
-The Geist Serif h1 (52px from the running head) and the lead (body 1.08rem) on the left, ruled off by a full-width hairline 30px under the lead. At the right, the chapter numeral in susuki with static streamlines bending around it (see Elevation & Depth). Phones get a 48px streamline strip above the title and no numeral.
+The Geist Serif h1 (52px from the running head) and the lead (body 1.08rem) on the left, ruled off by a full-width hairline 30px under the lead. At the right, the chapter numeral in susuki, framed like an island (a 1px susuki hairline at 30%, 8px radius, with corner marks), over a static patch of the dot lattice that fades out before the text column (see Elevation & Depth). Below 1100px the numeral goes; below 860px the lattice goes too, and phones open on the title alone.
 
 ### Docs Tables
 No container and no fill: rows on hairlines, 11px 14px cells, sans 0.92rem. Header cells are sans 500 0.85rem in muted, with a strong hairline under the header row. Body cells are body grey. Wide tables scroll horizontally inside their own block.
@@ -408,16 +430,18 @@ Two columns under a hairline, 80px below the last block, up to 58rem. Each side 
 ### Motion
 CSS only, with no animation library and no JS-driven motion:
 - **Entrance rise:** 14px upward with a fade, 0.9s on `cubic-bezier(.16,1,.3,1)` (1.3s for the numeral), staggered with delays from 0.05s to 0.36s.
-- **Gust:** the streamline dash animation.
-- **Pass:** where `animation-timeline: scroll()` is supported, the hero field fades to 25% and drifts as the hero scrolls away.
-- **Scroll reveals:** where `animation-timeline: view()` is supported, release items rise, bar fills grow from 0, and the rail line draws.
+- **Hydrate:** the hero lattice fades in over 1.2s; then each island hydrates at its directive's delay (0.9s, 1.8s, 2.7s): its susuki dots sweep in left to right (a 1s clip), its frame turns from dashed fg to solid susuki (0.6s), its tag's directive warms from muted to susuki, and its corner marks land 0.45s later.
+- **Live loop:** 1.2s after the live island hydrates, its wire fades in, and the event packet out, patch packet back, and patch flash repeat every 3.6s, linear.
+- **Pass:** where `animation-timeline: scroll()` is supported, the hero map fades to 30% as the hero scrolls away (opacity only, no drift).
+- **Scroll reveals:** where `animation-timeline: view()` is supported, release items rise, bar fills grow from 0, the rail line draws, and the closing island hydrates (sweep and frame) as it enters view.
 
-Content is fully visible where these features are missing. Under `prefers-reduced-motion: reduce`, every animation is off and the moving dashes are removed.
+Content is fully visible where these features are missing. Under `prefers-reduced-motion: reduce`, every animation is off and the map rests in its hydrated end state: solid susuki frames, dots, corner marks, and the wire, with no packets.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep susuki (#d8bf86) as the only accent and reserve it for the numeral, the active streamlines, emphasis, focus, and measured highlights.
+- **Do** keep susuki (#d8bf86) as the only accent and reserve it for the numeral, hydrated islands, emphasis, focus, and measured highlights.
+- **Do** snap every island to the 24px lattice, tag it in mono with its literal directive, and keep the grammar: dashed fg while dormant, solid susuki with corner marks once hydrated.
 - **Do** build structure from 1px hairlines (fg at 9%) on the ink ground, in 5/12 to 7/12 grids.
 - **Do** set display and numerals in Geist Serif at its single weight (400), and UI and body text in Geist.
 - **Do** use Geist Mono only for code, commands, versions, and measured values, with tabular figures for numbers.
@@ -437,5 +461,6 @@ Content is fully visible where these features are missing. Under `prefers-reduce
 - **Don't** use Geist Mono for decoration or to make something look technical.
 - **Don't** use shadows for elevation beyond the single popover shadow.
 - **Don't** put susuki inside code plates or on running prose in the docs.
-- **Don't** animate anything on a reading surface or let streamlines sit behind reading text.
+- **Don't** animate anything on a reading surface, and don't let the lattice reach reading text at full strength: mask it to ground in the docs and thin it behind the hero headline.
+- **Don't** reuse the registered `--p` property outside the Jetstream demo; the island map positions with `--cell`.
 - **Don't** use em dashes in prose.

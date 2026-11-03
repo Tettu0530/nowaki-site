@@ -44,13 +44,15 @@ The site is built with Nowaki itself from the published npm packages, so it doub
 
 ## Brand Commitments
 
-- Name: Nowaki, with the kanji 野分 (an autumn storm wind). The wind is the existing motif.
+- Name: Nowaki, with the kanji 野分 (an autumn storm wind). The mark is `assets/nowaki-mark.svg` from the framework repo (a diagonally split N around a typhoon eye, #D8BF86). The landing's visual motif is the island map (2026-11-03), which replaced the wind-tunnel streamlines.
+- Owner: a personal open-source project by Tettu0530 (MIT © 2026 Tettu0530). No VorEdge naming or contact on the site.
 - Status is **alpha** and must be stated plainly.
-- Links: GitHub `https://github.com/nowaki-dev/nowaki`, npm `nowaki`, crates.io `nowaki`.
+- Links: GitHub `https://github.com/Tettu0530/nowaki` (the old nowaki-dev/nowaki URL is retired), npm `nowaki`, crates.io `nowaki`.
 
 ## Evidence on Hand
 
-- Measured numbers in the copy: this page's JS is computed from the build at render time (`lib/bundle.ts`, gzip -9; 14 KB in 2026-11). Head-to-head from the framework's BENCHMARKS.md, same counter app: first-load JS **uncompressed** Nowaki 21.6 KB / Astro 23.1 KB / Next 103.0 KB (Next reports only uncompressed, so never compare it with gzip figures); dev server ready (cold) 74 / 544 / 1374 ms. Reproduce with `benchmarks/head-to-head.mjs` in the framework repo.
+- Measured numbers in the copy: this page's JS is computed from the build at render time (`lib/bundle.ts`, gzip -9; 14 KB in 2026-11 on 0.12, 13 KB on 0.13). Head-to-head from the framework's BENCHMARKS.md (re-measured for 0.13, Next.js 16.4 and Astro 7.4, same counter app, one machine): dev ready (cold) Nowaki 82 / Astro 1119 / Next 261 ms; production build 20 / 721 / 2087 ms; first-load JS gzip 9.1 / 10.4 / 132.0 KB. Against Next that is about 3x faster dev start, about 100x faster build, about 1/14 the JS; never reuse the older "18x" dev claim. Reproduce with `benchmarks/head-to-head.mjs` in the framework repo.
+- Jetstream is live only on `nowaki dev` and `nowaki start`; the node, bun, deno, vercel and cloudflare adapters render a live island's initial SSR only. Never imply real-time everywhere.
 - Feature list, "works today" and roadmap lists in `lib/i18n.ts`.
 - No testimonials, customer logos, adoption numbers, or star counts exist. Do not fabricate them.
 

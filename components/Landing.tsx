@@ -1,52 +1,14 @@
 import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
 import BuildTiles from "./BuildTiles.tsx";
+import IslandMap, { IslandEl } from "./IslandMap.tsx";
 import { STRINGS, GH, CRATES, NPM } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
-import { streamlines } from "../lib/streamlines.ts";
 import { NOWAKI_RELEASE, NOWAKI_VERSION } from "../lib/version.ts";
 import { shipped } from "../lib/bundle.ts";
+import { MARK_URL } from "../lib/landing-style.ts";
 
 const CHANGELOG = `${GH}/blob/main/CHANGELOG.md`;
-
-// Wind-tunnel streamlines bending around the release numeral. Server-rendered SVG;
-// the moving streaks are a CSS dash animation, so the hero costs no client JS.
-const FLOW_W = 1440;
-const FLOW_H = 780;
-const FLOW = streamlines({ w: FLOW_W, h: FLOW_H, lines: 34, cx: 300, cy: 400, rx: 330, ry: 150, step: 24 });
-// Deterministic per-line timing so prerendered output is stable.
-const timing = FLOW.map((_, i) => {
-  const r = ((i * 7919) % 101) / 101;
-  const q = ((i * 104729) % 97) / 97;
-  return { d: (5.5 + r * 5).toFixed(2), o: (-q * 10).toFixed(2) };
-});
-
-// A moving streak is four dashes stacked on one path and centred on each other:
-// short, opaque and thicker in the middle, longer, fainter and thinner outside, so
-// the head and the tail fade and taper instead of ending in a hard cap. Each layer's
-// keyframes (gust-0..3 in landing-style.ts) shift it back by half its extra length so
-// all layers share one centre. Lengths are plain attributes and the offsets literal:
-// Firefox rejects calc() and var() inside stroke-dash properties. Four layers, on
-// their own SVG layer (see the hero markup), keep ~60 fps on a 4x-throttled CPU;
-// seven layers in the shared SVG dropped to 30.
-const STREAK = [
-  { len: 160, a: 0.07, w: 0.75 },
-  { len: 96, a: 0.2, w: 0.95 },
-  { len: 52, a: 0.45, w: 1.15 },
-  { len: 24, a: 0.9, w: 1.4 },
-];
-const CORE = 24;
-const PERIOD = 1170;
-
-function Streak({ i, gold }: { i: number; gold: boolean }) {
-  return (
-    <g class={`st${gold ? " is-g" : ""}`} style={`--d:${timing[i].d}s;--o:${timing[i].o}s`}>
-      {STREAK.map((l, k) => (
-        <use href={`#f${i}`} class={`l${k}`} stroke-dasharray={`${l.len} ${PERIOD - l.len}`} stroke-width={l.w} style={`--a:${l.a}`} />
-      ))}
-    </g>
-  );
-}
 
 function Arrow() {
   return (
@@ -86,22 +48,7 @@ export default function Landing({ locale }: { locale: Locale }) {
 
       <main id="main">
         <section class="hero">
-          <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-            <defs>
-              {FLOW.map((d, i) => (
-                <path id={`f${i}`} d={d} fill="none" vector-effect="non-scaling-stroke" />
-              ))}
-            </defs>
-          </svg>
-          {/* Static lines and moving streaks are separate SVGs, so each frame repaints only the streaks. */}
-          <svg class="hero__flow" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMinYMid slice" aria-hidden="true">
-            {FLOW.map((_, i) => (
-              <use href={`#f${i}`} class={`sl${i % 6 === 2 ? " is-g" : ""}`} />
-            ))}
-          </svg>
-          <svg class="hero__flow streaks" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMinYMid slice" aria-hidden="true">
-            {FLOW.map((_, i) => (i % 2 === 0 ? <Streak i={i} gold={i % 6 === 2} /> : null))}
-          </svg>
+          <IslandMap keyLabels={s.hero.key} />
           <div class="wrap hero__grid">
             <div class="rel">
               <span class="rel__num rise" style="--rd:.05s" aria-label={`${s.hero.latest}: Nowaki ${NOWAKI_RELEASE}`}>
@@ -118,7 +65,7 @@ export default function Landing({ locale }: { locale: Locale }) {
             <div class="pitch">
               <h1 class="rise" style="--rd:.1s">
                 <span>{s.hero.h1a}</span>
-                <em>{s.hero.h1b}</em>
+                <span dangerouslySetInnerHTML={{ __html: s.hero.h1b }} />
               </h1>
               <p class="pitch__sub rise" style="--rd:.2s">
                 {s.hero.sub}
@@ -251,7 +198,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               </li>
             ))}
           </ol>
-          <p class="jet__note" id="jet-note">{s.jet.demo.note}</p>
+          <p class="jet__note" id="jet-note" dangerouslySetInnerHTML={{ __html: s.jet.demo.note }} />
           </div>
         </section>
 
@@ -333,12 +280,10 @@ export default function Landing({ locale }: { locale: Locale }) {
         </section>
 
         <section class="sec close" aria-labelledby="close-h">
-          <svg class="close__flow" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-            {FLOW.map((_, i) => (i % 2 === 1 ? <use href={`#f${i}`} class={`sl${i % 6 === 3 ? " is-g" : ""}`} /> : null))}
-          </svg>
-          <svg class="close__flow streaks" viewBox={`0 0 ${FLOW_W} ${FLOW_H}`} preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
-            {FLOW.map((_, i) => (i % 4 === 1 ? <Streak i={i} gold={i % 6 === 3} /> : null))}
-          </svg>
+          <div class="map map--close" aria-hidden="true">
+            <div class="map__sea" />
+            <IslandEl i={{ name: "Counter", directive: "client:visible", c: 9, r: 5, w: 9, h: 3, t: 0, wide: true }} />
+          </div>
           <div class="wrap">
             <h2 id="close-h">{s.close.h2}</h2>
             <div class="close__cta">
@@ -356,6 +301,7 @@ export default function Landing({ locale }: { locale: Locale }) {
           <div class="foot__top">
             <div>
               <a href={home} class="brand">
+                <img src={MARK_URL} alt="" width="24" height="24" />
                 Nowaki<small>野分</small>
               </a>
               <p>{s.footer.tagline}</p>

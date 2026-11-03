@@ -1,18 +1,12 @@
 // Docs styles: a running-head technical manual on the shared base (DESIGN.md).
-// Zero client JS: the chapter opener's streamlines are a CSS background image.
+// Zero client JS: the chapter opener's dot lattice is a CSS background image.
 import { BASE_CSS, FAVICON, FONT_PRELOADS } from "./landing-style.ts";
-import { streamlines } from "./streamlines.ts";
-
-const W = 1200;
 const H = 190;
-// The obstacle sits where the chapter numeral is drawn (top right of the opener).
-const lines = streamlines({ w: W, h: H, lines: 16, cx: 1040, cy: 104, rx: 170, ry: 58, step: 24 });
+// The opener's sea: the landing's 24px dot lattice as a static pattern (no motion in the docs).
 const opener =
-  `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 ${W} ${H}' preserveAspectRatio='none'>` +
-  lines
-    .map((d, i) => `<path d='${d}' fill='none' stroke='${i === 6 ? "#d8bf86" : "#eceef1"}' stroke-opacity='${i === 6 ? 0.55 : 0.09}' stroke-width='1' vector-effect='non-scaling-stroke'/>`)
-    .join("") +
-  `</svg>`;
+  `<svg xmlns='http://www.w3.org/2000/svg' width='1600' height='${H}'>` +
+  `<defs><pattern id='d' width='24' height='24' patternUnits='userSpaceOnUse'><circle cx='12' cy='12' r='1.15' fill='#eceef1' fill-opacity='.22'/></pattern></defs>` +
+  `<rect width='1600' height='${H}' fill='url(#d)'/></svg>`;
 const OPENER_URL = `url("data:image/svg+xml,${encodeURIComponent(opener)}")`;
 
 const DOCS_CSS = `
@@ -35,13 +29,15 @@ const DOCS_CSS = `
 .run a span{overflow:hidden;text-overflow:ellipsis}
 .run i{font-style:normal;font-family:var(--mono);color:var(--susuki)}
 
-/* The opener: streamlines bend around the chapter numeral on the right and fade out
-   before the title column and above the rule, so nothing sits behind the text. */
-.doc__num{position:absolute;top:84px;right:clamp(20px,4vw,72px);font:400 8.5rem/.86 var(--serif);letter-spacing:-.03em;color:var(--susuki);font-variant-numeric:lining-nums;pointer-events:none}
+/* The opener: the dot lattice sits right of the title column and fades out before
+   the text and above the rule, and the chapter numeral is framed like an island. */
+.doc__num{position:absolute;top:84px;right:calc(clamp(20px,4vw,72px) + 21px);font:400 8.5rem/.86 var(--serif);letter-spacing:-.03em;color:var(--susuki);font-variant-numeric:lining-nums;pointer-events:none}
+.doc__num::before{content:"";position:absolute;inset:-12px -16px -10px;border:1px solid rgb(216 191 134 / .3);border-radius:8px}
+.doc__num::after{--k:linear-gradient(var(--susuki),var(--susuki));content:"";position:absolute;inset:-17px -21px -15px;background:var(--k) 0 0/10px 1px,var(--k) 0 0/1px 10px,var(--k) 100% 0/10px 1px,var(--k) 100% 0/1px 10px,var(--k) 0 100%/10px 1px,var(--k) 0 100%/1px 10px,var(--k) 100% 100%/10px 1px,var(--k) 100% 100%/1px 10px;background-repeat:no-repeat}
 .doc__body{padding:0 clamp(20px,4vw,72px) 96px;background:
   linear-gradient(90deg,var(--ground) 0 52%,rgb(11 13 16 / 0) 74%) top left / 100% ${H}px no-repeat,
   linear-gradient(180deg,rgb(11 13 16 / 0) 45%,var(--ground)) top left / 100% ${H}px no-repeat,
-  ${OPENER_URL} top center / 100% ${H}px no-repeat;
+  ${OPENER_URL} top right / 1600px ${H}px no-repeat;
   background-origin:content-box;background-clip:content-box}
 .doc__body > h1:first-child{padding-top:52px;font:400 clamp(2.2rem,1.6rem + 1.6vw,3.1rem)/1.06 var(--serif);letter-spacing:-.03em;max-width:24ch}
 /* The lead's rule runs the full width of the doc, closing the opener band. */
@@ -101,7 +97,7 @@ const DOCS_CSS = `
   .doc__body table{font-size:.86rem}
   .doc__body th,.doc__body td{padding:9px 10px}
   /* Phones keep the wind as a short strip above the title; no line crosses type. */
-  .doc__body{background:linear-gradient(180deg,rgb(11 13 16 / 0) 55%,var(--ground)) top left / 100% 48px no-repeat,${OPENER_URL} right top / 260% 48px no-repeat}
+  .doc__body{background:none}
   .doc__body > h1:first-child{padding-top:64px}
 }
 `;
