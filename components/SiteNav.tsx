@@ -2,11 +2,9 @@ import { STRINGS, GH } from "../lib/i18n.ts";
 import { MARK_URL } from "../lib/landing-style.ts";
 import type { Locale } from "../lib/i18n.ts";
 
-// Links into /docs/ carry data-no-router: the docs bring their own <head> CSS,
-// which the island router does not swap in on client-side navigation (it syncs
-// only <meta> and <link>), so those links must be full page loads. The language
-// switch is a full load too: the router keeps the old <html lang>, which would
-// leave the :lang(ja) typography off.
+// Since Nowaki 0.13 the island router swaps each page's own <head> region (the
+// docs' <style>) and <html lang> on client navigation (Tettu0530/nowaki#21), so
+// links into the docs and the language switch need no data-no-router.
 // Site navigation shared by the landing and the docs. Below 760px the links fold
 // into a <details> menu, so it needs no JavaScript. The docs are English only,
 // so they drop the language switch.
@@ -18,10 +16,10 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
 
   const lang = (cls: string) => (
     <span class={cls} role="group" aria-label={s.nav.lang}>
-      <a data-no-router href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
+      <a href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
         EN
       </a>
-      <a data-no-router href="/ja/" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
+      <a href="/ja/" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
         日本語
       </a>
     </span>
@@ -35,7 +33,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
           Nowaki<small>野分</small>
         </a>
         <nav class="nav__links" aria-label="Primary">
-          <a data-no-router class="hide-sm" href="/docs/" aria-current={docsCurrent}>
+          <a class="hide-sm" href="/docs/" aria-current={docsCurrent}>
             {s.nav.docs}
           </a>
           <a class="hide-sm" href={compare}>
@@ -45,7 +43,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
             GitHub
           </a>
           {page === "home" ? lang("lang") : null}
-          <a data-no-router class="btn btn--solid" href="/docs/quickstart/">
+          <a class="btn btn--solid" href="/docs/quickstart/">
             {s.nav.start}
           </a>
           <details class="menu">
@@ -55,7 +53,7 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
               </svg>
             </summary>
             <div class="menu__panel">
-              <a data-no-router href="/docs/" aria-current={docsCurrent}>
+              <a href="/docs/" aria-current={docsCurrent}>
                 {s.nav.docs}
               </a>
               <a href={compare}>{s.nav.compare}</a>

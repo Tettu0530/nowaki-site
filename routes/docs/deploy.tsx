@@ -22,6 +22,11 @@ export default function Deploy() {
         <tr><td><code>cloudflare</code></td><td>An edge <code>fetch</code>-handler worker in <code>dist/worker/</code> + a <code>wrangler.jsonc</code> (static assets via the ASSETS binding).</td></tr>
         <tr><td><code>vercel</code></td><td>A Build Output API v3 layout in <code>.vercel/output/</code>: static assets + a self-contained Node serverless function. Deploy with <code>vercel deploy --prebuilt</code>.</td></tr>
       </table>
+      <p>
+        Jetstream islands are live only under <code>nowaki dev</code> and <code>nowaki start</code>.
+        The node, bun, deno, vercel and cloudflare adapters render a live island's initial HTML and
+        ship no live client.
+      </p>
 
       <h2>Node</h2>
       <Code src={`nowaki build --adapter node
@@ -30,8 +35,16 @@ node index.mjs        # PORT=3000 by default`} />
 
       <h2>Static</h2>
       <Code src={`nowaki build --adapter static
-# dist/static/ → upload to any static host / CDN`} />
-      <p>Static deploys serve the initial SSR of Jetstream islands and degrade gracefully without a WebSocket.</p>
+# dist/static/ → upload to any static host / CDN
+
+nowaki prerender --out public   # the same output, written where you choose`} />
+      <p>
+        Dynamic routes are written from their <code>staticPaths</code> (see{" "}
+        <a href="/docs/routing/">Routing &amp; data</a>). If the app has <code>routes/_404.tsx</code>,
+        the output includes <code>404.html</code>, which Cloudflare Pages, Netlify and GitHub Pages
+        serve for unknown paths. Static deploys serve the initial SSR of Jetstream islands and degrade
+        gracefully without a WebSocket.
+      </p>
 
       <h2>Cloudflare Workers (edge)</h2>
       <Code src={`nowaki build --adapter cloudflare

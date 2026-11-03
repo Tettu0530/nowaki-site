@@ -72,7 +72,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               </p>
               <div class="pitch__cta rise" style="--rd:.3s">
                 <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
-                <a data-no-router class="btn btn--line" href="/docs/quickstart/">
+                <a class="btn btn--line" href="/docs/quickstart/">
                   {s.hero.docs}
                 </a>
               </div>
@@ -205,7 +205,7 @@ export default function Landing({ locale }: { locale: Locale }) {
         <section class="sec wrap" aria-labelledby="build-h">
           <div class="sec__head">
             <h2 id="build-h">{s.build.h2}</h2>
-            <a data-no-router class="tlink" href="/docs/">
+            <a class="tlink" href="/docs/">
               {s.build.more}
               <Arrow />
             </a>
@@ -288,7 +288,7 @@ export default function Landing({ locale }: { locale: Locale }) {
             <h2 id="close-h">{s.close.h2}</h2>
             <div class="close__cta">
               <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
-              <a data-no-router class="btn btn--line" href="/docs/quickstart/">
+              <a class="btn btn--line" href="/docs/quickstart/">
                 {s.close.docs}
               </a>
             </div>
@@ -307,7 +307,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               <p>{s.footer.tagline}</p>
             </div>
             <nav aria-label="Footer">
-              <a data-no-router href="/docs/">{s.nav.docs}</a>
+              <a href="/docs/">{s.nav.docs}</a>
               <a href={GH}>GitHub</a>
               <a href={NPM}>npm</a>
               <a href={CRATES}>crates.io</a>
