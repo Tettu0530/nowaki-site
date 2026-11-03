@@ -1,5 +1,6 @@
 import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
+import BuildTiles from "./BuildTiles.tsx";
 import { STRINGS, GH, CRATES, NPM } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 import { streamlines } from "../lib/streamlines.ts";
@@ -39,33 +40,6 @@ function Mark({ no = false }: { no?: boolean }) {
     </svg>
   );
 }
-
-const ROUTE = `<span class="c">// routes/blog/[slug].tsx</span>
-<span class="k">import</span> Comments <span class="k">from</span> <span class="s">"../../islands/Comments.tsx"</span>;
-
-<span class="c">// runs on the server only</span>
-<span class="k">export const</span> <span class="f">loader</span> = <span class="k">async</span> ({ params }) =&gt; ({
-  post: <span class="k">await</span> db.<span class="f">post</span>(params.slug),
-});
-
-<span class="k">export default function</span> <span class="f">Post</span>({ data }) {
-  <span class="k">return</span> (
-    &lt;<span class="f">article</span>&gt;
-      &lt;<span class="f">h1</span>&gt;{data.post.title}&lt;/<span class="f">h1</span>&gt;
-      &lt;<span class="f">Comments</span> <span class="a">postId</span>={data.post.id} /&gt; <span class="c">// only this hydrates</span>
-    &lt;/<span class="f">article</span>&gt;
-  );
-}`;
-
-const ACTION = `<span class="c">// routes/guestbook.tsx</span>
-<span class="k">export const</span> <span class="f">loader</span> = (ctx) =&gt; ({ entries: <span class="f">read</span>(ctx) });
-
-<span class="c">// a non-GET request runs the action</span>
-<span class="k">export async function</span> <span class="f">action</span>(ctx) {
-  <span class="k">const</span> form = <span class="k">await</span> ctx.<span class="f">formData</span>();
-  ctx.<span class="f">setCookie</span>(<span class="s">"guestbook"</span>, <span class="f">add</span>(form.<span class="f">get</span>(<span class="s">"msg"</span>)));
-  <span class="k">return</span> ctx.<span class="f">redirect</span>(<span class="s">"/guestbook"</span>); <span class="c">// PRG</span>
-}`;
 
 const num = (v: string) => Number.parseFloat(v.replace(/[^\d.]/g, "")) || 0;
 
@@ -128,9 +102,7 @@ export default function Landing({ locale }: { locale: Locale }) {
                 </a>
               </div>
               <p class="pitch__note rise" style="--rd:.36s">
-                {s.hero.rustfree}
-                <br />
-                {s.hero.alpha}
+                {s.hero.note}
               </p>
             </div>
           </div>
@@ -140,7 +112,6 @@ export default function Landing({ locale }: { locale: Locale }) {
           <div class="wrap new__in">
             <div class="new__h">
               <h2 id="new-h">{s.release.h2}</h2>
-              <p>{s.release.since}</p>
             </div>
             <div class="new__list">
               {s.release.items.map((it) => (
@@ -254,58 +225,17 @@ export default function Landing({ locale }: { locale: Locale }) {
           </ol>
           <p class="jet__note" id="jet-note">{s.jet.demo.note}</p>
           </div>
-          <p class="only">{s.jet.only}</p>
         </section>
 
-        <section class="sec wrap" aria-labelledby="code-h">
+        <section class="sec wrap" aria-labelledby="build-h">
           <div class="sec__head">
-            <h2 id="code-h">{s.code.h2}</h2>
-            <p class="lead" dangerouslySetInnerHTML={{ __html: s.code.lead }} />
+            <h2 id="build-h">{s.build.h2}</h2>
+            <a data-no-router class="tlink" href="/docs/">
+              {s.build.more}
+              <Arrow />
+            </a>
           </div>
-          <div class="codes">
-            <figure class="code" style="margin:0">
-              <figcaption class="code__bar">
-                <b>{s.code.tabs[0]}</b>
-                <span>routes/blog/[slug].tsx</span>
-              </figcaption>
-              <pre>
-                <code dangerouslySetInnerHTML={{ __html: ROUTE }} />
-              </pre>
-            </figure>
-            <figure class="code" style="margin:0">
-              <figcaption class="code__bar">
-                <b>{s.code.tabs[1]}</b>
-                <span>routes/guestbook.tsx</span>
-              </figcaption>
-              <pre>
-                <code dangerouslySetInnerHTML={{ __html: ACTION }} />
-              </pre>
-            </figure>
-          </div>
-          <div class="conv">
-            <h3>{s.code.tabs[2]}</h3>
-            {s.code.conventions.map((c) => (
-              <div>
-                <code>{c.f}</code>
-                <span>{c.d}</span>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <section class="sec wrap" aria-labelledby="more-h">
-          <div class="sec__head">
-            <h2 id="more-h">{s.more.h2}</h2>
-            <p class="lead">{s.more.lead}</p>
-          </div>
-          <div class="feats">
-            {s.more.items.map((f) => (
-              <div class="feat">
-                <h3>{f.title}</h3>
-                <p dangerouslySetInnerHTML={{ __html: f.body }} />
-              </div>
-            ))}
-          </div>
+          <BuildTiles locale={locale} />
         </section>
 
         <section class="sec wrap" id="compare" aria-labelledby="cmp-h">
@@ -348,54 +278,29 @@ export default function Landing({ locale }: { locale: Locale }) {
         <section class="sec wrap" aria-labelledby="fit-h">
           <div class="sec__head">
             <h2 id="fit-h">{s.fit.h2}</h2>
-            <p class="lead">{s.fit.lead}</p>
+            <a class="tlink" href={`${GH}/blob/main/ROADMAP.md`}>
+              {s.fit.roadmap}
+              <Arrow />
+            </a>
           </div>
           <div class="fit">
-            <div>
-              <h3>{s.fit.forTitle}</h3>
-              <ul>
-                {s.fit.for.map((x) => (
-                  <li>
-                    <Mark />
-                    <span>{x}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 class="is-no">{s.fit.notTitle}</h3>
-              <ul>
-                {s.fit.not.map((x) => (
-                  <li>
-                    <Mark no />
-                    <span>{x}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div class="status">
-            <div>
-              <h3>{s.fit.statusTitle}</h3>
-              <p class="status__p">{s.fit.status}</p>
-              <p style="margin-top:1.2rem">
-                <a class="tlink" href={`${GH}/blob/main/ROADMAP.md`}>
-                  {s.fit.roadmap}
-                  <Arrow />
-                </a>
-              </p>
-            </div>
-            <div class="soon">
-              <h3 class="is-no">{s.fit.soonTitle}</h3>
-              <ul>
-                {s.fit.soon.map((w) => (
-                  <li>
-                    <Mark no />
-                    <span>{w}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {[
+              { title: s.fit.forTitle, items: s.fit.for, no: false },
+              { title: s.fit.notTitle, items: s.fit.not, no: true },
+              { title: s.fit.soonTitle, items: s.fit.soon, no: true },
+            ].map((col) => (
+              <div>
+                <h3 class={col.no ? "is-no" : undefined}>{col.title}</h3>
+                <ul>
+                  {col.items.map((x) => (
+                    <li>
+                      <Mark no={col.no} />
+                      <span>{x}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -413,15 +318,6 @@ export default function Landing({ locale }: { locale: Locale }) {
               <a data-no-router class="btn btn--line" href="/docs/quickstart/">
                 {s.close.docs}
               </a>
-            </div>
-            <div class="steps">
-              {s.how.steps.map((st) => (
-                <div class="step">
-                  <h3>{st.title}</h3>
-                  {st.cmd ? <code>{st.cmd}</code> : null}
-                  <p dangerouslySetInnerHTML={{ __html: st.body }} />
-                </div>
-              ))}
             </div>
           </div>
         </section>
