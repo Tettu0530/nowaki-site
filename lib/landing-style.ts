@@ -116,6 +116,10 @@ export const LANDING_CSS = `
 .isl__frame::before{--k:linear-gradient(var(--susuki),var(--susuki));content:"";position:absolute;inset:-5px;background:var(--k) 0 0/10px 1px,var(--k) 0 0/1px 10px,var(--k) 100% 0/10px 1px,var(--k) 100% 0/1px 10px,var(--k) 0 100%/10px 1px,var(--k) 0 100%/1px 10px,var(--k) 100% 100%/10px 1px,var(--k) 100% 100%/1px 10px;background-repeat:no-repeat}
 .isl__tag{position:absolute;left:0;bottom:calc(100% + 10px);white-space:nowrap;font:400 .74rem/1 var(--mono);color:var(--muted)}
 .isl__tag b{font-weight:500;color:var(--susuki)}
+/* an island that never hydrated (the 404): dashed, no dots, no marks, no motion */
+.isl.is-dormant .isl__frame{border-style:dashed;border-color:rgb(236 238 241 / .22);animation:none}
+.isl.is-dormant .isl__frame::before{display:none}
+.lost__ja{margin-top:.6rem}
 .isl__wire{position:absolute;left:calc(100% + 6px);top:50%;height:1px;width:calc(50vw - (var(--c) + var(--w)) * var(--cell) + var(--cell) / 2);background:repeating-linear-gradient(90deg,rgb(216 191 134 / .5) 0 4px,transparent 4px 8px)}
 .isl__ep{position:absolute;left:12px;bottom:9px;font:400 .72rem/1 var(--mono);color:var(--muted);white-space:nowrap}
 .pk{position:absolute;left:0;top:-2px;width:100%;height:5px;opacity:0}
