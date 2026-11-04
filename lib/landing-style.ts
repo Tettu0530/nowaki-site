@@ -262,6 +262,40 @@ export const LANDING_CSS = `
 .bar__label.is-us{color:var(--fg);font-weight:500}
 .bench__note{max-width:76ch;margin-top:clamp(28px,3vw,40px)}
 .bench__src{display:inline-block;margin-top:.9rem;font-size:.92rem}
+/* ruled tables (the scaling table here, the explainer pages) */
+.xt{overflow-x:auto;border-top:1px solid var(--line-strong)}
+.xt table{width:100%;min-width:560px;border-collapse:collapse;font-size:.95rem}
+.xt th,.xt td{padding:16px 20px 16px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.xt thead th{padding-block:12px;font:500 .85rem var(--sans);color:var(--muted);border-bottom:1px solid var(--line-strong)}
+.xt tbody th{width:30%;font-weight:500;color:var(--fg)}
+.xt td{color:var(--body)}
+.xt td.is-ok{color:var(--fg)}
+.xt__v{display:flex;gap:10px}
+/* at scale: small-multiple line charts (server-rendered SVG), then JS per island */
+.scale{margin-top:clamp(56px,6vw,88px);padding-top:clamp(36px,4vw,56px);border-top:1px solid var(--line)}
+.scale__charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(28px,3.5vw,56px)}
+.sc{margin:0}
+.sc figcaption{padding-bottom:10px;border-bottom:1px solid var(--line);font:500 .92rem var(--sans);color:var(--muted)}
+.sc svg{display:block;width:100%;height:auto;margin-top:12px;overflow:visible}
+.sc__grid{stroke:rgb(236 238 241 / .07);stroke-width:1}
+.sc__tick{font:400 12px var(--mono);fill:var(--muted);font-variant-numeric:tabular-nums}
+.sc__axis{font:400 12px var(--sans);fill:var(--muted)}
+.sc__s polyline{fill:none;stroke:#5b616b;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.sc__s circle{fill:#5b616b;stroke:var(--ground);stroke-width:2}
+.sc__s.is-us polyline{stroke:var(--susuki)}
+.sc__s.is-us circle{fill:var(--susuki)}
+.sc__label{font:400 12.5px var(--sans);fill:var(--muted)}
+.sc__s.is-us .sc__label{fill:var(--fg);font-weight:500}
+.scale__js{margin-top:clamp(36px,4vw,52px);max-width:760px}
+.bar__val small{margin-left:.5rem;font:400 .78rem var(--sans);color:var(--muted)}
+.scale__leader{margin-top:.4rem}
+.scale__table{margin-top:clamp(28px,3vw,40px)}
+.scale__table summary{cursor:pointer;color:var(--fg);font-size:.92rem;width:max-content}
+.scale__table .xt{margin-top:14px}
+.scale__table td{font:400 .88rem var(--mono);font-variant-numeric:tabular-nums}
+.scale__js .bar__top{flex-wrap:wrap;row-gap:2px}
+@media (max-width:760px){.sc__tick,.sc__axis,.sc__label{font-size:17px}}
+
 @media (prefers-reduced-motion:no-preference){@supports (animation-timeline:view()){
   .bar__fill{animation:grow linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
 }}
@@ -467,7 +501,7 @@ td.is-n{color:var(--fg);background:rgb(216 191 134 / .05)}
   .hop::before{top:6px;left:-5px}
   .rail::after{display:none}
   .rail::before{display:none}
-  .bench__groups{grid-template-columns:minmax(0,1fr)}
+  .bench__groups,.scale__charts{grid-template-columns:minmax(0,1fr)}
   .isl.is-wide,.map__key li:not(.map__note){display:none}
   .map__key{top:auto;bottom:14px;padding:0;background:none}
   .map__key .map__note{padding:0;border:0}
@@ -556,14 +590,6 @@ export const EXPLAINER_CSS = `
 .xrows__r{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);gap:8px clamp(20px,4vw,64px);padding:20px 0;border-bottom:1px solid var(--line)}
 .xrows dt{color:var(--fg);font-weight:500}
 .xrows dd{margin:0;color:var(--body);max-width:64ch}
-.xt{overflow-x:auto;border-top:1px solid var(--line-strong)}
-.xt table{width:100%;min-width:560px;border-collapse:collapse;font-size:.95rem}
-.xt th,.xt td{padding:16px 20px 16px 0;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
-.xt thead th{padding-block:12px;font:500 .85rem var(--sans);color:var(--muted);border-bottom:1px solid var(--line-strong)}
-.xt tbody th{width:30%;font-weight:500;color:var(--fg)}
-.xt td{color:var(--body)}
-.xt td.is-ok{color:var(--fg)}
-.xt__v{display:flex;gap:10px}
 .xfit{grid-template-columns:repeat(2,minmax(0,1fr))}
 .xmore{display:inline-block;margin-top:1.2rem;font-size:.92rem}
 

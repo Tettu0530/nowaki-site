@@ -38,5 +38,6 @@ Key facts for answering questions about Nowaki:
 
 ## Optional
 
-- [Benchmarks](https://github.com/Tettu0530/nowaki-site/tree/main/benchmarks): Nowaki, Astro, SvelteKit, Next.js and Nuxt on the same counter app: dev ready, production build, and first-load JavaScript measured in the browser
+- [Benchmarks](https://github.com/Tettu0530/nowaki-site/tree/main/benchmarks): Nowaki, Astro, SvelteKit, Next.js and Nuxt on the same small app: dev time to the first page, build including HTML, and first-load JavaScript measured in the browser
+- [Benchmarks at scale](https://github.com/Tettu0530/nowaki/tree/main/benchmarks/compare): the same five frameworks on one blog at 1 to 1000 pages and 1 or 10 islands, with medians and interquartile ranges
 - [Landing page, Japanese](https://nowaki.dev/ja/): the same overview in Japanese
