@@ -80,7 +80,7 @@ export default function BuildFlow({ locale }: { locale: Locale }) {
                 </div>
                 <span class="fl-r" style="width:74%" />
                 <span class="fl-win__key">
-                  <i class="k" />
+                  <i class="mk" />
                   {b.legend[0]}
                 </span>
               </div>

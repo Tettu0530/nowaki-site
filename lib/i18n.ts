@@ -1,4 +1,4 @@
-import { BASE_CSS, LANDING_CSS, FONT_PRELOADS, FAVICON } from "./landing-style.ts";
+import { BASE_CSS, LANDING_CSS, EXPLAINER_CSS, FONT_PRELOADS, FAVICON } from "./landing-style.ts";
 
 export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
@@ -13,7 +13,7 @@ export const STRINGS = {
     title: "Nowaki: a full-stack web framework on a Rust toolchain, installed with npm",
     desc: "Nowaki (野分) is a full-stack web framework on a Rust toolchain (oxc). Pages render to HTML; only the islands you mark ship JavaScript, and Jetstream islands ship none. Installed with npm, no Rust required.",
     ogTitle: "Nowaki: full-stack like Next.js, islands like Astro, installed with npm",
-    nav: { docs: "Docs", github: "GitHub", compare: "Compare", start: "Get started", lang: "Language", menu: "Menu" },
+    nav: { docs: "Docs", jetstream: "Jetstream", architecture: "Architecture", github: "GitHub", compare: "Compare", start: "Get started", lang: "Language", menu: "Menu" },
     hero: {
       latest: "Latest release",
       notes: "Release notes",
@@ -48,7 +48,7 @@ export const STRINGS = {
       h2: "One click, zero component JavaScript.",
       lead: "A live island keeps its state on the server. Press it.",
       steps: [
-        { t: "Click", d: "A ~2 KB runtime, no component code." },
+        { t: "Click", d: "A 1.4 KB runtime, no component code." },
         { t: "WebSocket", d: "To the Rust server." },
         { t: "Re-render", d: "Node renders the island." },
         { t: "Patch", d: "HTML back down the socket." },
@@ -61,6 +61,7 @@ export const STRINGS = {
         state: "Server state",
         js: "JavaScript this demo uses",
         jsVal: "0 bytes",
+        more: "How Jetstream works",
         note: "Simulated in CSS, not to scale. Live on <code>nowaki dev</code> and <code>nowaki start</code>; the other adapters render the island's first HTML only.",
       },
     },
@@ -70,7 +71,7 @@ export const STRINGS = {
       tiles: [
         { t: "File-based routing", d: "Layouts, middleware, loaders, actions and API routes, one file each.", href: "/docs/routing/" },
         { t: "Islands, zero JS by default", d: "Pages render to HTML. Only the components you mark ship JavaScript.", href: "/docs/" },
-        { t: "A Rust toolchain", d: "oxc parses, bundles and hashes. Node renders with Preact, so npm packages work.", href: "/docs/quickstart/" },
+        { t: "A Rust toolchain", d: "oxc parses, bundles and hashes. Node renders with Preact, so npm packages work.", href: "/architecture/" },
       ],
       legend: ["HTML, 0 KB JS"],
       flow: { render: "HTML", ship: "Client JavaScript is the island and its runtime. The rest of the page ships none." },
@@ -120,7 +121,7 @@ export const STRINGS = {
     title: "Nowaki: npm で入る、Rust 製ツールチェーンのフルスタックWebフレームワーク",
     desc: "Nowaki（野分）は Rust（oxc）のツールチェーンで動くフルスタックWebフレームワークです。ページは HTML で返し、JavaScript を送るのはマークした島だけ。Jetstream の島はそれすら送りません。npm で入り、Rust は不要です。",
     ogTitle: "Nowaki: Next.js 流のフルスタック、Astro 流の Islands。npm で入る",
-    nav: { docs: "ドキュメント", github: "GitHub", compare: "比較", start: "はじめる", lang: "言語", menu: "メニュー" },
+    nav: { docs: "ドキュメント", jetstream: "Jetstream", architecture: "仕組み", github: "GitHub", compare: "比較", start: "はじめる", lang: "言語", menu: "メニュー" },
     hero: {
       latest: "最新リリース",
       notes: "リリースノート（英語）",
@@ -160,7 +161,7 @@ export const STRINGS = {
       h2: "1回のクリック、コンポーネント JS はゼロ。",
       lead: "live の島は状態をサーバーに置きます。押してみてください。",
       steps: [
-        { t: "クリック", d: "~2 KB のランタイムだけ。コンポーネントのコードは無し。" },
+        { t: "クリック", d: "1.4 KB のランタイムだけ。コンポーネントのコードは無し。" },
         { t: "WebSocket", d: "Rust サーバーへ。" },
         { t: "再描画", d: "Node が島を描き直す。" },
         { t: "パッチ", d: "HTML をソケットで返す。" },
@@ -173,6 +174,7 @@ export const STRINGS = {
         state: "サーバーの状態",
         js: "このデモが使う JavaScript",
         jsVal: "0 バイト",
+        more: "Jetstream の仕組み",
         note: "CSS によるシミュレーションで、時間の比率は実際とは異なります。live に動くのは <code>nowaki dev</code> と <code>nowaki start</code> で、ほかのアダプタでは島の最初の HTML だけを描きます。",
       },
     },
@@ -182,7 +184,7 @@ export const STRINGS = {
       tiles: [
         { t: "ファイルベースのルーティング", d: "layout・middleware・loader・action・API ルートを、1ファイルずつ。", href: "/docs/routing/" },
         { t: "デフォルトで島・JS ゼロ", d: "ページは HTML で返し、JavaScript を送るのはマークしたコンポーネントだけ。", href: "/docs/" },
-        { t: "Rust のツールチェーン", d: "oxc がパース・バンドル・ハッシュ化。Node 上の Preact で描画するので、npm パッケージがそのまま使えます。", href: "/docs/quickstart/" },
+        { t: "Rust のツールチェーン", d: "oxc がパース・バンドル・ハッシュ化。Node 上の Preact で描画するので、npm パッケージがそのまま使えます。", href: "/ja/architecture/" },
       ],
       legend: ["HTML、JS は 0 KB"],
       flow: { render: "HTML", ship: "クライアントの JavaScript は、島とそのランタイムだけ。ページのほかの部分は 0 KB です。" },
@@ -247,4 +249,25 @@ ${FAVICON}
 <link rel="alternate" hreflang="x-default" href="https://nowaki.dev/" />
 ${FONT_PRELOADS}
 <style>${BASE_CSS}${LANDING_CSS}</style>`;
+}
+
+/** <head> for an explainer page: /<slug>/ in English, /ja/<slug>/ in Japanese. */
+export function explainerHead(locale: Locale, slug: string, title: string, desc: string): string {
+  const en = `https://nowaki.dev/${slug}/`;
+  const ja = `https://nowaki.dev/ja/${slug}/`;
+  return `
+<meta name="description" content="${desc}" />
+<meta name="theme-color" content="#0b0d10" />
+${FAVICON}
+<meta property="og:type" content="article" />
+<meta property="og:title" content="${title}" />
+<meta property="og:description" content="${desc}" />
+<meta property="og:locale" content="${locale === "ja" ? "ja_JP" : "en_US"}" />
+<meta property="og:url" content="${locale === "ja" ? ja : en}" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="alternate" hreflang="en" href="${en}" />
+<link rel="alternate" hreflang="ja" href="${ja}" />
+<link rel="alternate" hreflang="x-default" href="${en}" />
+${FONT_PRELOADS}
+<style>${BASE_CSS}${LANDING_CSS}${EXPLAINER_CSS}</style>`;
 }

@@ -1,0 +1,326 @@
+// Copy for the explainer pages (/jetstream, /architecture, and /ja/ versions).
+// Every statement is true of Nowaki 0.13.0 (checked against the v0.13.0 tag of
+// Tettu0530/nowaki). Measured values: live.js 1475 B gzip from a 0.13.0 build of a page
+// with one live island; {devMs} comes from benchmarks/results/summary.json.
+
+export const LIVE_JS_KB = "1.4";
+
+export const JETSTREAM = {
+  en: {
+    title: "Jetstream: live islands with no component JavaScript · Nowaki",
+    desc: "How Nowaki's Jetstream islands work: state on the server, events over one WebSocket, HTML patches back, and a 1.4 KB runtime. What it does in 0.13, where it runs, and what is not there yet.",
+    h1: "Live islands that ship no component JavaScript.",
+    lead: "A Jetstream island keeps its state on the server. A click travels over one WebSocket, the server runs your handler and renders the island again, and the browser applies the new HTML in place. The component's code never leaves the server.",
+    ctaDocs: "Read the Jetstream docs",
+    ctaOther: "How Nowaki is built",
+    write: {
+      h2: "What you write.",
+      lead: "An ordinary island file with one more export. Handlers are plain functions from state to state, and buttons name them with data-live instead of onClick.",
+      points: [
+        { t: "state", d: "Builds the first state, from the props you pass at the usage site." },
+        { t: "on", d: "Maps handler names to functions. They may be async; returning nothing keeps the state." },
+        { t: "Usage", d: "Put it on a page like any island: <code>&lt;LiveCounter /&gt;</code>. No client directive." },
+      ],
+    },
+    trip: {
+      h2: "One round trip.",
+      lead: "What happens between a click and the new HTML, under nowaki dev and nowaki start.",
+      lanes: ["Browser", "Rust server", "Node renderer"],
+      steps: [
+        { t: "Event", d: "A click on <code>[data-live]</code> sends the island id and the handler name over the WebSocket at <code>/__nowaki/live</code>." },
+        { t: "Forward", d: "Rust holds each island's state and signature for the connection and passes them, with the event, to the Node renderer on localhost." },
+        { t: "Run", d: "Node checks the signature, runs the handler, renders the island to HTML and signs the new state." },
+        { t: "Return", d: "The HTML, the new state and its signature go back to Rust." },
+        { t: "Patch", d: "Rust pushes them down the same socket." },
+        { t: "Morph", d: "live.js updates the island's DOM in place and keeps the signed state on the element." },
+      ],
+      note: "Only click events are wired in 0.13. Input, change and submit are planned.",
+    },
+    reach: {
+      h2: "What reaches the browser.",
+      stats: [
+        { v: "0 bytes", d: "of the island's component code. A live island gets no client chunk at all." },
+        { v: "{live} KB", d: "gzip: live.js in 0.13.0, the whole runtime. It loads only on pages that have a live island." },
+        { v: "1 socket", d: "per page, events up and HTML down. The rest of the page is plain server-rendered HTML." },
+      ],
+      note: "Measured from a 0.13.0 build of a page with one live island.",
+    },
+    state: {
+      h2: "State stays on the server, signed.",
+      lead: "The browser keeps a copy of the state only to resume. It cannot change it.",
+      rows: [
+        { t: "Signed", d: "Every state carries an HMAC-SHA256 signature. If the state was tampered with, the event is refused and nothing changes." },
+        { t: "Per connection", d: "Rust keeps the state for each WebSocket connection. Two tabs are two islands; state is not shared between users yet." },
+        { t: "Survives a reconnect", d: "Patches carry the signed state and the element keeps it, so after a dropped connection the island resumes where it was." },
+        { t: "Set a secret", d: "Set <code>NOWAKI_LIVE_SECRET</code> in production. Without it the key is random per process, and pages opened before a restart stop responding until they reload." },
+        { t: "Back-off", d: "If the socket drops, live.js retries with back-off and gives up after 8 failed attempts in a row. The island keeps its last HTML." },
+        { t: "Presence", d: "The server broadcasts how many live connections it holds; an element with <code>data-nowaki-presence</code> shows the count." },
+      ],
+    },
+    where: {
+      h2: "Where it runs.",
+      lead: "Live updates need the Rust server's WebSocket. Everywhere else the island renders once.",
+      cols: ["Run with", "Jetstream"],
+      rows: [
+        { k: "<code>nowaki dev</code>", v: "Live", ok: true },
+        { k: "<code>nowaki start</code>", v: "Live", ok: true },
+        { k: "Static output (<code>nowaki prerender</code>, static adapter)", v: "First HTML only. live.js still loads, tries the socket and stops after 8 attempts." },
+        { k: "node, bun, deno and vercel adapters", v: "First HTML only, without live.js." },
+        { k: "cloudflare adapter", v: "In 0.13.0 a page with a live island fails with an error. The fix is not released yet." },
+      ],
+    },
+    fit: {
+      h2: "Where it fits, and what is not there yet.",
+      forTitle: "A good fit",
+      for: [
+        "Small interactive parts backed by server data: likes, votes, counters, toggles, admin actions.",
+        "Pages where shipping component code is the cost you want to avoid.",
+        "Apps you run with nowaki start, on a server that keeps connections open.",
+      ],
+      notTitle: "Not yet",
+      not: [
+        "Input, change and submit events (planned).",
+        "State shared between users, rooms, and presence per room (planned).",
+        "State that outlives a server restart without a fixed secret.",
+        "Serverless and edge deploys: there is no WebSocket to hold.",
+      ],
+    },
+    close: { h2: "Try a live island.", docs: "Read the Jetstream docs" },
+  },
+  ja: {
+    title: "Jetstream：コンポーネント JS を送らない live の島 · Nowaki",
+    desc: "Nowaki の Jetstream の仕組み。状態はサーバーに置き、イベントは1本の WebSocket で送り、HTML のパッチが返ってきます。ランタイムは 1.4 KB。0.13 でできること、動く環境、まだできないことをまとめました。",
+    h1: "コンポーネントの JavaScript\u00a0を<wbr>送らない、live\u00a0の島。",
+    lead: "Jetstream の島は状態をサーバーに置きます。クリックは1本の WebSocket でサーバーへ届き、サーバーが handler を実行して島を描き直し、ブラウザは新しい HTML をその場で反映します。コンポーネントのコードはサーバーから出ません。",
+    ctaDocs: "Jetstream のドキュメント（英語）",
+    ctaOther: "Nowaki の仕組み",
+    write: {
+      h2: "書くもの。",
+      lead: "ふつうの島のファイルに export を1つ足したものです。handler は状態を受け取って新しい状態を返すふつうの関数で、ボタンには onClick ではなく data-live でその名前を書きます。",
+      points: [
+        { t: "state", d: "使う側で渡した props から、最初の状態を作ります。" },
+        { t: "on", d: "handler の名前と関数の対応です。async でもよく、何も返さなければ状態は変わりません。" },
+        { t: "使い方", d: "ほかの島と同じく、<code>&lt;LiveCounter /&gt;</code> のようにページに置きます。client ディレクティブは要りません。" },
+      ],
+    },
+    trip: {
+      h2: "1往復で起きること。",
+      lead: "nowaki dev と nowaki start で、クリックから新しい HTML が反映されるまでの流れです。",
+      lanes: ["ブラウザ", "Rust サーバー", "Node レンダラー"],
+      steps: [
+        { t: "イベント", d: "<code>[data-live]</code> をクリックすると、島の id と handler の名前が <code>/__nowaki/live</code> の WebSocket で送られます。" },
+        { t: "転送", d: "Rust は接続ごとに各島の状態と署名を持っていて、イベントと一緒に localhost の Node レンダラーへ渡します。" },
+        { t: "実行", d: "Node が署名を確かめ、handler を実行し、島を HTML に描き直して、新しい状態に署名します。" },
+        { t: "返却", d: "HTML と新しい状態、その署名を Rust に返します。" },
+        { t: "パッチ", d: "Rust がそれらを同じソケットでブラウザへ送ります。" },
+        { t: "反映", d: "live.js が島の DOM をその場で更新し、署名付きの状態を要素に保存します。" },
+      ],
+      note: "0.13 で扱えるイベントはクリックだけです。input・change・submit は予定に入っています。",
+    },
+    reach: {
+      h2: "ブラウザに届くもの。",
+      stats: [
+        { v: "0 バイト", d: "島のコンポーネントのコードは届きません。live の島にはクライアント用のチャンク自体がありません。" },
+        { v: "{live} KB", d: "gzip 後の live.js（0.13.0）。ランタイムはこれだけで、live の島があるページでだけ読み込みます。" },
+        { v: "ソケット1本", d: "ページごとに1本で、イベントを送り HTML を受け取ります。ページのほかの部分はサーバーで描いたふつうの HTML です。" },
+      ],
+      note: "live の島を1つ置いたページを 0.13.0 でビルドして測りました。",
+    },
+    state: {
+      h2: "状態は署名付きで<wbr>サーバーに置く。",
+      lead: "ブラウザが状態の写しを持つのは、再開のためだけです。ブラウザから書き換えることはできません。",
+      rows: [
+        { t: "署名", d: "状態にはすべて HMAC-SHA256 の署名が付きます。改ざんされていればイベントは受け付けず、何も変わりません。" },
+        { t: "接続ごと", d: "Rust は WebSocket の接続ごとに状態を持ちます。タブが2つなら島も2つです。ユーザーどうしで状態を共有する機能はまだありません。" },
+        { t: "再接続しても続く", d: "パッチには署名付きの状態が入っていて、要素がそれを保持します。そのため接続が切れたあとも、島は切れる前の状態から再開します。" },
+        { t: "秘密鍵を設定する", d: "本番では <code>NOWAKI_LIVE_SECRET</code> を設定してください。未設定だと鍵はプロセスごとにランダムで、再起動前に開いたページは再読み込みするまで反応しなくなります。" },
+        { t: "再試行", d: "ソケットが切れると、live.js はバックオフを挟みながら再接続を試し、8回続けて失敗するとやめます。島は最後の HTML のまま残ります。" },
+        { t: "接続数", d: "サーバーは live の接続数を配信します。<code>data-nowaki-presence</code> を付けた要素にその数が表示されます。" },
+      ],
+    },
+    where: {
+      h2: "動く環境。",
+      lead: "live の更新には Rust サーバーの WebSocket が必要です。それ以外の環境では、島は一度だけ描かれます。",
+      cols: ["実行方法", "Jetstream"],
+      rows: [
+        { k: "<code>nowaki dev</code>", v: "live", ok: true },
+        { k: "<code>nowaki start</code>", v: "live", ok: true },
+        { k: "静的出力（<code>nowaki prerender</code>、static アダプタ）", v: "最初の HTML だけ。live.js はそれでも読み込まれ、ソケットへの接続を8回試してやめます。" },
+        { k: "node・bun・deno・vercel アダプタ", v: "最初の HTML だけで、live.js は出力しません。" },
+        { k: "cloudflare アダプタ", v: "0.13.0 では、live の島があるページがエラーになります。修正はまだリリースされていません。" },
+      ],
+    },
+    fit: {
+      h2: "向く場面と、まだできないこと。",
+      forTitle: "向いている",
+      for: [
+        "サーバーのデータを使う小さな操作部分：いいね、投票、カウンター、切り替え、管理画面の操作。",
+        "コンポーネントのコードを送るコストを避けたいページ。",
+        "nowaki start で動かし、接続を保てるサーバーで運用するアプリ。",
+      ],
+      notTitle: "まだできない",
+      not: [
+        "input・change・submit のイベント（予定）。",
+        "ユーザー間で共有する状態、ルーム、ルームごとの接続数（予定）。",
+        "鍵を固定しない場合に、サーバーの再起動をまたいで状態を保つこと。",
+        "サーバーレスやエッジへのデプロイ。WebSocket の接続を保っておけません。",
+      ],
+    },
+    close: { h2: "live の島を試す。", docs: "Jetstream のドキュメント（英語）" },
+  },
+} as const;
+
+export const ARCHITECTURE = {
+  en: {
+    title: "Architecture: a Rust toolchain in front, a Node renderer behind · Nowaki",
+    desc: "How Nowaki is built: oxc compiles and bundles, a Rust server serves files and assembles HTML, Node renders Preact, and islands hydrate on their directive. Shipped as a native binary through npm.",
+    h1: "A Rust toolchain in front, a Node renderer behind.",
+    lead: "Nowaki compiles with oxc and serves with a Rust server, and renders your components with Preact on Node, so npm packages keep working. This page follows one app from source to the browser.",
+    ctaDocs: "Read the docs",
+    ctaOther: "How Jetstream works",
+    system: {
+      h2: "Two runtimes, one command.",
+      lead: "nowaki start runs both. The Rust front faces the network; the Node renderer stays on localhost.",
+      boxes: [
+        { t: "Browser", items: ["HTML from the server", "islands.js hydrates each island on its client:* directive", "the page router, fetched when idle", "live.js, only on pages with a live island"] },
+        { t: "Rust front", sub: "axum", items: ["files under /_nowaki/, cached as immutable", "HTML assembly: preload links, island and live scripts", "ISR cache (x-nowaki-cache: HIT, STALE, MISS)", "the Jetstream WebSocket at /__nowaki/live"] },
+        { t: "Node renderer", sub: "Preact", items: ["server rendering of the route", "loaders and actions", "server functions (\"use server\")", "Jetstream handlers"] },
+      ],
+      links: ["HTTP, WebSocket", "HTTP on 127.0.0.1"],
+    },
+    build: {
+      h2: "Build: oxc from parse to hash.",
+      lead: "nowaki build runs the whole pipeline in Rust. Node takes part only when you add plugins or .tsrx islands.",
+      steps: [
+        { t: "Parse", d: "oxc parses every module." },
+        { t: "Transform", d: "TypeScript is stripped and JSX compiled for Preact." },
+        { t: "Graph", d: "Imports are resolved with oxc_resolver into one module graph." },
+        { t: "Hoist", d: "Each island's own modules are concatenated into one chunk." },
+        { t: "Minify", d: "The oxc minifier runs; dependencies and shared code become deduplicated chunks, with one Preact." },
+        { t: "Hash", d: "An xxh3 content hash goes into every file name." },
+        { t: "Write", d: "dist/client with manifest.json for the browser, dist/server for the renderer." },
+      ],
+    },
+    request: {
+      h2: "Request: Rust first.",
+      rows: [
+        { t: "Static files", d: "Hashed files under <code>/_nowaki/</code> come straight from Rust with a one-year immutable cache header." },
+        { t: "Pages", d: "Node renders the route and returns its body, title and head. Rust assembles the document, adds modulepreload links and the island runtime, and adds live.js only when the page has a live island." },
+        { t: "ISR", d: "Routes that export <code>revalidate</code> are cached in Rust and revalidated in the background, one request per path at a time." },
+        { t: "Server functions", d: "Calls go to <code>POST /__nowaki/fn</code>; only functions exported from <code>\"use server\"</code> modules can be reached." },
+      ],
+    },
+    client: {
+      h2: "Client: islands first, router later.",
+      rows: [
+        { t: "Islands", d: "islands.js finds each island and imports its chunk on its directive: <code>client:load</code>, <code>idle</code>, <code>visible</code>, <code>media</code> or <code>only</code>." },
+        { t: "Router", d: "The client router is fetched once the page is idle, so the first load carries only the islands. Visited pages stay cached for 30 seconds." },
+        { t: "Live islands", d: "Jetstream islands get no chunk; live.js handles them over one socket." },
+      ],
+    },
+    dev: {
+      h2: "Dev: compile on request.",
+      rows: [
+        { t: "On demand", d: "nowaki dev transforms a file when the browser asks for it, and keeps the result in memory and on disk in <code>node_modules/.cache/nowaki</code>." },
+        { t: "One island at a time", d: "Editing a file in <code>islands/</code> re-renders that island alone (its local state resets); other edits reload the page. Errors appear as a full-screen overlay." },
+        { t: "Ready in {devMs} ms", d: "From start to ready for the counter app in our five-framework head-to-head." },
+      ],
+    },
+    ship: {
+      h2: "Shipped through npm.",
+      rows: [
+        { t: "A native binary", d: "The <code>nowaki</code> package installs a prebuilt binary for macOS, Linux or Windows through optional dependencies. No Rust toolchain is needed." },
+        { t: "Node 22 or later", d: "Node runs the renderer, with Preact 10 or 11 as the component library." },
+        { t: "Or cargo", d: "<code>cargo install nowaki</code> builds the same CLI from crates.io." },
+      ],
+    },
+    deploy: {
+      h2: "Deploy targets.",
+      cols: ["Target", "Output", "Jetstream"],
+      rows: [
+        { k: "<code>nowaki start</code>", o: "The Rust front with the Node renderer", j: "Live", ok: true },
+        { k: "node, bun, deno", o: "<code>dist/server/index.mjs</code>", j: "First HTML only" },
+        { k: "static", o: "Prerendered HTML in <code>dist/static</code>, with <code>404.html</code> and <code>staticPaths</code>", j: "First HTML only" },
+        { k: "cloudflare", o: "A Worker in <code>dist/worker</code> with <code>wrangler.jsonc</code>", j: "Pages with a live island fail in 0.13.0" },
+        { k: "vercel", o: "Build Output API v3 in <code>.vercel/output</code>", j: "First HTML only" },
+      ],
+    },
+    close: { h2: "Read the code, or start an app.", docs: "Read the docs" },
+  },
+  ja: {
+    title: "仕組み：前に Rust のツールチェーン、後ろに Node のレンダラー · Nowaki",
+    desc: "Nowaki の仕組み。oxc がコンパイルしてバンドルし、Rust サーバーがファイルを配信して HTML を組み立て、Node が Preact で描画し、島はディレクティブに従ってハイドレートします。npm でネイティブバイナリとして配布しています。",
+    h1: "前に\u00a0Rust\u00a0の<wbr>ツールチェーン、後ろに\u00a0Node\u00a0の<wbr>レンダラー。",
+    lead: "Nowaki は oxc でコンパイルし、Rust サーバーで配信します。コンポーネントは Node 上の Preact で描画するので、npm パッケージがそのまま使えます。このページでは1つのアプリをソースからブラウザまでたどります。",
+    ctaDocs: "ドキュメント（英語）",
+    ctaOther: "Jetstream の仕組み",
+    system: {
+      h2: "2つのランタイムを<wbr>1つのコマンドで動かす。",
+      lead: "nowaki start は両方を起動します。ネットワークに面するのは Rust のフロントで、Node のレンダラーは localhost の外に出ません。",
+      boxes: [
+        { t: "ブラウザ", items: ["サーバーが描いた HTML", "islands.js が client:* に従って島をハイドレート", "ページルーターはアイドル状態になってから取得", "live.js は live の島があるページだけ"] },
+        { t: "Rust フロント", sub: "axum", items: ["/_nowaki/ のファイルを immutable で配信", "HTML の組み立て：preload リンク、島と live のスクリプト", "ISR キャッシュ（x-nowaki-cache：HIT・STALE・MISS）", "Jetstream の WebSocket（/__nowaki/live）"] },
+        { t: "Node レンダラー", sub: "Preact", items: ["ルートのサーバー描画", "loader と action", "サーバー関数（\"use server\"）", "Jetstream の handler"] },
+      ],
+      links: ["HTTP、WebSocket", "127.0.0.1 上の HTTP"],
+    },
+    build: {
+      h2: "ビルド：パースから<wbr>ハッシュまで\u00a0oxc。",
+      lead: "nowaki build はパイプライン全体を Rust で実行します。Node が関わるのは、プラグインや .tsrx の島を使うときだけです。",
+      steps: [
+        { t: "パース", d: "oxc がすべてのモジュールをパースします。" },
+        { t: "変換", d: "TypeScript の型を取り除き、JSX を Preact 向けにコンパイルします。" },
+        { t: "グラフ", d: "import を oxc_resolver で解決し、1つのモジュールグラフにします。" },
+        { t: "結合", d: "島ごとに、その島だけが使うモジュールを1つのチャンクにまとめます。" },
+        { t: "圧縮", d: "oxc の minifier をかけます。依存と共有コードは重複のないチャンクになり、Preact は1つだけです。" },
+        { t: "ハッシュ", d: "すべてのファイル名に xxh3 のコンテンツハッシュを付けます。" },
+        { t: "書き出し", d: "ブラウザ向けの dist/client（manifest.json 付き）と、レンダラー向けの dist/server を書き出します。" },
+      ],
+    },
+    request: {
+      h2: "リクエスト：まず Rust\u00a0が受ける。",
+      rows: [
+        { t: "静的ファイル", d: "<code>/_nowaki/</code> のハッシュ付きファイルは、Rust が1年の immutable のキャッシュヘッダーを付けて直接返します。" },
+        { t: "ページ", d: "Node がルートを描画して本文・タイトル・head を返し、Rust が文書を組み立てます。modulepreload のリンクと島のランタイムを足し、live の島があるページにだけ live.js を足します。" },
+        { t: "ISR", d: "<code>revalidate</code> を export したルートは Rust がキャッシュし、バックグラウンドで再検証します。再検証はパスごとに1件ずつです。" },
+        { t: "サーバー関数", d: "呼び出しは <code>POST /__nowaki/fn</code> に届きます。呼べるのは <code>\"use server\"</code> のモジュールが export した関数だけです。" },
+      ],
+    },
+    client: {
+      h2: "クライアント：先に島、ルーターはあとで。",
+      rows: [
+        { t: "島", d: "islands.js が島を見つけ、<code>client:load</code>・<code>idle</code>・<code>visible</code>・<code>media</code>・<code>only</code> のディレクティブに従ってチャンクを import します。" },
+        { t: "ルーター", d: "クライアントのルーターはページがアイドル状態になってから取得するので、最初の読み込みは島だけです。表示したページは30秒キャッシュします。" },
+        { t: "live の島", d: "Jetstream の島にはチャンクがなく、live.js が1本のソケットで扱います。" },
+      ],
+    },
+    dev: {
+      h2: "開発：リクエストされたら<wbr>コンパイル。",
+      rows: [
+        { t: "必要なときに", d: "nowaki dev は、ブラウザが求めたときにファイルを変換し、結果をメモリと <code>node_modules/.cache/nowaki</code> に保存します。" },
+        { t: "島は1つずつ", d: "<code>islands/</code> のファイルを編集すると、その島だけを描き直し、島のローカル状態はリセットされます。ほかの編集ではページを再読み込みします。エラーは全画面のオーバーレイで表示します。" },
+        { t: "{devMs} ms で起動", d: "5つのフレームワークの比較で使ったカウンターアプリが、起動して準備完了になるまでの時間です。" },
+      ],
+    },
+    ship: {
+      h2: "npm で配布。",
+      rows: [
+        { t: "ネイティブバイナリ", d: "<code>nowaki</code> パッケージは optional dependencies を通じて macOS・Linux・Windows 向けのビルド済みバイナリを入れます。Rust のツールチェーンは要りません。" },
+        { t: "Node 22 以上", d: "レンダラーは Node で動き、コンポーネントのライブラリは Preact 10 か 11 です。" },
+        { t: "cargo でも", d: "<code>cargo install nowaki</code> で、同じ CLI を crates.io からビルドできます。" },
+      ],
+    },
+    deploy: {
+      h2: "デプロイ先。",
+      cols: ["デプロイ先", "出力", "Jetstream"],
+      rows: [
+        { k: "<code>nowaki start</code>", o: "Rust フロントと Node レンダラー", j: "live", ok: true },
+        { k: "node・bun・deno", o: "<code>dist/server/index.mjs</code>", j: "最初の HTML だけ" },
+        { k: "static", o: "<code>dist/static</code> に prerender した HTML（<code>404.html</code>、<code>staticPaths</code> に対応）", j: "最初の HTML だけ" },
+        { k: "cloudflare", o: "<code>dist/worker</code> の Worker と <code>wrangler.jsonc</code>", j: "0.13.0 では live の島があるページがエラー" },
+        { k: "vercel", o: "<code>.vercel/output</code> の Build Output API v3", j: "最初の HTML だけ" },
+      ],
+    },
+    close: { h2: "コードを読むか、アプリを始めるか。", docs: "ドキュメント（英語）" },
+  },
+} as const;

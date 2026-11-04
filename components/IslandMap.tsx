@@ -62,15 +62,15 @@ export default function IslandMap({ keyLabels }: { keyLabels: readonly string[] 
       ))}
       <ul class="map__key">
         <li>
-          <i class="k k--sea" />
+          <i class="mk mk--sea" />
           {keyLabels[0]}
         </li>
         <li>
-          <i class="k k--isl" />
+          <i class="mk mk--isl" />
           {keyLabels[1]}
         </li>
         <li>
-          <i class="k k--live" />
+          <i class="mk mk--live" />
           {keyLabels[2]}
         </li>
         <li class="map__note">{keyLabels[3]}</li>
