@@ -40,6 +40,9 @@ html{background:var(--ground);-webkit-text-size-adjust:100%;scroll-padding-top:7
 body{margin:0;color:var(--body);font:16px/1.65 var(--sans);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:clip}
 h1,h2,h3{color:var(--fg);margin:0;font-weight:400;text-wrap:balance}
 :lang(ja) :is(h1,h2,h3,p,li,td,th,figcaption,span,a){word-break:auto-phrase;line-break:strict}
+/* auto-phrase is Chromium-only. Elsewhere (Safari, Firefox) Japanese headings break only at
+   spaces, punctuation and <wbr>, never inside a word; overflow-wrap is the narrow-screen escape. */
+@supports not (word-break:auto-phrase){:lang(ja) :is(h1,h2,h3){word-break:keep-all;overflow-wrap:anywhere}}
 :where(p,li,td,th) code{white-space:nowrap}
 p{margin:0;text-wrap:pretty}
 a{color:inherit;text-decoration:none}
