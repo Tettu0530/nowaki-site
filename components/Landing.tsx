@@ -51,7 +51,7 @@ function Bench({ locale }: { locale: Locale }) {
   return (
     <div class="bench" id="bench">
       <div class="bench__head">
-        <h3>{b.h3}</h3>
+        <h3 dangerouslySetInnerHTML={{ __html: b.h3 }} />
         <p class="lead">{b.lead}</p>
       </div>
       <div class="bench__groups">
