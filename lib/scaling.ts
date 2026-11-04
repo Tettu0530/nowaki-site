@@ -13,9 +13,23 @@ export type ScalingFw = {
   cells: Record<string, Cell>;
   fits: { islands: { homeJs: { perIslandKB: number } } };
 };
-export type Scaling = { measured: string; machine: string; frameworks: Record<string, ScalingFw> };
+/** One production-server run set (benchmarks/compare/prod.mjs): 100 pages, median of 5 runs. */
+export type Prod = {
+  framework: string;
+  label: string;
+  version: string;
+  env: Record<string, string>;
+  isr: boolean;
+  runs: number;
+  postRps: number;
+  homeRps: number;
+  idleMB: number;
+  peakMB: number;
+  ttfbP50: number;
+};
+export type Scaling = { measured: string; machine: string; frameworks: Record<string, ScalingFw>; prod?: Record<string, Prod> };
 
-export const SOURCE_COMMIT = "3257906";
+export const SOURCE_COMMIT = "0fba471";
 export const PAGES = [1, 10, 100, 1000] as const;
 
 function load(): Scaling | null {
