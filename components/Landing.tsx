@@ -1,13 +1,13 @@
 import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
+import SiteFooter from "./SiteFooter.tsx";
 import BuildFlow from "./BuildFlow.tsx";
 import IslandMap, { IslandEl } from "./IslandMap.tsx";
-import { STRINGS, GH, CRATES, NPM, SITE_GH } from "../lib/i18n.ts";
+import { STRINGS, GH, SITE_GH } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 import { NOWAKI_RELEASE, NOWAKI_VERSION } from "../lib/version.ts";
 import { shipped } from "../lib/bundle.ts";
 import { BENCH } from "../lib/benchmarks.ts";
-import { MARK_URL } from "../lib/landing-style.ts";
 
 const CHANGELOG = `${GH}/blob/main/CHANGELOG.md`;
 
@@ -99,7 +99,6 @@ export default function Landing({ locale }: { locale: Locale }) {
   const s = STRINGS[locale];
   const ship = shipped(["CopyCommand"]);
   const t = (x: string) => x.replaceAll("{kb}", String(ship?.kb ?? 14));
-  const home = locale === "ja" ? "/ja/" : "/";
 
   return (
     <>
@@ -262,6 +261,10 @@ export default function Landing({ locale }: { locale: Locale }) {
             ))}
           </ol>
           <p class="jet__note" id="jet-note" dangerouslySetInnerHTML={{ __html: s.jet.demo.note }} />
+          <a class="tlink jet__more" href={locale === "ja" ? "/ja/jetstream/" : "/jetstream/"}>
+            {s.jet.demo.more}
+            <Arrow />
+          </a>
           </div>
         </section>
 
@@ -360,31 +363,7 @@ export default function Landing({ locale }: { locale: Locale }) {
         </section>
       </main>
 
-      <footer class="foot">
-        <div class="wrap">
-          <div class="foot__top">
-            <div>
-              <a href={home} class="brand">
-                <img src={MARK_URL} alt="" width="24" height="24" />
-                Nowaki<small>野分</small>
-              </a>
-              <p>{s.footer.tagline}</p>
-            </div>
-            <nav aria-label="Footer">
-              <a href="/docs/">{s.nav.docs}</a>
-              <a href={GH}>GitHub</a>
-              <a href={NPM}>npm</a>
-              <a href={CRATES}>crates.io</a>
-              <a href={CHANGELOG}>Changelog</a>
-            </nav>
-          </div>
-          <div class="foot__legal">
-            <span>{s.footer.copyright}</span>
-            <span>{s.footer.windName}</span>
-          </div>
-          <p class="foot__tm">{s.footer.trademark}</p>
-        </div>
-      </footer>
+      <SiteFooter locale={locale} />
     </>
   );
 }

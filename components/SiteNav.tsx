@@ -5,21 +5,33 @@ import type { Locale } from "../lib/i18n.ts";
 // Since Nowaki 0.13 the island router swaps each page's own <head> region (the
 // docs' <style>) and <html lang> on client navigation (Tettu0530/nowaki#21), so
 // links into the docs and the language switch need no data-no-router.
-// Site navigation shared by the landing and the docs. Below 760px the links fold
-// into a <details> menu, so it needs no JavaScript. The docs are English only,
-// so they drop the language switch; so does any other page (the 404).
-export default function SiteNav({ locale = "en", page }: { locale?: Locale; page: "home" | "docs" | "other" }) {
+// Site navigation shared by the landing, the explainer pages and the docs. Below 960px
+// Compare and GitHub fold into a <details> menu, below 760px everything does, so it
+// needs no JavaScript. The docs are English only and the 404 has no counterpart, so
+// they drop the language switch; elsewhere it points at this page in the other language.
+export type NavPage = "home" | "jetstream" | "architecture" | "docs" | "other";
+
+export default function SiteNav({
+  locale = "en",
+  page,
+  alt = { en: "/", ja: "/ja/" },
+}: {
+  locale?: Locale;
+  page: NavPage;
+  alt?: { en: string; ja: string };
+}) {
   const s = STRINGS[locale];
-  const home = locale === "ja" ? "/ja/" : "/";
-  const compare = page === "home" ? "#compare" : `${home}#compare`;
-  const docsCurrent = page === "docs" ? "page" : undefined;
+  const base = locale === "ja" ? "/ja/" : "/";
+  const compare = page === "home" ? "#compare" : `${base}#compare`;
+  const cur = (p: NavPage) => (page === p ? "page" : undefined);
+  const hasLang = page !== "docs" && page !== "other";
 
   const lang = (cls: string) => (
     <span class={cls} role="group" aria-label={s.nav.lang}>
-      <a href="/" lang="en" aria-current={locale === "en" ? "page" : undefined}>
+      <a href={alt.en} lang="en" aria-current={locale === "en" ? "page" : undefined}>
         EN
       </a>
-      <a href="/ja/" lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
+      <a href={alt.ja} lang="ja" aria-current={locale === "ja" ? "page" : undefined}>
         日本語
       </a>
     </span>
@@ -28,21 +40,27 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
   return (
     <header class="nav">
       <div class="wrap nav__in">
-        <a href={home} class="brand">
+        <a href={base} class="brand">
           <img src={MARK_URL} alt="" width="24" height="24" />
           Nowaki<small>野分</small>
         </a>
         <nav class="nav__links" aria-label="Primary">
-          <a class="hide-sm" href="/docs/" aria-current={docsCurrent}>
+          <a class="hide-sm" href={`${base}jetstream/`} aria-current={cur("jetstream")}>
+            {s.nav.jetstream}
+          </a>
+          <a class="hide-sm" href={`${base}architecture/`} aria-current={cur("architecture")}>
+            {s.nav.architecture}
+          </a>
+          <a class="hide-sm" href="/docs/" aria-current={cur("docs")}>
             {s.nav.docs}
           </a>
-          <a class="hide-sm" href={compare}>
+          <a class="hide-sm hide-md" href={compare}>
             {s.nav.compare}
           </a>
-          <a class="hide-sm" href={GH}>
+          <a class="hide-sm hide-md" href={GH}>
             GitHub
           </a>
-          {page === "home" ? lang("lang") : null}
+          {hasLang ? lang("lang") : null}
           <a class="btn btn--solid" href="/docs/quickstart/">
             {s.nav.start}
           </a>
@@ -53,12 +71,18 @@ export default function SiteNav({ locale = "en", page }: { locale?: Locale; page
               </svg>
             </summary>
             <div class="menu__panel">
-              <a href="/docs/" aria-current={docsCurrent}>
+              <a class="menu__sm" href={`${base}jetstream/`} aria-current={cur("jetstream")}>
+                {s.nav.jetstream}
+              </a>
+              <a class="menu__sm" href={`${base}architecture/`} aria-current={cur("architecture")}>
+                {s.nav.architecture}
+              </a>
+              <a class="menu__sm" href="/docs/" aria-current={cur("docs")}>
                 {s.nav.docs}
               </a>
               <a href={compare}>{s.nav.compare}</a>
               <a href={GH}>GitHub</a>
-              {page === "home" ? lang("menu__lang") : null}
+              {hasLang ? lang("menu__lang") : null}
             </div>
           </details>
         </nav>
