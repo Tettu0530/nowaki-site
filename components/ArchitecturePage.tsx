@@ -1,5 +1,5 @@
-// /architecture and /ja/architecture: how Nowaki 0.13.0 is built, source to browser.
-import { Page, Opener, Sec, Rows, Table, Close } from "./Explainer.tsx";
+// /architecture and /ja/architecture: how Nowaki 0.14.0 is built, source to browser.
+import { Page, Opener, Sec, Rows, Table, Close, Arrow } from "./Explainer.tsx";
 import { ARCHITECTURE } from "../lib/explainers.ts";
 import { BENCH } from "../lib/benchmarks.ts";
 import { GH } from "../lib/i18n.ts";
@@ -8,7 +8,7 @@ import type { Locale } from "../lib/i18n.ts";
 export default function ArchitecturePage({ locale }: { locale: Locale }) {
   const s = ARCHITECTURE[locale];
   const base = locale === "ja" ? "/ja/" : "/";
-  const devMs = String(BENCH?.frameworks.find((f) => f.framework === "nowaki")?.devMs ?? "");
+  const devMs = String(BENCH?.frameworks.find((f) => f.framework === "nowaki")?.devFirstMs ?? "");
   const fill = (rows: readonly { t: string; d: string }[]) => rows.map((r) => ({ t: r.t.replace("{devMs}", devMs), d: r.d.replace("{devMs}", devMs) }));
   return (
     <Page locale={locale} page="architecture" slug="architecture">
@@ -53,6 +53,14 @@ export default function ArchitecturePage({ locale }: { locale: Locale }) {
 
       <Sec id="request-h" h2={s.request.h2}>
         <Rows rows={s.request.rows} />
+      </Sec>
+
+      <Sec id="security-h" h2={s.security.h2} lead={s.security.lead}>
+        <Rows rows={s.security.rows} />
+        <a class="tlink xmore" href="/docs/security/">
+          {s.security.more}
+          <Arrow />
+        </a>
       </Sec>
 
       <Sec id="client-h" h2={s.client.h2}>

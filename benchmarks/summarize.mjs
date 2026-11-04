@@ -29,12 +29,15 @@ for (const fw of order) {
     version: series[0].version,
     runs: series.length,
     devMs: median(series.map((r) => r.devMs)),
+    devFirstMs: median(series.map((r) => r.devFirstMs)),
+    buildCmd: series[0].buildCmd ?? null,
     buildMs: median(series.map((r) => r.buildMs)),
     jsKB: js ? Math.round(js.gzKB * 10) / 10 : null,
     jsFiles: js?.files ?? null,
     // JS that loads only once the page is idle (Nowaki's SPA router), from the browser file list.
     idleKB: js ? Math.round(js.list.filter((l) => /\/router(-core)?\./.test(l) && fw === "nowaki").reduce((n, l) => n + Number.parseFloat(l), 0) * 10) / 10 : 0,
     devRuns: series.map((r) => r.devMs),
+    devFirstRuns: series.map((r) => r.devFirstMs),
     buildRuns: series.map((r) => r.buildMs),
   });
 }
@@ -44,6 +47,6 @@ const summary = {
   frameworks: out,
 };
 writeFileSync(path.join(R, "summary.json"), `${JSON.stringify(summary, null, 2)}\n`);
-console.log("| framework | dev ready (cold) | build | first-load JS (gzip) |\n|---|---|---|---|");
-for (const f of out) console.log(`| ${f.label} ${f.version} | ${f.devMs} ms | ${f.buildMs} ms | ${f.jsKB} KB |`);
+console.log("| framework | dev first page (cold) | dev ready line | build | first-load JS (gzip) |\n|---|---|---|---|---|");
+for (const f of out) console.log(`| ${f.label} ${f.version} | ${f.devFirstMs} ms | ${f.devMs} ms | ${f.buildMs} ms | ${f.jsKB} KB |`);
 console.log(`\n${summary.measured} · ${summary.machine}`);

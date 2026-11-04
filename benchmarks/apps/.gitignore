@@ -8,3 +8,4 @@ build/
 .output/
 .svelte-kit/
 .nowaki/
+next-counter/AGENTS.md

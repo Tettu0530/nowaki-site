@@ -17,7 +17,7 @@ export default function Jetstream() {
       <p>
         A regular island ships its component JS and runs in the browser. A Jetstream island ships
         none: the server holds its state per connection, re-renders on events, and sends a DOM patch
-        that a ~2&nbsp;KB runtime morphs in. It's Nowaki's answer to "content-driven but dynamic"
+        that a 1.5&nbsp;KB (gzip) runtime morphs in. It's Nowaki's answer to "content-driven but dynamic"
         UIs (live counters, dashboards, presence) without shipping a client framework.
       </p>
 
@@ -51,7 +51,7 @@ export default function LiveCounter({ state }) {
       <ul>
         <li>The build emits <strong>no client chunk</strong> for live islands; it SSRs them inside a <code>&lt;nowaki-live&gt;</code> wrapper with the initial state.</li>
         <li>The Rust front holds a <code>/__nowaki/live</code> WebSocket and keeps each island's state per connection.</li>
-        <li>A <code>data-live</code> event is bridged to the Node renderer (a pure <code>state → html</code> function); the new HTML is pushed as a patch and morphed into the DOM.</li>
+        <li>A <code>data-live</code> click is bridged to the Node renderer, which verifies the signed state, runs the handler and renders the island again; the new HTML and the re-signed state are pushed as a patch and morphed into the DOM. Only click events are wired so far.</li>
         <li>Client and optimistic islands coexist on the same page.</li>
       </ul>
 
@@ -62,10 +62,21 @@ export default function LiveCounter({ state }) {
         <li><strong>Connection cap</strong>: a global limit (<code>NOWAKI_LIVE_MAX</code>); over it, the client keeps the initial SSR view (graceful degradation).</li>
       </ul>
 
+      <h2>Signatures, timeouts and errors <span class="badge">v0.14</span></h2>
+      <ul>
+        <li><strong>Signed state</strong>: every state is signed with HMAC-SHA256 over the island name, the issue time and the state, and verified before each render and handler. A signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (86400 seconds by default) is rejected; every patch is re-signed, so an island in use doesn't expire.</li>
+        <li><strong>Set <code>NOWAKI_LIVE_SECRET</code></strong> in production. Without it each process uses its own random key: state can't resume after a restart or on another instance, and production servers warn at startup.</li>
+        <li><strong>Renders off the session loop</strong>: one render at a time per connection, with up to 32 events queued behind it, so pings, presence and new events keep flowing.</li>
+        <li><strong>Timeouts and errors</strong>: a render slower than <code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code> (10000 by default) or one that fails is reported as <code>{`{ type: "error", nid, reason }`}</code> (<code>timeout</code>, <code>render failed</code> or <code>busy</code>) and dispatched as a <code>nowaki:live-error</code> window event. The island keeps its last HTML and state.</li>
+        <li><strong>Origin check</strong>: the WebSocket upgrade must come from the page's own origin. Behind a reverse proxy, set <code>NOWAKI_TRUST_PROXY=1</code>.</li>
+      </ul>
+
       <div class="note">
-        Static and edge deploys serve the initial SSR and degrade gracefully without a WebSocket;
-        the connected, reactive mode runs under <code>nowaki start</code> (the Rust front holds the
-        socket). Validate inputs in your <code>on</code> handlers as you would any server handler.
+        Live updates run under <code>nowaki dev</code> and <code>nowaki start</code>, where the Rust
+        front holds the socket. The node, bun, deno, vercel and cloudflare adapters render a live
+        island's initial HTML and ship no live client; static output (<code>nowaki prerender</code>)
+        still loads live.js, which stops after 8 failed connection attempts. Validate payloads in your{" "}
+        <code>on</code> handlers as you would any server handler.
       </div>
     </>
   );

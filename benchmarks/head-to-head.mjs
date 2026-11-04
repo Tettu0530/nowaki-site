@@ -8,6 +8,7 @@
 //
 // Metrics (the same definitions as BENCHMARKS.md in Tettu0530/nowaki):
 //   dev ready (cold)  wall time from starting the dev server to its ready line, caches cleared
+//   dev first page    wall time from the same start until GET / returns 200 with the page text
 //   build             wall time of the production build, caches cleared
 //   first-load JS     a quick static estimate from the built output, logged for reference only.
 //                     The published figure comes from browser-check.mjs: every JS file the
@@ -74,31 +75,51 @@ function htmlJs(htmlFile, resolve) {
   return files;
 }
 
-// Starts the dev server and returns ms until a ready marker appears, then kills its process group.
-function devReady(cmd, args, cwd, env, markers, timeoutMs = 120000) {
+// Starts the dev server and measures two things from the same spawn:
+//   readyMs  until the framework prints its ready line
+//   firstMs  until GET / answers 200 with the page's own text ("Hello from"), i.e. the first
+//            page is compiled and rendered. Frameworks print "ready" at different points
+//            (before or after their first compile), so firstMs is the like-for-like one.
+// Then kills the process group.
+function devRun(cmd, args, cwd, env, markers, port, daemon = false, timeoutMs = 120000) {
   const wanted = markers.map((m) => m.toLowerCase());
   return new Promise((resolve) => {
     const t0 = now();
     const child = spawn(cmd, args, { cwd, env: { ...process.env, ...env, FORCE_COLOR: "0", NO_COLOR: "1" }, detached: true });
+    let readyMs = null;
+    let firstMs = null;
     let done = false;
     let log = "";
-    const finish = (ms) => {
+    const finish = () => {
       if (done) return;
       done = true;
       try {
         process.kill(-child.pid, "SIGKILL");
       } catch {}
-      resolve({ ms, log });
+      resolve({ readyMs, firstMs, log });
     };
     const onData = (buf) => {
       const text = buf.toString();
       log += text;
-      if (wanted.some((m) => text.toLowerCase().includes(m))) finish(now() - t0);
+      if (readyMs == null && wanted.some((m) => text.toLowerCase().includes(m))) readyMs = now() - t0;
     };
     child.stdout.on("data", onData);
     child.stderr.on("data", onData);
-    child.on("exit", () => finish(null));
-    setTimeout(() => finish(null), timeoutMs);
+    // A CLI that hands the server to a background daemon (Astro 7) exits early; keep polling.
+    child.on("exit", () => (daemon ? null : finish()));
+    setTimeout(finish, timeoutMs);
+    (async () => {
+      while (!done && firstMs == null) {
+        try {
+          const r = await fetch(`http://localhost:${port}/`, { signal: AbortSignal.timeout(30000) });
+          const body = await r.text();
+          if (r.status === 200 && body.includes("Hello from")) firstMs = now() - t0;
+        } catch {}
+        if (firstMs == null) await sleep(25);
+      }
+      // both observed (or the page answered before any ready line): stop
+      if (firstMs != null) setTimeout(finish, readyMs == null ? 300 : 0);
+    })();
   });
 }
 
@@ -115,7 +136,10 @@ const FRAMEWORKS = {
     bin: "nowaki",
     dev: ["dev", ".", "--port", "8901"],
     ready: ["ready in"],
-    build: ["build", "."],
+    // `nowaki build` writes no HTML; the others prerender `/` in their build, so Nowaki is
+    // timed with `nowaki prerender` (build, then render every route to dist/static).
+    build: ["prerender", "."],
+    port: 8901,
     caches: ["dist", ".nowaki", "node_modules/.cache"],
     js(dir) {
       const client = path.join(dir, "dist/client");
@@ -130,6 +154,7 @@ const FRAMEWORKS = {
     bin: "next",
     env: { NEXT_TELEMETRY_DISABLED: "1" },
     dev: ["dev", "-p", "8902"],
+    port: 8902,
     ready: ["ready in"],
     build: ["build"],
     caches: [".next"],
@@ -141,7 +166,9 @@ const FRAMEWORKS = {
     bin: "astro",
     env: { ASTRO_TELEMETRY_DISABLED: "1" },
     dev: ["dev", "--port", "8903"],
+    port: 8903,
     ready: ["ready in", "dev server running at"],
+    daemon: true,
     after: (dir, bin) => spawnSync(bin, ["dev", "stop"], { cwd: dir, stdio: "ignore" }),
     build: ["build"],
     caches: ["dist", ".astro", "node_modules/.vite"],
@@ -153,6 +180,7 @@ const FRAMEWORKS = {
     bin: "nuxt",
     env: { NUXT_TELEMETRY_DISABLED: "1" },
     dev: ["dev", "--port", "8904"],
+    port: 8904,
     ready: ["ready in"], // "◆ Ready in 2.51s", printed once the server stops answering 503
     build: ["build"],
     caches: [".nuxt", ".output", "node_modules/.cache", "node_modules/.vite"],
@@ -163,6 +191,7 @@ const FRAMEWORKS = {
     dir: "sveltekit-counter",
     bin: "vite",
     dev: ["dev", "--port", "8905"],
+    port: 8905,
     ready: ["ready in"],
     build: ["build"],
     caches: [".svelte-kit", "build", "node_modules/.vite"],
@@ -195,10 +224,10 @@ console.log(`${fw.label} ${version} · ${RUNS} runs · ${machine}`);
 
 for (let i = 1; i <= RUNS; i++) {
   clean();
-  const dev = await devReady(bin, fw.dev, dir, fw.env, fw.ready);
+  const dev = await devRun(bin, fw.dev, dir, fw.env, fw.ready, fw.port, fw.daemon);
   fw.after?.(dir, bin);
   await sleep(1500); // let the port and child processes go
-  if (dev.ms == null) console.error(dev.log.slice(-2000));
+  if (dev.firstMs == null) console.error(dev.log.slice(-2000));
   clean();
   const build = run(bin, fw.build, dir, fw.env);
   if (build.ms == null) {
@@ -206,9 +235,9 @@ for (let i = 1; i <= RUNS; i++) {
     process.exit(1);
   }
   const js = sizes(fw.js(dir));
-  const row = { framework: name, label: fw.label, version, run: i, devMs: dev.ms, buildMs: build.ms, ...js, at: new Date().toISOString(), machine };
+  const row = { framework: name, label: fw.label, version, run: i, devMs: dev.readyMs, devFirstMs: dev.firstMs, buildMs: build.ms, buildCmd: fw.build.join(" "), ...js, at: new Date().toISOString(), machine };
   appendFileSync(path.join(HERE, "results/runs.jsonl"), `${JSON.stringify(row)}\n`);
-  console.log(`run ${i}: dev ${dev.ms} ms · build ${build.ms} ms · JS ${js.rawKB.toFixed(1)} KB raw / ${js.gzKB.toFixed(1)} KB gzip (${js.files} files)`);
+  console.log(`run ${i}: dev ready ${dev.readyMs} ms, first page ${dev.firstMs} ms · build ${build.ms} ms · JS ${js.rawKB.toFixed(1)} KB raw / ${js.gzKB.toFixed(1)} KB gzip (${js.files} files)`);
   await sleep(1500);
 }
 clean();
