@@ -219,7 +219,7 @@ export const LANDING_CSS = `
 /* proof: measured numbers */
 .proof{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,5vw,80px);align-items:start}
 .bars{display:grid;gap:clamp(36px,4vw,52px)}
-.ledger{position:sticky;top:96px}
+.proof .ledger{order:-1}
 .ledger h3{font:500 .92rem var(--sans);color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
 .ledger__t{min-width:0;width:100%;font-size:.9rem}
 .ledger__t th,.ledger__t td{padding:11px 0;border-bottom:1px solid var(--line);vertical-align:baseline}
@@ -230,6 +230,7 @@ export const LANDING_CSS = `
 .ledger__t tfoot td{color:var(--susuki)}
 .ledger__src{margin-top:10px;font-size:.8rem;color:var(--muted)}
 .ledger .note{margin-top:28px}
+.bars > .note{margin-top:-12px}
 .bars__group{display:grid;gap:18px}
 .bars__group h3{font:500 .92rem var(--sans);color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
 .bar__top{display:flex;justify-content:space-between;gap:1rem;align-items:baseline}
@@ -239,6 +240,17 @@ export const LANDING_CSS = `
 .bar__track{margin-top:10px;height:6px;border-radius:6px;background:var(--raise-2);overflow:hidden}
 .bar__fill{height:100%;border-radius:6px;background:var(--susuki);transform-origin:left}
 .bar__fill.is-muted{background:#3a404a}
+/* five-framework head-to-head, under the comparison table */
+.bench{margin-top:clamp(56px,6vw,88px);padding-top:clamp(36px,4vw,56px);border-top:1px solid var(--line)}
+.bench__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px clamp(24px,4vw,64px);margin-bottom:clamp(28px,3vw,44px)}
+.bench__head h3{flex:1 1 420px;min-width:0;font:400 clamp(1.5rem,1.1rem + 1.2vw,2.1rem)/1.12 var(--serif);letter-spacing:-.022em;max-width:22ch}
+:lang(ja) .bench__head h3{line-height:1.35;letter-spacing:0;max-width:none}
+.bench__groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,3.5vw,56px)}
+.bars__group h4{margin:0;font:500 .92rem var(--sans);color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
+.bar__label small{margin-left:.2rem;font:400 .78rem var(--mono);color:var(--muted)}
+.bar__label.is-us{color:var(--fg);font-weight:500}
+.bench__note{max-width:76ch;margin-top:clamp(28px,3vw,40px)}
+.bench__src{display:inline-block;margin-top:.9rem;font-size:.92rem}
 @media (prefers-reduced-motion:no-preference){@supports (animation-timeline:view()){
   .bar__fill{animation:grow linear both;animation-timeline:view();animation-range:entry 20% cover 45%}
 }}
@@ -462,6 +474,7 @@ td.is-n{color:var(--fg);background:rgb(216 191 134 / .05)}
   .hop::before{top:6px;left:-5px}
   .rail::after{display:none}
   .rail::before{display:none}
+  .bench__groups{grid-template-columns:minmax(0,1fr)}
   .isl.is-wide,.map__key li:not(.map__note){display:none}
   .map__key{top:auto;bottom:14px;padding:0;background:none}
   .map__key .map__note{padding:0;border:0}

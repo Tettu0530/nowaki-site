@@ -1,0 +1,111 @@
+{
+  "measured": "2026-11-04",
+  "machine": "Apple M2, 8 cores, 16 GB, darwin 25.6.0, node v24.14.0",
+  "frameworks": [
+    {
+      "framework": "nowaki",
+      "label": "Nowaki",
+      "version": "0.13.0",
+      "runs": 3,
+      "devMs": 148,
+      "buildMs": 82,
+      "jsKB": 12.9,
+      "jsFiles": 7,
+      "idleKB": 3.9,
+      "devRuns": [
+        1044,
+        146,
+        148
+      ],
+      "buildRuns": [
+        75,
+        82,
+        87
+      ]
+    },
+    {
+      "framework": "astro",
+      "label": "Astro",
+      "version": "7.4.5",
+      "runs": 3,
+      "devMs": 988,
+      "buildMs": 674,
+      "jsKB": 9.4,
+      "jsFiles": 4,
+      "idleKB": 0,
+      "devRuns": [
+        2972,
+        988,
+        943
+      ],
+      "buildRuns": [
+        912,
+        661,
+        674
+      ]
+    },
+    {
+      "framework": "sveltekit",
+      "label": "SvelteKit",
+      "version": "3.1.1",
+      "runs": 3,
+      "devMs": 426,
+      "buildMs": 950,
+      "jsKB": 31.2,
+      "jsFiles": 10,
+      "idleKB": 0,
+      "devRuns": [
+        598,
+        382,
+        426
+      ],
+      "buildRuns": [
+        969,
+        950,
+        930
+      ]
+    },
+    {
+      "framework": "next",
+      "label": "Next.js",
+      "version": "16.4.4",
+      "runs": 3,
+      "devMs": 449,
+      "buildMs": 2375,
+      "jsKB": 133.5,
+      "jsFiles": 6,
+      "idleKB": 0,
+      "devRuns": [
+        740,
+        321,
+        449
+      ],
+      "buildRuns": [
+        4206,
+        2159,
+        2375
+      ]
+    },
+    {
+      "framework": "nuxt",
+      "label": "Nuxt",
+      "version": "4.6.4",
+      "runs": 3,
+      "devMs": 1536,
+      "buildMs": 3946,
+      "jsKB": 67,
+      "jsFiles": 4,
+      "idleKB": 0,
+      "devRuns": [
+        1950,
+        1460,
+        1536
+      ],
+      "buildRuns": [
+        4525,
+        3811,
+        3946
+      ]
+    }
+  ]
+}

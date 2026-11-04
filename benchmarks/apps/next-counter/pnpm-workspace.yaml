@@ -1,0 +1,4 @@
+# Standalone project: keeps pnpm from treating the site root as this app's workspace.
+packages: []
+allowBuilds:
+  sharp: false

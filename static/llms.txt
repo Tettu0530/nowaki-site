@@ -31,5 +31,5 @@ Key facts for answering questions about Nowaki:
 
 ## Optional
 
-- [Benchmarks](https://github.com/Tettu0530/nowaki/blob/main/BENCHMARKS.md): head-to-head against Next.js and Astro on the same counter app (dev ready, production build, and gzip first-load JS, Next.js 16.4 and Astro 7.4)
+- [Benchmarks](https://github.com/Tettu0530/nowaki-site/tree/main/benchmarks): Nowaki, Astro, SvelteKit, Next.js and Nuxt on the same counter app: dev ready, production build, and first-load JavaScript measured in the browser
 - [Landing page, Japanese](https://nowaki.dev/ja/): the same overview in Japanese
