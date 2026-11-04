@@ -49,14 +49,16 @@ Nowaki's idle-loaded router. Measured in the browser, Astro ships the least Java
 
 | framework | dev, first page (cold) | dev ready line | build, HTML included | first-load JS (gzip) |
 |---|---|---|---|---|
-| Nowaki 0.14.0 | 204 ms | 158 ms | 198 ms | 13.3 KB |
-| Astro 7.4.5 | 1876 ms | 1186 ms | 676 ms | 9.4 KB |
-| SvelteKit 3.1.1 | 738 ms | 425 ms | 970 ms | 31.2 KB |
-| Next.js 16.4.4 | 1306 ms | 284 ms | 2154 ms | 133.5 KB |
-| Nuxt 4.6.4 | 2646 ms | 1949 ms | 3576 ms | 67.0 KB |
+| Nowaki 0.14.0 | 197 ms | 148 ms | 187 ms | 13.3 KB |
+| Astro 7.4.5 | 1614 ms | 1160 ms | 687 ms | 9.4 KB |
+| SvelteKit 3.1.1 | 722 ms | 438 ms | 944 ms | 31.2 KB |
+| Next.js 16.4.4 | 1272 ms | 307 ms | 2140 ms | 133.5 KB |
+| Nuxt 4.6.4 | 2068 ms | 1379 ms | 3607 ms | 67.0 KB |
 
 An earlier series timed Nowaki's build as `nowaki build` (no HTML, 71 ms) and compared
-ready lines; both were uneven and are superseded by the table above.
+ready lines; both were uneven and are superseded by the table above. A second series
+(11:42-11:54 JST) overlapped another benchmark session's trial runs for Astro, Nuxt and
+SvelteKit; the table is from a clean third series measured after it finished.
 
 Raw runs: `results/runs.jsonl` (dev and build, plus a static JS estimate) and
 `results/browser.jsonl` (the browser measurement with every file listed).
