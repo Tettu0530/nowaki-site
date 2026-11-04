@@ -166,7 +166,7 @@ export const STRINGS = {
         { title: "rooms", body: "<code>live.room</code> と <code>live.shared</code> で、同じ room のタブがすべて1つの状態を共有します。1つのタブでの投票が、ほかのタブにも反映されます。状態はサーバーのプロセス1つの中に置きます。" },
         { title: "live query", body: "島がトピックを購読します。action や API ルートで <code>publish(topic)</code> を呼ぶと、購読している島に新しい HTML が届きます。動くのは <code>nowaki dev</code> と <code>nowaki start</code> です。" },
         { title: "フォームと入力のイベント", body: "<code>data-live-submit</code>、間引きのできる <code>data-live-input</code>、<code>data-live-change</code> を使えます。<code>data-key</code> を付けた行は、要素を保ったまま更新されます。" },
-        { title: "prerender の高速化", body: "一時的なサーバーの起動と staticPaths の評価を同時に始め、ページを8つずつ描きます。下の比較の1000ページのブログでは、700\u00a0ms から 504\u00a0ms になりました。" },
+        { title: "prerender の高速化", body: "一時的なサーバーの起動と staticPaths の評価を同時に始め、ページを8つずつ描きます。下の比較にある1000ページのブログでは、ビルドの時間が 700\u00a0ms から 504\u00a0ms になりました。" },
         { title: "クライアントの JavaScript を縮小", body: "チャンクを完全に minify するようになりました。下の比較にあるカウンターのページは、13.3\u00a0KB から 11.4\u00a0KB になりました。" },
       ],
     },

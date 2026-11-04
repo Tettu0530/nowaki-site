@@ -46,6 +46,18 @@ export const JETSTREAM = {
       ],
       note: "Rooms are held in the memory of one server process. They don't reach other instances, and they start empty after a restart. On the deploy adapters a room island handles events, but the other members are not pushed.",
     },
+    fanout: {
+      h2: "One change, 1000 connections.",
+      lead: "How long one change on the server takes to reach every subscribed connection under nowaki start: 1000 WebSocket connections, the same change repeated 150 times.",
+      stats: [
+        { v: "63.2\u00a0ms", d: "p95 per patch for a live query: one publish() reaching 1000 subscribed islands." },
+        { v: "67.5\u00a0ms", d: "p95 per patch for a room: one vote reaching the other 999 members." },
+        { v: "0 missed", d: "of more than 149,850 patches in each scenario." },
+      ],
+      note: "Median of 3 sets on an Apple M2, with Nowaki 0.15.0 built from source. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. Patches go out one connection after another, which is being worked on (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>). The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
+      method: "The harness and every set",
+      href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
+    },
     more: {
       h2: "Also new in 0.15.",
       rows: [
@@ -149,6 +161,18 @@ export const JETSTREAM = {
         { t: "在席表示", d: "<code>data-nowaki-presence=\"poll:demo\"</code> を付けた要素に、room にいる接続の数が表示されます。WebSocket のときだけです。" },
       ],
       note: "rooms はサーバーのプロセス1つのメモリに置きます。ほかのインスタンスには届かず、再起動すると空になります。デプロイ用のアダプタでも room の島はイベントを処理しますが、ほかのメンバーには push されません。",
+    },
+    fanout: {
+      h2: "1つの変更を<wbr>1000本の接続へ。",
+      lead: "nowaki start で、サーバー側の1つの変更が、購読しているすべての接続に届くまでの時間を測りました。WebSocket の接続を1000本開き、同じ変更を150回くり返しました。",
+      stats: [
+        { v: "63.2\u00a0ms", d: "live query のパッチ1通ごとの p95。1回の publish() が、購読している1000個の島に届くまでです。" },
+        { v: "67.5\u00a0ms", d: "room のパッチ1通ごとの p95。1票がほかの999のメンバーに届くまでです。" },
+        { v: "取りこぼし 0", d: "シナリオごとに 149,850 通を超えるパッチのうち、届かなかったものはありません。" },
+      ],
+      note: "Apple M2 で3セットを測った中央値です。Nowaki 0.15.0 はソースからビルドして使いました。受け手のクライアントは同じマシンで動く Node のプロセス1つなので、1000通を処理する時間も数値に含まれます。パッチは接続ごとに順に送っていて、この送り方の改良を進めています（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。デプロイ用のアダプタにはサーバーからの push がないので、この数値は nowaki dev と nowaki start だけに当てはまります。",
+      method: "計測の方法とすべての結果（英語）",
+      href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
     more: {
       h2: "0.15 で入ったほかの機能。",

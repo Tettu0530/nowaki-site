@@ -130,6 +130,21 @@ export default function JetstreamPage({ locale }: { locale: Locale }) {
         <p class="note" {...html(s.rooms.note)} />
       </Sec>
 
+      <Sec id="fanout-h" h2={s.fanout.h2} lead={s.fanout.lead}>
+        <div class="xstats">
+          {s.fanout.stats.map((st) => (
+            <div>
+              <b>{st.v}</b>
+              <p {...html(st.d)} />
+            </div>
+          ))}
+        </div>
+        <p class="note" {...html(s.fanout.note)} />
+        <a class="tlink xsrc" href={s.fanout.href}>
+          {s.fanout.method}
+        </a>
+      </Sec>
+
       <Sec id="more-h" h2={s.more.h2}>
         <Rows rows={s.more.rows} />
       </Sec>
