@@ -583,6 +583,7 @@ export const EXPLAINER_CSS = `
 
 /* measured figures */
 .xstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.xsrc{display:inline-block;margin-top:16px}
 .xstats > div{padding:28px clamp(16px,2.5vw,32px) 28px 0}
 .xstats > div + div{padding-left:clamp(16px,2.5vw,32px);border-left:1px solid var(--line)}
 .xstats b{display:block;font:400 clamp(1.9rem,1.3rem + 1.6vw,2.8rem)/1.05 var(--serif);letter-spacing:-.02em;color:var(--susuki)}
