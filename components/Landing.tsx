@@ -2,10 +2,11 @@ import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
 import BuildTiles from "./BuildTiles.tsx";
 import IslandMap, { IslandEl } from "./IslandMap.tsx";
-import { STRINGS, GH, CRATES, NPM } from "../lib/i18n.ts";
+import { STRINGS, GH, CRATES, NPM, SITE_GH } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 import { NOWAKI_RELEASE, NOWAKI_VERSION } from "../lib/version.ts";
 import { shipped } from "../lib/bundle.ts";
+import { BENCH } from "../lib/benchmarks.ts";
 import { MARK_URL } from "../lib/landing-style.ts";
 
 const CHANGELOG = `${GH}/blob/main/CHANGELOG.md`;
@@ -27,6 +28,68 @@ function Mark({ no = false }: { no?: boolean }) {
     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" style="color:var(--susuki)">
       <path d="M2.2 6.4 4.8 9 9.8 3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
+  );
+}
+
+// The five-framework head-to-head: one group per metric, each sorted from best to worst,
+// bars drawn to scale against the group's largest value, Nowaki in susuki.
+const METRICS = [
+  { key: "devMs", unit: "ms", digits: 0 },
+  { key: "buildMs", unit: "ms", digits: 0 },
+  { key: "jsKB", unit: "KB", digits: 1 },
+] as const;
+
+function Bench({ locale }: { locale: Locale }) {
+  if (!BENCH) return null;
+  const b = STRINGS[locale].compare.bench;
+  const now = BENCH.frameworks.find((f) => f.framework === "nowaki");
+  const note = b.note
+    .replace("{runs}", String(now?.runs ?? 3))
+    .replace("{machine}", BENCH.machine.split(",").slice(0, 3).join(","))
+    .replace("{date}", BENCH.measured)
+    .replace("{idle}", String(now?.idleKB ?? 0));
+  return (
+    <div class="bench" id="bench">
+      <div class="bench__head">
+        <h3>{b.h3}</h3>
+        <p class="lead">{b.lead}</p>
+      </div>
+      <div class="bench__groups">
+        {METRICS.map((m, gi) => {
+          const rows = [...BENCH.frameworks].sort((x, y) => x[m.key] - y[m.key]);
+          const max = Math.max(...rows.map((r) => r[m.key]));
+          return (
+            <div class="bars__group">
+              <h4>{b.groups[gi]}</h4>
+              {rows.map((r) => {
+                const us = r.framework === "nowaki";
+                const v = r[m.key];
+                return (
+                  <div>
+                    <div class="bar__top">
+                      <span class={`bar__label${us ? " is-us" : ""}`}>
+                        {r.label} <small>{r.version.split(".").slice(0, 2).join(".")}</small>
+                      </span>
+                      <span class={`bar__val${us ? "" : " is-muted"}`}>
+                        {v.toFixed(m.digits)} {m.unit}
+                      </span>
+                    </div>
+                    <div class="bar__track">
+                      <div class={`bar__fill${us ? "" : " is-muted"}`} style={`width:${Math.max((v / max) * 100, 1).toFixed(1)}%`} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
+      <p class="note bench__note" dangerouslySetInnerHTML={{ __html: note }} />
+      <a class="tlink bench__src" href={`${SITE_GH}/tree/main/benchmarks`}>
+        {b.method}
+        <Arrow />
+      </a>
+    </div>
   );
 }
 
@@ -129,6 +192,7 @@ export default function Landing({ locale }: { locale: Locale }) {
                 </div>
               );
             })}
+            <p class="note" dangerouslySetInnerHTML={{ __html: s.proof.note }} />
           </div>
           <aside class="ledger" aria-labelledby="ledger-h">
             {ship ? (
@@ -156,7 +220,6 @@ export default function Landing({ locale }: { locale: Locale }) {
                 <p class="ledger__src">{s.proof.ledger.note}</p>
               </>
             ) : null}
-            <p class="note" dangerouslySetInnerHTML={{ __html: s.proof.note }} />
           </aside>
           </div>
         </section>
@@ -248,6 +311,7 @@ export default function Landing({ locale }: { locale: Locale }) {
             </table>
           </div>
           <p class="note">{s.compare.note}</p>
+          <Bench locale={locale} />
         </section>
 
         <section class="sec wrap" aria-labelledby="fit-h">

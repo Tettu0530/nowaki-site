@@ -4,6 +4,7 @@ export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
 
 export const GH = "https://github.com/Tettu0530/nowaki";
+export const SITE_GH = "https://github.com/Tettu0530/nowaki-site";
 export const CRATES = "https://crates.io/crates/nowaki";
 export const NPM = "https://www.npmjs.com/package/nowaki";
 
@@ -35,21 +36,12 @@ export const STRINGS = {
     proof: {
       h2: "This page ships {kb} KB of JavaScript.",
       lead: "Two copy buttons are the only code that runs here. Everything that moves is CSS.",
-      groups: ["This site, gzip", "Same counter app: first-load JS, gzip", "Same counter app: production build", "Same counter app: dev server ready, cold"],
+      groups: ["This site, gzip"],
       bars: [
         { label: "This page", value: "{kb} KB", group: 0 },
         { label: "A page with no islands", value: "0 KB", group: 0 },
-        { label: "Nowaki", value: "9.1 KB", group: 1 },
-        { label: "Astro 7.4", value: "10.4 KB", group: 1, muted: true },
-        { label: "Next.js 16.4, app router", value: "132.0 KB", group: 1, muted: true },
-        { label: "Nowaki", value: "20 ms", group: 2 },
-        { label: "Astro 7.4", value: "721 ms", group: 2, muted: true },
-        { label: "Next.js 16.4", value: "2087 ms", group: 2, muted: true },
-        { label: "Nowaki", value: "82 ms", group: 3 },
-        { label: "Astro 7.4", value: "1119 ms", group: 3, muted: true },
-        { label: "Next.js 16.4", value: "261 ms", group: 3, muted: true },
       ],
-      note: "Head-to-head from <code>benchmarks/head-to-head.mjs</code>, all three on one machine. Numbers move between runs; the orders of magnitude are the point.",
+      note: `How that compares with Astro, SvelteKit, Next.js and Nuxt on one app is <a class="tlink" href="#bench">measured below</a>.`,
       ledger: { h3: "What the {kb} KB is", total: "Total, gzip -9", note: "Computed from this build." },
     },
     jet: {
@@ -96,6 +88,13 @@ export const STRINGS = {
         { feature: "Maturity", nowaki: "Alpha", next: "Mature", astro: "Mature" },
       ],
       note: "Server functions, streaming SSR and deploy adapters exist in all three.",
+      bench: {
+        h3: "Five frameworks, one app, measured.",
+        lead: "The same page with one counter, built and started on one machine. Lower is better.",
+        groups: ["Dev server ready, cold", "Production build", "JavaScript on first load, gzip"],
+        note: "Median of {runs} runs on {machine}, {date}. Caches cleared before every run. First-load JavaScript is everything the browser runs for <code>/</code>: files and inline scripts, measured in headless Chromium. Nowaki's {idle} KB includes its client router, which loads once the page is idle.",
+        method: "Apps, scripts and raw runs",
+      },
     },
     fit: {
       h2: "Where it fits, and where it stands.",
@@ -144,21 +143,12 @@ export const STRINGS = {
     proof: {
       h2: "このページが送る JavaScript は {kb} KB。",
       lead: "ここで動くコードは2つのコピーボタンだけです。動いているものはすべて CSS です。",
-      groups: ["このサイト（gzip 後）", "同じカウンタアプリ：first-load JS（gzip 後）", "同じカウンタアプリ：本番ビルド", "同じカウンタアプリ：dev サーバーの起動（cold）"],
+      groups: ["このサイト（gzip 後）"],
       bars: [
         { label: "このページ", value: "{kb} KB", group: 0 },
         { label: "島の無いページ", value: "0 KB", group: 0 },
-        { label: "Nowaki", value: "9.1 KB", group: 1 },
-        { label: "Astro 7.4", value: "10.4 KB", group: 1, muted: true },
-        { label: "Next.js 16.4（app router）", value: "132.0 KB", group: 1, muted: true },
-        { label: "Nowaki", value: "20 ms", group: 2 },
-        { label: "Astro 7.4", value: "721 ms", group: 2, muted: true },
-        { label: "Next.js 16.4", value: "2087 ms", group: 2, muted: true },
-        { label: "Nowaki", value: "82 ms", group: 3 },
-        { label: "Astro 7.4", value: "1119 ms", group: 3, muted: true },
-        { label: "Next.js 16.4", value: "261 ms", group: 3, muted: true },
       ],
-      note: "直接比較は <code>benchmarks/head-to-head.mjs</code> によるもので、3つとも同じマシンで測っています。数値は回ごとに揺れます。見てほしいのは桁の違いです。",
+      note: `Astro・SvelteKit・Next.js・Nuxt と同じアプリで比べた結果は、<a class="tlink" href="#bench">下で実測しています</a>。`,
       ledger: {
         h3: "{kb} KB の内訳",
         total: "合計（gzip -9）",
@@ -210,6 +200,13 @@ export const STRINGS = {
         { feature: "成熟度", nowaki: "alpha", next: "成熟", astro: "成熟" },
       ],
       note: "サーバー関数・ストリーミング SSR・デプロイアダプタは3つともにあります。",
+      bench: {
+        h3: "5つのフレームワークを、同じアプリで実測。",
+        lead: "カウンターが1つあるだけの同じページを、同じマシンでビルドして起動しました。小さいほど良い値です。",
+        groups: ["dev サーバーの起動（cold）", "本番ビルド", "初回に読み込む JavaScript（gzip 後）"],
+        note: "{machine} で {runs} 回測った中央値（{date}）。毎回キャッシュを消してから測っています。初回の JavaScript は、ヘッドレス Chromium で <code>/</code> を開いたときにブラウザが実行するものすべて（ファイルとインラインスクリプト）です。Nowaki の値には、ページが落ち着いてから読み込むクライアントルーター {idle} KB を含みます。",
+        method: "アプリ・スクリプト・生データ（英語）",
+      },
     },
     fit: {
       h2: "向く場面と、いまの現在地。",

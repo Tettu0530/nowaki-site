@@ -1,0 +1,10 @@
+# Build output and deps of the benchmark apps (not committed)
+node_modules/
+dist/
+build/
+.next/
+.astro/
+.nuxt/
+.output/
+.svelte-kit/
+.nowaki/
