@@ -175,6 +175,11 @@ export const LANDING_CSS = `
 .pitch h1 span{display:block}
 .pitch h1 em{font-style:normal;color:var(--susuki)}
 :lang(ja) .pitch h1{font-size:clamp(2rem,1.1rem + 2.5vw,3.35rem);line-height:1.18;letter-spacing:-.01em;max-width:none}
+/* The ja headline is always two lines, one per phrase: each line stays whole and the size
+   shrinks with the column (the first line is ~11.9em wide), never past the usual size. */
+:lang(ja) .pitch{container-type:inline-size}
+:lang(ja) .pitch h1{font-size:max(1.25rem,min(clamp(2rem,1.1rem + 2.5vw,3.35rem),100cqi / 12.4))}
+:lang(ja) .pitch h1 span{white-space:nowrap}
 .pitch__sub{margin-top:1.5rem;max-width:52ch;font-size:clamp(1rem,.95rem + .25vw,1.14rem);color:var(--body)}
 .pitch__cta{margin-top:2rem;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .pitch__cta>*,.close__cta>*,.copybar{min-width:0}
