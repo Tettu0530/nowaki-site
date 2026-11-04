@@ -10,7 +10,7 @@ the idiomatic way in each framework:
 
 | app | framework | UI | output measured |
 |---|---|---|---|
-| `apps/nowaki-counter` | Nowaki 0.14 (npm) | Preact island | `nowaki build` |
+| `apps/nowaki-counter` | Nowaki 0.15 (npm) | Preact island | `nowaki build` |
 | `apps/astro-counter` | Astro 7.4 | Preact island (`client:load`) | static build |
 | `apps/sveltekit-counter` | SvelteKit 3.1 | Svelte 5 | adapter-static, `/` prerendered |
 | `apps/next-counter` | Next.js 16.4 | React 19 client component | app router, `/` prerendered |
@@ -49,7 +49,7 @@ Nowaki's idle-loaded router. Measured in the browser, Astro ships the least Java
 
 | framework | dev, first page (cold) | dev ready line | build, HTML included | first-load JS (gzip) |
 |---|---|---|---|---|
-| Nowaki 0.14.0 | 197 ms | 148 ms | 187 ms | 13.3 KB |
+| Nowaki 0.15.0 | 224 ms | 171 ms | 180 ms | 11.4 KB |
 | Astro 7.4.5 | 1614 ms | 1160 ms | 687 ms | 9.4 KB |
 | SvelteKit 3.1.1 | 722 ms | 438 ms | 944 ms | 31.2 KB |
 | Next.js 16.4.4 | 1272 ms | 307 ms | 2140 ms | 133.5 KB |
@@ -59,6 +59,11 @@ An earlier series timed Nowaki's build as `nowaki build` (no HTML, 71 ms) and co
 ready lines; both were uneven and are superseded by the table above. A second series
 (11:42-11:54 JST) overlapped another benchmark session's trial runs for Astro, Nuxt and
 SvelteKit; the table is from a clean third series measured after it finished.
+
+Nowaki was re-measured alone on 0.15.0 the same day, with nothing else running (the other
+four are unchanged). Against 0.14.0 (197 ms, 148 ms, 187 ms, 13.3 KB): the JS is smaller (the
+router went from about 4 KB to 2.8 KB), the build is about the same, and dev is within the
+run-to-run spread.
 
 Raw runs: `results/runs.jsonl` (dev and build, plus a static JS estimate) and
 `results/browser.jsonl` (the browser measurement with every file listed).

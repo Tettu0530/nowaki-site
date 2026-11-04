@@ -5,29 +5,29 @@
     {
       "framework": "nowaki",
       "label": "Nowaki",
-      "version": "0.14.0",
+      "version": "0.15.0",
       "runs": 3,
-      "devMs": 148,
-      "devFirstMs": 197,
+      "devMs": 171,
+      "devFirstMs": 224,
       "buildCmd": "prerender .",
-      "buildMs": 187,
-      "jsKB": 13.3,
+      "buildMs": 180,
+      "jsKB": 11.4,
       "jsFiles": 7,
-      "idleKB": 4.1,
+      "idleKB": 2.8,
       "devRuns": [
-        262,
-        148,
-        145
+        866,
+        151,
+        171
       ],
       "devFirstRuns": [
-        310,
-        197,
-        197
+        928,
+        196,
+        224
       ],
       "buildRuns": [
-        158,
-        187,
-        210
+        178,
+        190,
+        180
       ]
     },
     {
