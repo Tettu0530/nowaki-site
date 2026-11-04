@@ -124,7 +124,7 @@ export const STRINGS = {
     hero: {
       latest: "最新リリース",
       notes: "リリースノート（英語）",
-      h1a: "Next.js\u00a0流の<wbr>フルスタック。",
+      h1a: "Next.js\u00a0流のフルスタック。",
       h1b: "Astro\u00a0流の <em>Islands</em>。",
       sub: "ルート・loader・action を HTML で返します。JavaScript を送るのはマークした島だけ。Jetstream の島はそれすら送りません。",
       note: "Rust は不要。alpha 版なので、API はまだ変わります。",
