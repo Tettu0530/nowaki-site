@@ -124,8 +124,8 @@ export const STRINGS = {
     hero: {
       latest: "最新リリース",
       notes: "リリースノート（英語）",
-      h1a: "Next.js 流のフルスタック。",
-      h1b: "Astro 流の <em>Islands</em>。",
+      h1a: "Next.js\u00a0流の<wbr>フルスタック。",
+      h1b: "Astro\u00a0流の <em>Islands</em>。",
       sub: "ルート・loader・action を HTML で返します。JavaScript を送るのはマークした島だけ。Jetstream の島はそれすら送りません。",
       note: "Rust は不要。alpha 版なので、API はまだ変わります。",
       docs: "クイックスタート（英語）",
@@ -218,7 +218,7 @@ export const STRINGS = {
       soonTitle: "1.0 までに",
       soon: ["状態を保つ HMR", ".tsrx 島の scoped CSS", "RSC 風のストリーミング境界", "公開 API の安定化"],
     },
-    close: { h2: "コマンドひとつで始める。", docs: "クイックスタートを読む（英語）" },
+    close: { h2: "コマンドひとつで<wbr>始める。", docs: "クイックスタートを読む（英語）" },
     footer: {
       tagline: "Rust ツールチェーンのフルスタックWebフレームワーク。デフォルトで JS ゼロ、npm で入ります。",
       copyright: "MIT © 2026 Tettu0530",

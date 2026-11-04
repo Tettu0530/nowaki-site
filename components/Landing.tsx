@@ -127,7 +127,7 @@ export default function Landing({ locale }: { locale: Locale }) {
             </div>
             <div class="pitch">
               <h1 class="rise" style="--rd:.1s">
-                <span>{s.hero.h1a}</span>
+                <span dangerouslySetInnerHTML={{ __html: s.hero.h1a }} />
                 <span dangerouslySetInnerHTML={{ __html: s.hero.h1b }} />
               </h1>
               <p class="pitch__sub rise" style="--rd:.2s">
@@ -349,7 +349,7 @@ export default function Landing({ locale }: { locale: Locale }) {
             <IslandEl i={{ name: "Counter", directive: "client:visible", c: 9, r: 5, w: 9, h: 3, t: 0, wide: true }} />
           </div>
           <div class="wrap">
-            <h2 id="close-h">{s.close.h2}</h2>
+            <h2 id="close-h" dangerouslySetInnerHTML={{ __html: s.close.h2 }} />
             <div class="close__cta">
               <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
               <a class="btn btn--line" href="/docs/quickstart/">
