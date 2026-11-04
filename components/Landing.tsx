@@ -1,6 +1,6 @@
 import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
-import BuildTiles from "./BuildTiles.tsx";
+import BuildFlow from "./BuildFlow.tsx";
 import IslandMap, { IslandEl } from "./IslandMap.tsx";
 import { STRINGS, GH, CRATES, NPM, SITE_GH } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
@@ -273,7 +273,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               <Arrow />
             </a>
           </div>
-          <BuildTiles locale={locale} />
+          <BuildFlow locale={locale} />
         </section>
 
         <section class="sec wrap" id="compare" aria-labelledby="cmp-h">

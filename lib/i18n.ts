@@ -68,12 +68,12 @@ export const STRINGS = {
       h2: "Write a route. Mark an island. Ship.",
       more: "All features in the docs",
       tiles: [
-        { t: "Islands, zero JS by default", d: "Pages render to HTML. Only the components you mark ship JavaScript.", href: "/docs/" },
         { t: "File-based routing", d: "Layouts, middleware, loaders, actions and API routes, one file each.", href: "/docs/routing/" },
+        { t: "Islands, zero JS by default", d: "Pages render to HTML. Only the components you mark ship JavaScript.", href: "/docs/" },
         { t: "A Rust toolchain", d: "oxc parses, bundles and hashes. Node renders with Preact, so npm packages work.", href: "/docs/quickstart/" },
       ],
-      legend: ["HTML, 0 KB JS", "Island"],
-      resolver: { idle: "waiting for a request", label: "Resolver", params: "params", method: "method" },
+      legend: ["HTML, 0 KB JS"],
+      flow: { render: "HTML", ship: "Client JavaScript is the island and its runtime. The rest of the page ships none." },
     },
     compare: {
       h2: "Next to Next.js and Astro.",
@@ -180,12 +180,12 @@ export const STRINGS = {
       h2: "ルートを書き、島をマークして、公開する。",
       more: "すべての機能はドキュメントへ（英語）",
       tiles: [
-        { t: "デフォルトで島・JS ゼロ", d: "ページは HTML で返し、JavaScript を送るのはマークしたコンポーネントだけ。", href: "/docs/" },
         { t: "ファイルベースのルーティング", d: "layout・middleware・loader・action・API ルートを、1ファイルずつ。", href: "/docs/routing/" },
+        { t: "デフォルトで島・JS ゼロ", d: "ページは HTML で返し、JavaScript を送るのはマークしたコンポーネントだけ。", href: "/docs/" },
         { t: "Rust のツールチェーン", d: "oxc がパース・バンドル・ハッシュ化。描画は Node の Preact なので npm パッケージがそのまま使えます。", href: "/docs/quickstart/" },
       ],
-      legend: ["HTML、JS は 0 KB", "島"],
-      resolver: { idle: "リクエスト待ち", label: "Resolver", params: "params", method: "method" },
+      legend: ["HTML、JS は 0 KB"],
+      flow: { render: "HTML", ship: "クライアントの JavaScript は、島とその実行環境だけ。ページのほかの部分は 0 KB です。" },
     },
     compare: {
       h2: "Next.js・Astro と並べると。",
