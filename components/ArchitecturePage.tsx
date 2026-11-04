@@ -1,4 +1,4 @@
-// /architecture and /ja/architecture: how Nowaki 0.14.0 is built, source to browser.
+// /architecture and /ja/architecture: how Nowaki 0.15.0 is built, source to browser.
 import { Page, Opener, Sec, Rows, Table, Close, Arrow } from "./Explainer.tsx";
 import { ARCHITECTURE } from "../lib/explainers.ts";
 import { BENCH } from "../lib/benchmarks.ts";

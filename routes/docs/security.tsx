@@ -25,7 +25,9 @@ export default function Security() {
         <tr><td>Server function limits</td><td>Bodies over <code>NOWAKI_FN_BODY_LIMIT</code> get 413, more than 16 arguments get 400, and in production only <code>ServerFnError</code> messages reach the client.</td></tr>
         <tr><td>Forwarded headers</td><td>The Rust front drops client-sent <code>x-forwarded-*</code>, <code>forwarded</code>, <code>x-real-ip</code> and internal <code>x-nowaki-*</code> headers and sets <code>x-forwarded-host</code> from <code>Host</code> itself.</td></tr>
         <tr><td>WebSocket Origin check</td><td>Cross-origin upgrades to the HMR and Jetstream sockets are refused.</td></tr>
+        <tr><td>Jetstream POST events <span class="badge">v0.15</span></td><td><code>POST /__nowaki/live-event</code> has the server function gate: JSON only, the <code>x-nowaki-live: 1</code> header, cross-site requests rejected, and a 64&nbsp;KiB body cap. <code>live.authorize</code> can refuse any event, and an event can call only the island's own handlers.</td></tr>
         <tr><td>Jetstream state signature</td><td>HMAC over the island name, the issue time and the state, verified before each render and handler, rejected after <code>NOWAKI_LIVE_MAX_AGE</code>.</td></tr>
+        <tr><td>Internal live endpoint <span class="badge">v0.14.1</span></td><td><code>nowaki dev</code> and <code>nowaki start</code> don't expose the sidecar's <code>/__nowaki/live-render</code> (404).</td></tr>
         <tr><td>Generic production 500s</td><td>Stack traces and file paths never reach the client.</td></tr>
       </table>
 
@@ -60,7 +62,9 @@ export const csrf = true;    // reject cross-site writes here too`} />
       <p>
         Behind a proxy that rewrites <code>Host</code>, forward the public host as{" "}
         <code>x-forwarded-host</code> and set <code>NOWAKI_TRUST_PROXY=1</code> for{" "}
-        <code>nowaki start</code>, or same-origin posts are rejected too.
+        <code>nowaki start</code> and the node, bun and deno adapters, or same-origin posts are
+        rejected too. Since 0.15 the adapters ignore a client-sent <code>x-forwarded-host</code>{" "}
+        unless that variable is set; on Vercel, whose edge sets it, it is always used.
       </p>
 
       <h2>Content Security Policy (opt-in)</h2>
@@ -94,7 +98,7 @@ export const csrf = true;    // reject cross-site writes here too`} />
         <tr><td><code>NOWAKI_CSP_REPORT_URI</code></td><td>unset</td><td>Adds a <code>report-uri</code> to the policy.</td></tr>
         <tr><td><code>NOWAKI_SECURITY_HEADERS</code></td><td>on</td><td><code>off</code> removes the default headers. On the vercel adapter, set it at build time too.</td></tr>
         <tr><td><code>NOWAKI_TRUST_PROXY</code></td><td>unset</td><td><code>1</code> uses the proxy's first <code>x-forwarded-host</code> / <code>x-forwarded-proto</code> for the same-origin and WebSocket checks and passes <code>x-forwarded-for</code>. Leave it unset when clients reach <code>nowaki start</code> directly.</td></tr>
-        <tr><td><code>NOWAKI_LIVE_SECRET</code></td><td>random per process</td><td>The key that signs Jetstream state. Set it in production.</td></tr>
+        <tr><td><code>NOWAKI_LIVE_SECRET</code></td><td>random per process</td><td>The key that signs Jetstream state. Set it in production, and on the adapters whenever more than one instance or Worker isolate can serve a request.</td></tr>
         <tr><td><code>NOWAKI_LIVE_MAX_AGE</code></td><td>86400</td><td>Seconds after which a Jetstream signature is rejected.</td></tr>
         <tr><td><code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code></td><td>10000</td><td>A live render slower than this is reported to the client as <code>timeout</code>.</td></tr>
         <tr><td><code>NOWAKI_FN_BODY_LIMIT</code></td><td>1 MiB</td><td>Server function request bodies over this get 413.</td></tr>

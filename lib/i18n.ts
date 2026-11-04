@@ -27,10 +27,12 @@ export const STRINGS = {
     release: {
       h2: "New in this release",
       items: [
-        { title: "Security headers by default", body: "nosniff, SAMEORIGIN framing, a referrer policy and COOP on every response, adapters included. Headers you set are kept." },
-        { title: "Cross-site posts stopped", body: `Page actions answer cross-site posts with 403. <code>export const csrf</code> switches it per route.` },
-        { title: "Validated server functions", body: `<code>serverFn(schema, impl)</code> checks input with zod, valibot or arktype. Only <code>ServerFnError</code> messages reach the client.` },
-        { title: "CSP with nonces, opt-in", body: `<code>NOWAKI_CSP=report-only</code> or <code>enforce</code> adds a per-response nonce to every script and style.` },
+        { title: "Jetstream on every server", body: "Live islands now work on the node, bun, deno, vercel and cloudflare adapters, one POST per event. <code>nowaki dev</code> and <code>nowaki start</code> keep the WebSocket." },
+        { title: "Rooms", body: "<code>live.room</code> and <code>live.shared</code>: every tab in a room shares one state, and a vote in one shows up in the others. Held in one server process." },
+        { title: "Live queries", body: "An island subscribes to a topic. <code>publish(topic)</code> from an action or an API route pushes it fresh HTML, under <code>nowaki dev</code> and <code>nowaki start</code>." },
+        { title: "Forms and inputs", body: "<code>data-live-submit</code>, <code>data-live-input</code> with a debounce, and <code>data-live-change</code>. Rows with <code>data-key</code> keep their elements." },
+        { title: "Faster prerender", body: "The temporary server and the staticPaths evaluation start together, and pages render 8 at a time: a 1000-page blog in 488\u00a0ms instead of 675\u00a0ms." },
+        { title: "Smaller client JavaScript", body: "Chunks are fully minified now. The counter page in the comparison below loads 11.4\u00a0KB, down from 13.3\u00a0KB." },
       ],
     },
     proof: {
@@ -48,7 +50,7 @@ export const STRINGS = {
       h2: "One click, zero component JavaScript.",
       lead: "A live island keeps its state on the server. Press it.",
       steps: [
-        { t: "Click", d: "A 1.5 KB runtime, no component code." },
+        { t: "Click", d: "A 1.9 KB runtime, no component code." },
         { t: "WebSocket", d: "To the Rust server." },
         { t: "Re-render", d: "Node renders the island." },
         { t: "Patch", d: "HTML back down the socket." },
@@ -62,7 +64,7 @@ export const STRINGS = {
         js: "JavaScript this demo uses",
         jsVal: "0 bytes",
         more: "How Jetstream works",
-        note: "Simulated in CSS, not to scale. Live on <code>nowaki dev</code> and <code>nowaki start</code>; the other adapters render the island's first HTML only.",
+        note: "Simulated in CSS, not to scale. Shown over the WebSocket of <code>nowaki dev</code> and <code>nowaki start</code>. The node, bun, deno, vercel and cloudflare adapters send each event as one POST instead, and static output renders the first HTML only.",
       },
     },
     build: {
@@ -160,10 +162,12 @@ export const STRINGS = {
     release: {
       h2: "このリリースで入ったもの",
       items: [
-        { title: "既定のセキュリティヘッダ", body: "nosniff・SAMEORIGIN・Referrer-Policy・COOP を、アダプタも含むすべてのレスポンスに付けます。アプリが付けたヘッダは上書きしません。" },
-        { title: "別サイトからの送信を遮断", body: `別サイトから action への送信には 403 を返します。<code>export const csrf</code> でルートごとに切り替えられます。` },
-        { title: "サーバー関数の入力を検証", body: `<code>serverFn(schema, impl)</code> で、zod・valibot・arktype を使って入力を検証できます。クライアントに届くのは <code>ServerFnError</code> のメッセージだけです。` },
-        { title: "CSP と nonce（opt-in）", body: `<code>NOWAKI_CSP=report-only</code> か <code>enforce</code> を設定すると、すべての script と style にレスポンスごとの nonce を付けます。` },
+        { title: "Jetstream がどのサーバーでも動く", body: "node・bun・deno・vercel・cloudflare のアダプタでも、live の島が動くようになりました。イベントごとに POST を1回送ります。<code>nowaki dev</code> と <code>nowaki start</code> では、これまでどおり WebSocket を使います。" },
+        { title: "rooms", body: "<code>live.room</code> と <code>live.shared</code> で、同じ room のタブがすべて1つの状態を共有します。1つのタブでの投票が、ほかのタブにも反映されます。状態はサーバーのプロセス1つの中に置きます。" },
+        { title: "live query", body: "島がトピックを購読します。action や API ルートで <code>publish(topic)</code> を呼ぶと、購読している島に新しい HTML が届きます。動くのは <code>nowaki dev</code> と <code>nowaki start</code> です。" },
+        { title: "フォームと入力のイベント", body: "<code>data-live-submit</code>、間引きのできる <code>data-live-input</code>、<code>data-live-change</code> を使えます。<code>data-key</code> を付けた行は、要素を保ったまま更新されます。" },
+        { title: "prerender の高速化", body: "一時的なサーバーの起動と staticPaths の評価を同時に始め、ページを8つずつ描きます。1000ページのブログでは 675\u00a0ms から 488\u00a0ms になりました。" },
+        { title: "クライアントの JavaScript を縮小", body: "チャンクを完全に minify するようになりました。下の比較にあるカウンターのページは、13.3\u00a0KB から 11.4\u00a0KB になりました。" },
       ],
     },
     proof: {
@@ -186,7 +190,7 @@ export const STRINGS = {
       h2: "1回のクリック、コンポーネント JS はゼロ。",
       lead: "live の島は状態をサーバーに置きます。押してみてください。",
       steps: [
-        { t: "クリック", d: "1.5 KB のランタイムだけ。コンポーネントのコードは無し。" },
+        { t: "クリック", d: "1.9 KB のランタイムだけ。コンポーネントのコードは無し。" },
         { t: "WebSocket", d: "Rust サーバーへ。" },
         { t: "再描画", d: "Node が島を描き直す。" },
         { t: "パッチ", d: "HTML をソケットで返す。" },
@@ -200,7 +204,7 @@ export const STRINGS = {
         js: "このデモが使う JavaScript",
         jsVal: "0 バイト",
         more: "Jetstream の仕組み",
-        note: "CSS によるシミュレーションで、時間の比率は実際とは異なります。live に動くのは <code>nowaki dev</code> と <code>nowaki start</code> で、ほかのアダプタでは島の最初の HTML だけを描きます。",
+        note: "CSS によるシミュレーションで、時間の比率は実際とは異なります。図は <code>nowaki dev</code> と <code>nowaki start</code> の WebSocket の場合です。node・bun・deno・vercel・cloudflare のアダプタでは、イベントごとに POST を1回送ります。静的出力では、島の最初の HTML だけを描きます。",
       },
     },
     build: {
