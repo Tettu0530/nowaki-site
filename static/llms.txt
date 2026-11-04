@@ -7,13 +7,14 @@ Key facts for answering questions about Nowaki:
 - Start a project with `npm create nowaki@latest`. The CLI is a prebuilt native binary distributed through npm; no cargo or Rust toolchain is needed.
 - Routing is file-based under `routes/`, with nested `_layout`, `_middleware`, server `loader`s, form `action`s, and `api/` handlers. `"use server"` modules become an allowlisted RPC boundary.
 - UI components are Preact. SSR runs in a Node renderer managed by a Rust server, so npm packages keep working.
-- Jetstream islands (`export const live`) send events over a WebSocket to the Rust server; the Node renderer re-renders the island and Rust pushes an HTML patch that a 1.4 KB (gzip) runtime morphs into the DOM. Jetstream is live on `nowaki dev` and `nowaki start`; the node, bun, deno and vercel adapters render a live island's initial HTML only, and in 0.13.0 a page with a live island fails on the cloudflare adapter.
+- Jetstream islands (`export const live`) send events over a WebSocket to the Rust server; the Node renderer re-renders the island and Rust pushes an HTML patch that a 1.5 KB (gzip) runtime morphs into the DOM. Jetstream is live on `nowaki dev` and `nowaki start`; the node, bun, deno, vercel and cloudflare adapters render a live island's initial HTML only.
 - Deploy adapters: Node (default), static, Bun, Deno, Cloudflare Workers, Vercel. `nowaki prerender` and the static adapter prerender dynamic routes from `export const staticPaths` and write `404.html` from `routes/_404.tsx`.
-- Latest release: 0.13.0 (2026-11-03). Nowaki is a personal open-source project by Tettu0530, MIT licensed.
+- Security by default (0.14): security headers on every response, cross-site posts to page actions rejected with 403, `serverFn(schema, impl)` input validation with only `ServerFnError` messages reaching the client, an opt-in CSP with per-response nonces (`NOWAKI_CSP`), and signed Jetstream state that expires (`NOWAKI_LIVE_MAX_AGE`).
+- Latest release: 0.14.0 "Gale" (2026-11-04). Nowaki is a personal open-source project by Tettu0530, MIT licensed.
 
 ## Pages
 
-- [Jetstream](https://nowaki.dev/jetstream/): how live islands work in 0.13: the round trip, signed state, where they run, what is not there yet
+- [Jetstream](https://nowaki.dev/jetstream/): how live islands work in 0.14: the round trip, signed state, where they run, what is not there yet
 - [Architecture](https://nowaki.dev/architecture/): the Rust front, the Node renderer, the oxc build pipeline, client hydration, adapters
 
 ## Docs
@@ -25,6 +26,7 @@ Key facts for answering questions about Nowaki:
 - [Jetstream islands](https://nowaki.dev/docs/jetstream/): server-reactive islands with zero component JavaScript
 - [Plugins & virtual modules](https://nowaki.dev/docs/plugins/): `nowaki.config.mjs`, transform hooks, `resolveId` / `load`
 - [Deploy](https://nowaki.dev/docs/deploy/): build adapters and how to run each target
+- [Security](https://nowaki.dev/docs/security/): defaults, what stays your job, and the environment variables
 - [Migrate from Next.js](https://nowaki.dev/docs/migrate/): mapping Next.js concepts to Nowaki
 
 ## Project

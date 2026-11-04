@@ -10,6 +10,8 @@ export type BenchRow = {
   version: string;
   runs: number;
   devMs: number;
+  /** Start to the first page (GET / with the page text): the like-for-like dev figure. */
+  devFirstMs: number;
   buildMs: number;
   jsKB: number;
   idleKB: number;

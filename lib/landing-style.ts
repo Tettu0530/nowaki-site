@@ -565,6 +565,7 @@ export const EXPLAINER_CSS = `
 .xt td.is-ok{color:var(--fg)}
 .xt__v{display:flex;gap:10px}
 .xfit{grid-template-columns:repeat(2,minmax(0,1fr))}
+.xmore{display:inline-block;margin-top:1.2rem;font-size:.92rem}
 
 /* architecture: three boxes joined by links */
 .sys{display:grid;grid-template-columns:minmax(0,1fr) 112px minmax(0,1.1fr) 112px minmax(0,1fr)}

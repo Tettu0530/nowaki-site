@@ -27,10 +27,10 @@ export const STRINGS = {
     release: {
       h2: "New in this release",
       items: [
-        { title: "Static dynamic routes", body: `<code>export const staticPaths</code> on a <code>[param]</code> route prerenders one page per entry, plus <code>404.html</code>.` },
-        { title: "React libraries render", body: `<code>react</code> imports in node_modules resolve to <code>preact/compat</code> on the server too.` },
-        { title: "Runs on Windows", body: `<code>nowaki dev</code>, <code>build</code> and <code>start</code>. Also preact 11.` },
-        { title: "Jetstream keeps its state", body: "Patches carry signed state, so a reconnect resumes where it was." },
+        { title: "Security headers by default", body: "nosniff, SAMEORIGIN framing, a referrer policy and COOP on every response, adapters included. Headers you set are kept." },
+        { title: "Cross-site posts stopped", body: `Page actions answer cross-site posts with 403. <code>export const csrf</code> switches it per route.` },
+        { title: "Validated server functions", body: `<code>serverFn(schema, impl)</code> checks input with zod, valibot or arktype. Only <code>ServerFnError</code> messages reach the client.` },
+        { title: "CSP with nonces, opt-in", body: `<code>NOWAKI_CSP=report-only</code> or <code>enforce</code> adds a per-response nonce to every script and style.` },
       ],
     },
     proof: {
@@ -48,7 +48,7 @@ export const STRINGS = {
       h2: "One click, zero component JavaScript.",
       lead: "A live island keeps its state on the server. Press it.",
       steps: [
-        { t: "Click", d: "A 1.4 KB runtime, no component code." },
+        { t: "Click", d: "A 1.5 KB runtime, no component code." },
         { t: "WebSocket", d: "To the Rust server." },
         { t: "Re-render", d: "Node renders the island." },
         { t: "Patch", d: "HTML back down the socket." },
@@ -92,8 +92,8 @@ export const STRINGS = {
       bench: {
         h3: "Five frameworks, one app, measured.",
         lead: "The same page with one counter, built and started on one machine. Lower is better.",
-        groups: ["Dev server ready, cold", "Production build", "JavaScript on first load, gzip"],
-        note: "Median of {runs} runs on {machine}, {date}. Caches cleared before every run. First-load JavaScript is everything the browser runs for <code>/</code>: files and inline scripts, measured in headless Chromium. Nowaki's {idle} KB includes its client router, which loads once the page is idle.",
+        groups: ["Dev server, first page, cold", "Production build, HTML included", "JavaScript on first load, gzip"],
+        note: "Median of {runs} runs on {machine}, {date}. Caches cleared before every run. Dev is timed from start until <code>/</code> returns the page, and the build includes writing the HTML (for Nowaki, <code>nowaki prerender</code>). First-load JavaScript is everything the browser runs for <code>/</code>: files and inline scripts, measured in headless Chromium. Nowaki's {idle} KB includes its client router, which loads once the page is idle. The app is tiny, so these numbers mostly show each framework's fixed cost.",
         method: "Apps, scripts and raw runs",
       },
     },
@@ -135,10 +135,10 @@ export const STRINGS = {
     release: {
       h2: "このリリースで入ったもの",
       items: [
-        { title: "動的ルートも静的に書き出す", body: `<code>[param]</code> のルートに <code>staticPaths</code> を書くと、1ページずつ prerender します。<code>404.html</code> も書き出します。` },
-        { title: "React のライブラリも SSR", body: `node_modules 内の <code>react</code> の import は、サーバー側でも <code>preact/compat</code> に解決されます。` },
-        { title: "Windows で動く", body: `<code>nowaki dev</code>・<code>build</code>・<code>start</code>。preact 11 にも対応。` },
-        { title: "Jetstream が状態を保つ", body: "patch に署名付きの state を載せ、再接続しても続きから。" },
+        { title: "既定のセキュリティヘッダ", body: "nosniff・SAMEORIGIN・Referrer-Policy・COOP を、アダプタも含むすべてのレスポンスに付けます。アプリが付けたヘッダは上書きしません。" },
+        { title: "別サイトからの送信を遮断", body: `別サイトから action への送信には 403 を返します。<code>export const csrf</code> でルートごとに切り替えられます。` },
+        { title: "サーバー関数の入力を検証", body: `<code>serverFn(schema, impl)</code> で、zod・valibot・arktype を使って入力を検証できます。クライアントに届くのは <code>ServerFnError</code> のメッセージだけです。` },
+        { title: "CSP と nonce（opt-in）", body: `<code>NOWAKI_CSP=report-only</code> か <code>enforce</code> を設定すると、すべての script と style にレスポンスごとの nonce を付けます。` },
       ],
     },
     proof: {
@@ -161,7 +161,7 @@ export const STRINGS = {
       h2: "1回のクリック、コンポーネント JS はゼロ。",
       lead: "live の島は状態をサーバーに置きます。押してみてください。",
       steps: [
-        { t: "クリック", d: "1.4 KB のランタイムだけ。コンポーネントのコードは無し。" },
+        { t: "クリック", d: "1.5 KB のランタイムだけ。コンポーネントのコードは無し。" },
         { t: "WebSocket", d: "Rust サーバーへ。" },
         { t: "再描画", d: "Node が島を描き直す。" },
         { t: "パッチ", d: "HTML をソケットで返す。" },
@@ -205,8 +205,8 @@ export const STRINGS = {
       bench: {
         h3: "5つのフレームワークを<wbr>同じアプリで実測。",
         lead: "カウンターが1つあるだけの同じページを、同じマシンでビルドして起動しました。小さいほど良い値です。",
-        groups: ["dev サーバーの起動（cold）", "本番ビルド", "初回に読み込む JavaScript（gzip 後）"],
-        note: "{machine} で {runs} 回測った中央値（{date}）。毎回キャッシュを消してから測っています。初回の JavaScript は、ヘッドレス Chromium で <code>/</code> を開いたときにブラウザが実行するものすべて（ファイルとインラインスクリプト）です。Nowaki の値には、ページがアイドル状態になってから読み込むクライアントルーター {idle} KB を含みます。",
+        groups: ["dev サーバーで最初のページまで（cold）", "本番ビルド（HTML の書き出しまで）", "初回に読み込む JavaScript（gzip 後）"],
+        note: "{machine} で {runs} 回測った中央値（{date}）。毎回キャッシュを消してから測っています。dev は起動から <code>/</code> がページを返すまで、ビルドは HTML の書き出しまで（Nowaki は <code>nowaki prerender</code>）の時間です。初回の JavaScript は、ヘッドレス Chromium で <code>/</code> を開いたときにブラウザが実行するものすべて（ファイルとインラインスクリプト）です。Nowaki の値には、ページがアイドル状態になってから読み込むクライアントルーター {idle} KB を含みます。アプリがごく小さいため、主に各フレームワークの固定費を表す数値です。",
         method: "アプリ・スクリプト・生データ（英語）",
       },
     },

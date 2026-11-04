@@ -34,7 +34,7 @@ function Mark({ no = false }: { no?: boolean }) {
 // The five-framework head-to-head: one group per metric, each sorted from best to worst,
 // bars drawn to scale against the group's largest value, Nowaki in susuki.
 const METRICS = [
-  { key: "devMs", unit: "ms", digits: 0 },
+  { key: "devFirstMs", unit: "ms", digits: 0 },
   { key: "buildMs", unit: "ms", digits: 0 },
   { key: "jsKB", unit: "KB", digits: 1 },
 ] as const;

@@ -38,6 +38,33 @@ export async function whoami() {
       <Code src={`import { getContext } from "@nowaki-dev/runtime";
 import type { LoaderContext, PageProps, Meta } from "@nowaki-dev/runtime";`} />
 
+      <h2>Validate input <span class="badge">v0.14</span></h2>
+      <p>
+        Wrap a function in <code>serverFn(schema, impl)</code> and its first argument is checked
+        with any <a href="https://standardschema.dev">Standard Schema</a> library (zod, valibot,
+        arktype) before your code runs. Invalid input gets a 400 whose <code>data.issues</code> lists
+        the problems. <code>nowaki build</code> warns about <code>"use server"</code> exports that
+        take arguments without it.
+      </p>
+      <Code src={`// actions/todos.ts
+"use server";
+
+import { serverFn, ServerFnError } from "@nowaki-dev/runtime";
+import { z } from "zod";
+
+export const addTodo = serverFn(z.string().trim().min(1).max(200), async (text) => {
+  if (await isFull()) throw new ServerFnError("The list is full", { status: 409 });
+  return save(text);
+});`} />
+      <p>
+        Throw <code>ServerFnError(message, {`{ status, data }`})</code> for errors the user should
+        see: its status, message and <code>data</code> reach the client, where the thrown
+        <code>Error</code> carries <code>status</code> and <code>data</code>. In production any other
+        error becomes a generic <code>Internal Server Error</code> (500) and is logged; dev still shows
+        the message. Request bodies over <code>NOWAKI_FN_BODY_LIMIT</code> (1 MiB by default) get 413,
+        and calls with more than 16 arguments get 400.
+      </p>
+
       <h2>Call it from an island</h2>
       <p>Import and call it like a normal async function. The browser only ships the proxy.</p>
       <Code src={`// islands/Todos.tsx
@@ -64,8 +91,8 @@ export default function Todos({ initial = [] }) {
 
       <div class="note">
         Treat each server function like a public HTTP endpoint: <strong>validate its arguments</strong>{" "}
-        (they arrive as JSON from the client) and check authorization with <code>getContext()</code>.
-        Errors return only <code>error.message</code> to the client, never the stack.
+        (they arrive as JSON from the client; <code>serverFn</code> does it for the first one) and check
+        authorization with <code>getContext()</code>. Stack traces never reach the client.
       </div>
 
       <h2>Authoring rules</h2>

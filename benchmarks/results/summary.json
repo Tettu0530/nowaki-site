@@ -5,22 +5,29 @@
     {
       "framework": "nowaki",
       "label": "Nowaki",
-      "version": "0.13.0",
+      "version": "0.14.0",
       "runs": 3,
-      "devMs": 148,
-      "buildMs": 82,
-      "jsKB": 12.9,
+      "devMs": 158,
+      "devFirstMs": 204,
+      "buildCmd": "prerender .",
+      "buildMs": 198,
+      "jsKB": 13.3,
       "jsFiles": 7,
-      "idleKB": 3.9,
+      "idleKB": 4.1,
       "devRuns": [
-        1044,
+        158,
         146,
-        148
+        174
+      ],
+      "devFirstRuns": [
+        204,
+        197,
+        388
       ],
       "buildRuns": [
-        75,
-        82,
-        87
+        203,
+        184,
+        198
       ]
     },
     {
@@ -28,20 +35,27 @@
       "label": "Astro",
       "version": "7.4.5",
       "runs": 3,
-      "devMs": 988,
-      "buildMs": 674,
+      "devMs": 1186,
+      "devFirstMs": 1876,
+      "buildCmd": "build",
+      "buildMs": 676,
       "jsKB": 9.4,
       "jsFiles": 4,
       "idleKB": 0,
       "devRuns": [
-        2972,
-        988,
-        943
+        1384,
+        1119,
+        1186
+      ],
+      "devFirstRuns": [
+        2017,
+        1682,
+        1876
       ],
       "buildRuns": [
-        912,
-        661,
-        674
+        676,
+        647,
+        843
       ]
     },
     {
@@ -49,20 +63,27 @@
       "label": "SvelteKit",
       "version": "3.1.1",
       "runs": 3,
-      "devMs": 426,
-      "buildMs": 950,
+      "devMs": 425,
+      "devFirstMs": 738,
+      "buildCmd": "build",
+      "buildMs": 970,
       "jsKB": 31.2,
       "jsFiles": 10,
       "idleKB": 0,
       "devRuns": [
-        598,
-        382,
-        426
+        1394,
+        424,
+        425
+      ],
+      "devFirstRuns": [
+        1789,
+        712,
+        738
       ],
       "buildRuns": [
-        969,
-        950,
-        930
+        963,
+        1021,
+        970
       ]
     },
     {
@@ -70,20 +91,27 @@
       "label": "Next.js",
       "version": "16.4.4",
       "runs": 3,
-      "devMs": 449,
-      "buildMs": 2375,
+      "devMs": 284,
+      "devFirstMs": 1306,
+      "buildCmd": "build",
+      "buildMs": 2154,
       "jsKB": 133.5,
       "jsFiles": 6,
       "idleKB": 0,
       "devRuns": [
-        740,
-        321,
-        449
+        444,
+        284,
+        269
+      ],
+      "devFirstRuns": [
+        1779,
+        1306,
+        1261
       ],
       "buildRuns": [
-        4206,
-        2159,
-        2375
+        2154,
+        2071,
+        2306
       ]
     },
     {
@@ -91,20 +119,27 @@
       "label": "Nuxt",
       "version": "4.6.4",
       "runs": 3,
-      "devMs": 1536,
-      "buildMs": 3946,
+      "devMs": 1949,
+      "devFirstMs": 2646,
+      "buildCmd": "build",
+      "buildMs": 3576,
       "jsKB": 67,
       "jsFiles": 4,
       "idleKB": 0,
       "devRuns": [
-        1950,
-        1460,
-        1536
+        2420,
+        1949,
+        1428
+      ],
+      "devFirstRuns": [
+        3114,
+        2646,
+        2138
       ],
       "buildRuns": [
-        4525,
-        3811,
-        3946
+        3947,
+        3576,
+        3553
       ]
     }
   ]

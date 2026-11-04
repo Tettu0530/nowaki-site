@@ -90,7 +90,9 @@ export const POST = async (ctx) => ctx.json({ received: await ctx.bodyJson() });
       <h2>Streaming SSR</h2>
       <p>
         Opt a route into streaming with <code>export const streaming = true</code>; the shell is sent
-        first and the body streams in, lowering time-to-first-byte for slow pages.
+        first and the body streams in, lowering time-to-first-byte for slow pages. Today that holds on
+        the node adapter. Under <code>nowaki dev</code> and <code>nowaki start</code> the Rust front
+        still waits for the whole response before sending it.
       </p>
 
       <h2>Incremental static regeneration (ISR)</h2>

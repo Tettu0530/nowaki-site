@@ -1,14 +1,14 @@
 // Copy for the explainer pages (/jetstream, /architecture, and /ja/ versions).
-// Every statement is true of Nowaki 0.13.0 (checked against the v0.13.0 tag of
-// Tettu0530/nowaki). Measured values: live.js 1475 B gzip from a 0.13.0 build of a page
-// with one live island; {devMs} comes from benchmarks/results/summary.json.
+// Every statement is true of Nowaki 0.14.0 (checked against the v0.14.0 tag of
+// Tettu0530/nowaki and its SECURITY.md). Measured values: live.js 1534 B gzip from a 0.14.0
+// build of a page with one live island; {devMs} comes from benchmarks/results/summary.json.
 
-export const LIVE_JS_KB = "1.4";
+export const LIVE_JS_KB = "1.5";
 
 export const JETSTREAM = {
   en: {
     title: "Jetstream: live islands with no component JavaScript · Nowaki",
-    desc: "How Nowaki's Jetstream islands work: state on the server, events over one WebSocket, HTML patches back, and a 1.4 KB runtime. What it does in 0.13, where it runs, and what is not there yet.",
+    desc: "How Nowaki's Jetstream islands work: state on the server, events over one WebSocket, HTML patches back, and a 1.5 KB runtime. What it does in 0.14, where it runs, and what is not there yet.",
     h1: "Live islands that ship no component JavaScript.",
     lead: "A Jetstream island keeps its state on the server. A click travels over one WebSocket, the server runs your handler and renders the island again, and the browser applies the new HTML in place. The component's code never leaves the server.",
     ctaDocs: "Read the Jetstream docs",
@@ -34,26 +34,28 @@ export const JETSTREAM = {
         { t: "Patch", d: "Rust pushes them down the same socket." },
         { t: "Morph", d: "live.js updates the island's DOM in place and keeps the signed state on the element." },
       ],
-      note: "Only click events are wired in 0.13. Input, change and submit are planned.",
+      note: "Only click events are wired in 0.14. Input, change and submit are planned.",
     },
     reach: {
       h2: "What reaches the browser.",
       stats: [
         { v: "0 bytes", d: "of the island's component code. A live island gets no client chunk at all." },
-        { v: "{live} KB", d: "gzip: live.js in 0.13.0, the whole runtime. It loads only on pages that have a live island." },
+        { v: "{live} KB", d: "gzip: live.js in 0.14.0, the whole runtime. It loads only on pages that have a live island." },
         { v: "1 socket", d: "per page, events up and HTML down. The rest of the page is plain server-rendered HTML." },
       ],
-      note: "Measured from a 0.13.0 build of a page with one live island.",
+      note: "Measured from a 0.14.0 build of a page with one live island.",
     },
     state: {
       h2: "State stays on the server, signed.",
       lead: "The browser keeps a copy of the state only to resume. It cannot change it.",
       rows: [
-        { t: "Signed", d: "Every state carries an HMAC-SHA256 signature. If the state was tampered with, the event is refused and nothing changes." },
+        { t: "Signed", d: "Every state carries an HMAC-SHA256 signature with its issue time. A tampered state is refused, and a signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (a day by default) no longer verifies. Every patch is re-signed, so an island in use does not expire." },
         { t: "Per connection", d: "Rust keeps the state for each WebSocket connection. Two tabs are two islands; state is not shared between users yet." },
         { t: "Survives a reconnect", d: "Patches carry the signed state and the element keeps it, so after a dropped connection the island resumes where it was." },
-        { t: "Set a secret", d: "Set <code>NOWAKI_LIVE_SECRET</code> in production. Without it the key is random per process, and pages opened before a restart stop responding until they reload." },
+        { t: "Set a secret", d: "Set <code>NOWAKI_LIVE_SECRET</code> in production. Without it each process signs with its own random key, so state cannot resume after a restart or on another instance, and production servers warn at startup." },
+        { t: "Origin check", d: "The WebSocket upgrade must come from the page's own origin. Behind a reverse proxy, set <code>NOWAKI_TRUST_PROXY=1</code> so the check uses the proxy's <code>x-forwarded-host</code>." },
         { t: "Back-off", d: "If the socket drops, live.js retries with back-off and gives up after 8 failed attempts in a row. The island keeps its last HTML." },
+        { t: "Slow renders", d: "A render runs off the connection loop, one at a time per connection with up to 32 events queued, so pings and presence keep flowing. If it takes longer than <code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code> (10 seconds by default) or fails, the island keeps its last HTML and the page gets a <code>nowaki:live-error</code> event." },
         { t: "Presence", d: "The server broadcasts how many live connections it holds; an element with <code>data-nowaki-presence</code> shows the count." },
       ],
     },
@@ -65,8 +67,7 @@ export const JETSTREAM = {
         { k: "<code>nowaki dev</code>", v: "Live", ok: true },
         { k: "<code>nowaki start</code>", v: "Live", ok: true },
         { k: "Static output (<code>nowaki prerender</code>, static adapter)", v: "First HTML only. live.js still loads, tries the socket and stops after 8 attempts." },
-        { k: "node, bun, deno and vercel adapters", v: "First HTML only, without live.js." },
-        { k: "cloudflare adapter", v: "In 0.13.0 a page with a live island fails with an error. The fix is not released yet." },
+        { k: "node, bun, deno, vercel and cloudflare adapters", v: "First HTML only, without live.js." },
       ],
     },
     fit: {
@@ -89,7 +90,7 @@ export const JETSTREAM = {
   },
   ja: {
     title: "Jetstream：コンポーネント JS を送らない live の島 · Nowaki",
-    desc: "Nowaki の Jetstream の仕組み。状態はサーバーに置き、イベントは1本の WebSocket で送り、HTML のパッチが返ってきます。ランタイムは 1.4 KB。0.13 でできること、動く環境、まだできないことをまとめました。",
+    desc: "Nowaki の Jetstream の仕組み。状態はサーバーに置き、イベントは1本の WebSocket で送り、HTML のパッチが返ってきます。ランタイムは 1.5 KB。0.14 でできること、動く環境、まだできないことをまとめました。",
     h1: "コンポーネントの JavaScript\u00a0を<wbr>送らない、live\u00a0の島。",
     lead: "Jetstream の島は状態をサーバーに置きます。クリックは1本の WebSocket でサーバーへ届き、サーバーが handler を実行して島を描き直し、ブラウザは新しい HTML をその場で反映します。コンポーネントのコードはサーバーから出ません。",
     ctaDocs: "Jetstream のドキュメント（英語）",
@@ -115,26 +116,28 @@ export const JETSTREAM = {
         { t: "パッチ", d: "Rust がそれらを同じソケットでブラウザへ送ります。" },
         { t: "反映", d: "live.js が島の DOM をその場で更新し、署名付きの状態を要素に保存します。" },
       ],
-      note: "0.13 で扱えるイベントはクリックだけです。input・change・submit は予定に入っています。",
+      note: "0.14 で扱えるイベントはクリックだけです。input・change・submit は予定に入っています。",
     },
     reach: {
       h2: "ブラウザに届くもの。",
       stats: [
         { v: "0 バイト", d: "島のコンポーネントのコードは届きません。live の島にはクライアント用のチャンク自体がありません。" },
-        { v: "{live} KB", d: "gzip 後の live.js（0.13.0）。ランタイムはこれだけで、live の島があるページでだけ読み込みます。" },
+        { v: "{live} KB", d: "gzip 後の live.js（0.14.0）。ランタイムはこれだけで、live の島があるページでだけ読み込みます。" },
         { v: "ソケット1本", d: "ページごとに1本で、イベントを送り HTML を受け取ります。ページのほかの部分はサーバーで描いたふつうの HTML です。" },
       ],
-      note: "live の島を1つ置いたページを 0.13.0 でビルドして測りました。",
+      note: "live の島を1つ置いたページを 0.14.0 でビルドして測りました。",
     },
     state: {
       h2: "状態は署名付きで<wbr>サーバーに置く。",
       lead: "ブラウザが状態の写しを持つのは、再開のためだけです。ブラウザから書き換えることはできません。",
       rows: [
-        { t: "署名", d: "状態にはすべて HMAC-SHA256 の署名が付きます。改ざんされていればイベントは受け付けず、何も変わりません。" },
+        { t: "署名", d: "状態にはすべて、発行時刻を含む HMAC-SHA256 の署名が付きます。改ざんされた状態は受け付けず、<code>NOWAKI_LIVE_MAX_AGE</code>（既定は1日）より古い署名も無効になります。パッチのたびに署名し直すので、使われている島が期限切れになることはありません。" },
         { t: "接続ごと", d: "Rust は WebSocket の接続ごとに状態を持ちます。タブが2つなら島も2つです。ユーザーどうしで状態を共有する機能はまだありません。" },
         { t: "再接続しても続く", d: "パッチには署名付きの状態が入っていて、要素がそれを保持します。そのため接続が切れたあとも、島は切れる前の状態から再開します。" },
-        { t: "秘密鍵を設定する", d: "本番では <code>NOWAKI_LIVE_SECRET</code> を設定してください。未設定だと鍵はプロセスごとにランダムで、再起動前に開いたページは再読み込みするまで反応しなくなります。" },
+        { t: "秘密鍵を設定する", d: "本番では <code>NOWAKI_LIVE_SECRET</code> を設定してください。未設定だと鍵はプロセスごとにランダムなので、再起動のあとや別のインスタンスでは状態を再開できません。未設定のまま起動すると、本番のサーバーは警告を出します。" },
+        { t: "Origin の確認", d: "受け付ける WebSocket の接続は、ページと同じオリジンからのものだけです。リバースプロキシの後ろでは <code>NOWAKI_TRUST_PROXY=1</code> を設定してください。そうすると、プロキシが付ける <code>x-forwarded-host</code> で確認します。" },
         { t: "再試行", d: "ソケットが切れると、live.js はバックオフを挟みながら再接続を試し、8回続けて失敗するとやめます。島は最後の HTML のまま残ります。" },
+        { t: "遅い描画", d: "描画は接続のループの外で、接続ごとに1件ずつ行います。キューで待てるイベントは最大32件です。描画の間も ping と接続数の配信は止まりません。描画が <code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code>（既定は10秒）を超えるか失敗すると、島は最後の HTML のまま残り、ページに <code>nowaki:live-error</code> イベントが届きます。" },
         { t: "接続数", d: "サーバーは live の接続数を配信します。<code>data-nowaki-presence</code> を付けた要素にその数が表示されます。" },
       ],
     },
@@ -146,8 +149,7 @@ export const JETSTREAM = {
         { k: "<code>nowaki dev</code>", v: "live", ok: true },
         { k: "<code>nowaki start</code>", v: "live", ok: true },
         { k: "静的出力（<code>nowaki prerender</code>、static アダプタ）", v: "最初の HTML だけ。live.js はそれでも読み込まれ、ソケットへの接続を8回試してやめます。" },
-        { k: "node・bun・deno・vercel アダプタ", v: "最初の HTML だけで、live.js は出力しません。" },
-        { k: "cloudflare アダプタ", v: "0.13.0 では、live の島があるページがエラーになります。修正はまだリリースされていません。" },
+        { k: "node・bun・deno・vercel・cloudflare アダプタ", v: "最初の HTML だけで、live.js は出力しません。" },
       ],
     },
     fit: {
@@ -210,6 +212,18 @@ export const ARCHITECTURE = {
         { t: "Server functions", d: "Calls go to <code>POST /__nowaki/fn</code>; only functions exported from <code>\"use server\"</code> modules can be reached." },
       ],
     },
+    security: {
+      h2: "Secure by default.",
+      lead: "Since 0.14 the defaults close the common holes. They are only defaults: what your app sets wins.",
+      rows: [
+        { t: "Security headers", d: "Every response from <code>nowaki dev</code>, <code>nowaki start</code> (ISR hits and static files included), every adapter, and the <code>_headers</code> that <code>nowaki prerender</code> writes carries <code>nosniff</code>, <code>x-frame-options: SAMEORIGIN</code>, a referrer policy and <code>cross-origin-opener-policy: same-origin</code>, plus <code>frame-ancestors 'self'</code> when the app sends no CSP." },
+        { t: "Cross-site posts", d: "Page actions answer a cross-site non-GET request with 403. API routes only warn for now; <code>export const csrf</code> turns the check on or off per route." },
+        { t: "Server functions", d: "<code>serverFn(schema, impl)</code> validates the first argument with any Standard Schema library before your code runs, and <code>nowaki build</code> warns about functions that take arguments without it. In production only <code>ServerFnError</code> messages reach the client, and bodies over 1 MiB get 413." },
+        { t: "CSP, opt-in", d: "With <code>NOWAKI_CSP=report-only</code> or <code>enforce</code>, every <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> gets a per-response nonce, made fresh even for ISR hits. It is off by default." },
+        { t: "Forwarded headers", d: "The Rust front drops client-sent <code>x-forwarded-*</code> headers and sets the host itself. Behind a reverse proxy, set <code>NOWAKI_TRUST_PROXY=1</code>." },
+      ],
+      more: "Security in the docs",
+    },
     client: {
       h2: "Client: islands first, router later.",
       rows: [
@@ -223,7 +237,7 @@ export const ARCHITECTURE = {
       rows: [
         { t: "On demand", d: "nowaki dev transforms a file when the browser asks for it, and keeps the result in memory and on disk in <code>node_modules/.cache/nowaki</code>." },
         { t: "One island at a time", d: "Editing a file in <code>islands/</code> re-renders that island alone (its local state resets); other edits reload the page. Errors appear as a full-screen overlay." },
-        { t: "Ready in {devMs} ms", d: "From start to ready for the counter app in our five-framework head-to-head." },
+        { t: "First page in {devMs} ms", d: "From starting nowaki dev until it returns the first page, for the counter app in our five-framework head-to-head." },
       ],
     },
     ship: {
@@ -241,7 +255,7 @@ export const ARCHITECTURE = {
         { k: "<code>nowaki start</code>", o: "The Rust front with the Node renderer", j: "Live", ok: true },
         { k: "node, bun, deno", o: "<code>dist/server/index.mjs</code>", j: "First HTML only" },
         { k: "static", o: "Prerendered HTML in <code>dist/static</code>, with <code>404.html</code> and <code>staticPaths</code>", j: "First HTML only" },
-        { k: "cloudflare", o: "A Worker in <code>dist/worker</code> with <code>wrangler.jsonc</code>", j: "Pages with a live island fail in 0.13.0" },
+        { k: "cloudflare", o: "A Worker in <code>dist/worker</code> with <code>wrangler.jsonc</code>", j: "First HTML only" },
         { k: "vercel", o: "Build Output API v3 in <code>.vercel/output</code>", j: "First HTML only" },
       ],
     },
@@ -286,6 +300,18 @@ export const ARCHITECTURE = {
         { t: "サーバー関数", d: "呼び出しは <code>POST /__nowaki/fn</code> に届きます。呼べるのは <code>\"use server\"</code> のモジュールが export した関数だけです。" },
       ],
     },
+    security: {
+      h2: "設定なしで安全。",
+      lead: "0.14 から、よくある穴は既定の設定でふさいでいます。あくまで既定値なので、アプリが自分で設定した値が優先されます。",
+      rows: [
+        { t: "セキュリティヘッダ", d: "<code>nowaki dev</code>・<code>nowaki start</code>（ISR のヒットと静的ファイルを含む）・すべてのアダプタが返すレスポンスと、<code>nowaki prerender</code> が書き出す <code>_headers</code> には、<code>nosniff</code>、<code>x-frame-options: SAMEORIGIN</code>、Referrer-Policy、<code>cross-origin-opener-policy: same-origin</code> を付けます。アプリが CSP を送らないときは <code>frame-ancestors 'self'</code> も付けます。" },
+        { t: "別サイトからの送信", d: "別サイトから action への GET 以外のリクエストには 403 を返します。API ルートは当面、警告を出すだけです。<code>export const csrf</code> でルートごとに確認の有効・無効を切り替えられます。" },
+        { t: "サーバー関数", d: "<code>serverFn(schema, impl)</code> は、Standard Schema に対応したライブラリで最初の引数を検証してからコードを実行します。引数を取るのに検証のない関数には、<code>nowaki build</code> が警告を出します。本番でクライアントに届くのは <code>ServerFnError</code> のメッセージだけです。1 MiB を超える body には 413 を返します。" },
+        { t: "CSP（opt-in）", d: "<code>NOWAKI_CSP=report-only</code> か <code>enforce</code> を設定すると、すべての <code>&lt;script&gt;</code> と <code>&lt;style&gt;</code> にレスポンスごとの nonce を付けます。ISR のキャッシュから返すときも、nonce は毎回新しく作ります。既定では無効です。" },
+        { t: "転送ヘッダ", d: "Rust のフロントは、クライアントが付けた <code>x-forwarded-*</code> を捨て、ホストを自分で設定します。リバースプロキシの後ろでは <code>NOWAKI_TRUST_PROXY=1</code> を設定してください。" },
+      ],
+      more: "Security のドキュメント（英語）",
+    },
     client: {
       h2: "クライアント：先に島、ルーターはあとで。",
       rows: [
@@ -299,7 +325,7 @@ export const ARCHITECTURE = {
       rows: [
         { t: "必要なときに", d: "nowaki dev は、ブラウザが求めたときにファイルを変換し、結果をメモリと <code>node_modules/.cache/nowaki</code> に保存します。" },
         { t: "島は1つずつ", d: "<code>islands/</code> のファイルを編集すると、その島だけを描き直し、島のローカル状態はリセットされます。ほかの編集ではページを再読み込みします。エラーは全画面のオーバーレイで表示します。" },
-        { t: "{devMs} ms で起動", d: "5つのフレームワークの比較で使ったカウンターアプリが、起動して準備完了になるまでの時間です。" },
+        { t: "{devMs} ms で最初のページ", d: "5つのフレームワークの比較で使ったカウンターアプリで、nowaki dev を起動してから最初のページを返すまでの時間です。" },
       ],
     },
     ship: {
@@ -317,7 +343,7 @@ export const ARCHITECTURE = {
         { k: "<code>nowaki start</code>", o: "Rust フロントと Node レンダラー", j: "live", ok: true },
         { k: "node・bun・deno", o: "<code>dist/server/index.mjs</code>", j: "最初の HTML だけ" },
         { k: "static", o: "<code>dist/static</code> に prerender した HTML（<code>404.html</code>、<code>staticPaths</code> に対応）", j: "最初の HTML だけ" },
-        { k: "cloudflare", o: "<code>dist/worker</code> の Worker と <code>wrangler.jsonc</code>", j: "0.13.0 では live の島があるページがエラー" },
+        { k: "cloudflare", o: "<code>dist/worker</code> の Worker と <code>wrangler.jsonc</code>", j: "最初の HTML だけ" },
         { k: "vercel", o: "<code>.vercel/output</code> の Build Output API v3", j: "最初の HTML だけ" },
       ],
     },
