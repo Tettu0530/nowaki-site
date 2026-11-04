@@ -1,4 +1,4 @@
-// /jetstream and /ja/jetstream: how a live island works, in 0.14.0 terms.
+// /jetstream and /ja/jetstream: how a live island works, in 0.15.0 terms.
 import Code from "./Code.tsx";
 import { Page, Opener, Sec, Rows, Table, FitLists, Close, html } from "./Explainer.tsx";
 import { JETSTREAM, LIVE_JS_KB } from "../lib/explainers.ts";
@@ -22,6 +22,30 @@ export default function LiveCounter({ state }) {
     </div>
   );
 }`;
+
+// A room island, as in examples/hello (islands/LivePoll.tsx and routes/poll.tsx).
+const ROOM = `// islands/LivePoll.tsx
+export const live = {
+  room: (props) => \`poll:\${props.id}\`,
+  shared: () => ({ a: 0, b: 0 }),
+  on: {
+    vote: (v, option) => ({ ...v, [option]: v[option] + 1 }),
+  },
+};
+
+export default function LivePoll({ state }) {
+  return (
+    <div>
+      <button data-live="vote" value="a">A</button>
+      <strong>a: {state.a} · b: {state.b}</strong>
+      <button data-live="vote" value="b">B</button>
+    </div>
+  );
+}
+
+// routes/poll.tsx
+<LivePoll id="demo" />
+<strong data-nowaki-presence="poll:demo">0</strong>`;
 
 // Which lanes each step joins: browser 0, Rust 1, Node 2. A step on one lane is work, not a message.
 const HOPS: [number, number][] = [
@@ -87,8 +111,27 @@ export default function JetstreamPage({ locale }: { locale: Locale }) {
               );
             })}
           </ol>
-          <p class="note">{s.trip.note}</p>
+          <p class="note" {...html(s.trip.note)} />
         </div>
+      </Sec>
+
+      <Sec id="rooms-h" h2={s.rooms.h2} lead={s.rooms.lead}>
+        <div class="xcode">
+          <Code src={ROOM} />
+          <dl class="xpoints">
+            {s.rooms.points.map((p) => (
+              <div>
+                <dt>{/^[a-z]+$/.test(p.t) ? <code>{p.t}</code> : p.t}</dt>
+                <dd {...html(p.d)} />
+              </div>
+            ))}
+          </dl>
+        </div>
+        <p class="note" {...html(s.rooms.note)} />
+      </Sec>
+
+      <Sec id="more-h" h2={s.more.h2}>
+        <Rows rows={s.more.rows} />
       </Sec>
 
       <Sec id="reach-h" h2={s.reach.h2}>
