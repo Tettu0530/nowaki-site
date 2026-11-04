@@ -256,7 +256,7 @@ export const LANDING_CSS = `
 .bench__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px clamp(24px,4vw,64px);margin-bottom:clamp(28px,3vw,44px)}
 .bench__head h3{flex:1 1 420px;min-width:0;font:400 clamp(1.5rem,1.1rem + 1.2vw,2.1rem)/1.12 var(--serif);letter-spacing:-.022em;max-width:22ch}
 :lang(ja) .bench__head h3{line-height:1.35;letter-spacing:0;max-width:none}
-.bench__groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,3.5vw,56px)}
+.bench__groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(28px,3.5vw,56px);align-items:start}
 .bars__group h4{margin:0;font:500 .92rem var(--sans);color:var(--muted);padding-bottom:10px;border-bottom:1px solid var(--line)}
 .bar__label small{margin-left:.2rem;font:400 .78rem var(--mono);color:var(--muted)}
 .bar__label.is-us{color:var(--fg);font-weight:500}
@@ -294,6 +294,9 @@ export const LANDING_CSS = `
 .scale__table .xt{margin-top:14px}
 .scale__table td{font:400 .88rem var(--mono);font-variant-numeric:tabular-nums}
 .scale__js .bar__top{flex-wrap:wrap;row-gap:2px}
+.prod__notes{margin:clamp(28px,3vw,40px) 0 0;padding:0;list-style:none;display:grid;gap:10px;max-width:76ch}
+.prod__notes li{position:relative;padding-left:18px;color:var(--body);font-size:.94rem}
+.prod__notes li::before{content:"";position:absolute;left:0;top:.72em;width:8px;height:1px;background:var(--susuki)}
 @media (max-width:760px){.sc__tick,.sc__axis,.sc__label{font-size:17px}}
 
 @media (prefers-reduced-motion:no-preference){@supports (animation-timeline:view()){

@@ -9,6 +9,7 @@ import { NOWAKI_RELEASE, NOWAKI_VERSION } from "../lib/version.ts";
 import { shipped } from "../lib/bundle.ts";
 import { BENCH } from "../lib/benchmarks.ts";
 import Scaling from "./Scaling.tsx";
+import Production from "./Production.tsx";
 
 const CHANGELOG = `${GH}/blob/main/CHANGELOG.md`;
 
@@ -317,6 +318,7 @@ export default function Landing({ locale }: { locale: Locale }) {
           <p class="note">{s.compare.note}</p>
           <Bench locale={locale} />
           <Scaling locale={locale} />
+          <Production locale={locale} />
         </section>
 
         <section class="sec wrap" aria-labelledby="fit-h">
