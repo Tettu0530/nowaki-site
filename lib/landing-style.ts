@@ -315,7 +315,7 @@ export const LANDING_CSS = `
 @keyframes ink-b{30%{color:var(--susuki)}}
 /* build flow ("Write a route. Mark an island. Ship."): one figure in the hero's island grammar.
    Base styles are the finished state; keyframes start from the beginning of the story.
-   Scroll-driven where view timelines exist, a 10s loop elsewhere, still under reduced motion. */
+   Scroll-driven where view timelines exist, a 13s loop elsewhere, still under reduced motion. */
 .flow__stage{position:relative;border:1px solid var(--line);border-radius:12px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='1.15' fill='%23eceef1' fill-opacity='.2'/%3E%3C/svg%3E") 0 0/24px 24px var(--ground);padding:clamp(28px,3.5vw,48px) clamp(20px,3vw,40px);overflow:hidden}
 .flow__grid{display:grid;grid-template-columns:minmax(0,1fr) 72px minmax(0,1.3fr) 72px minmax(0,.95fr);align-items:center}
 .fl-card{border:1px solid rgb(236 238 241 / .14);border-radius:10px;background:#0e1115;overflow:hidden}
@@ -354,27 +354,27 @@ export const LANDING_CSS = `
 .flow__t:hover{text-decoration:underline;text-decoration-color:var(--susuki);text-underline-offset:.28em}
 .flow__d{margin-top:4px;color:var(--muted);font-size:.93rem;max-width:40ch}
 @media (prefers-reduced-motion:no-preference){
-  .flow__grid{animation:fl-fade 10s linear infinite}
-  .fl-req{animation:fl-req 10s linear infinite}
-  .fl-l--load{animation:fl-load 10s linear infinite}
-  .fl-l--isl{animation:fl-lisl 10s linear infinite}
-  .fl-pk--1{animation:fl-pk1 10s linear infinite}
-  .fl-win__body{animation:fl-reveal 10s linear infinite}
-  .fl-isl__lit{animation:fl-sweep 10s linear infinite}
-  .fl-isl__frame{animation:fl-frame 10s linear infinite}
-  .fl-isl__frame::before{animation:fl-corners 10s linear infinite}
-  .fl-isl__tag b{animation:fl-tag 10s linear infinite}
-  .fl-pk--2{animation:fl-pk2 10s linear infinite}
-  .fl-o--0{animation:fl-o0 10s linear infinite}
-  .fl-o--1{animation:fl-o1 10s linear infinite}
-  .fl-o--2{animation:fl-o2 10s linear infinite}
-  .fl-o--3{animation:fl-o3 10s linear infinite}
-  .fl-ship__note{animation:fl-note 10s linear infinite}
+  .flow__grid{animation:fl-fade 13s linear infinite}
+  .fl-req{animation:fl-req 13s linear infinite}
+  .fl-l--load{animation:fl-load 13s linear infinite}
+  .fl-l--isl{animation:fl-lisl 13s linear infinite}
+  .fl-pk--1{animation:fl-pk1 13s linear infinite}
+  .fl-win__body{animation:fl-reveal 13s linear infinite}
+  .fl-isl__lit{animation:fl-sweep 13s linear infinite}
+  .fl-isl__frame{animation:fl-frame 13s linear infinite}
+  .fl-isl__frame::before{animation:fl-corners 13s linear infinite}
+  .fl-isl__tag b{animation:fl-tag 13s linear infinite}
+  .fl-pk--2{animation:fl-pk2 13s linear infinite}
+  .fl-o--0{animation:fl-o0 13s linear infinite}
+  .fl-o--1{animation:fl-o1 13s linear infinite}
+  .fl-o--2{animation:fl-o2 13s linear infinite}
+  .fl-o--3{animation:fl-o3 13s linear infinite}
+  .fl-ship__note{animation:fl-note 13s linear infinite}
   /* scroll-driven: the story advances as the figure crosses the viewport, once */
   @supports (animation-timeline:view()){
     .flow__stage{view-timeline-name:--flow}
     .flow__grid{animation:none}
-    .flow__grid :is(.fl-req,.fl-l--load,.fl-l--isl,.fl-pk,.fl-win__body,.fl-isl__lit,.fl-isl__frame,.fl-isl__tag b,.fl-o,.fl-ship__note),.fl-isl__frame::before{animation-timeline:--flow;animation-range:cover 12% cover 52%;animation-duration:auto;animation-iteration-count:1;animation-fill-mode:both}
+    .flow__grid :is(.fl-req,.fl-l--load,.fl-l--isl,.fl-pk,.fl-win__body,.fl-isl__lit,.fl-isl__frame,.fl-isl__tag b,.fl-o,.fl-ship__note),.fl-isl__frame::before{animation-timeline:--flow;animation-range:cover 12% cover 66%;animation-duration:auto;animation-iteration-count:1;animation-fill-mode:both}
   }
 }
 @keyframes fl-fade{0%{opacity:0}3%,95%{opacity:1}100%{opacity:0}}

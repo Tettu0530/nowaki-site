@@ -2,7 +2,7 @@
 // grammar: a request reaches a route file, the page renders to HTML and its one island
 // hydrates, and oxc writes the output, where only the island and its runtime are client JS.
 // CSS only (lib/landing-style.ts, "build flow"): scroll-driven where the browser supports
-// view timelines, a 10s loop elsewhere, the finished state under reduced motion.
+// view timelines, a 13s loop elsewhere, the finished state under reduced motion.
 // The route, URL, file names and hashes are illustrative.
 import { STRINGS } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
