@@ -257,6 +257,7 @@ The world rejects glass and backdrop-filter, Chromium-only effects, animation li
 - The island map: static HTML is a dot-lattice sea; islands are hairline-framed and lattice-snapped, dashed while dormant and solid once hydrated.
 - Hairline-ruled grids instead of cards.
 - Geist Serif display, Geist sans UI, Geist Mono for code and measured values only.
+- Japanese pages set display headings in gothic (Geist with Hiragino Sans / Noto Sans JP, weight 600, no tracking), never Mincho. Latin-only display text on them (the English tagline marked `lang="en"`, the release numeral, 野分 by the logo) keeps Geist Serif. Implemented in BASE_CSS by redefining `--serif` under `:lang(ja)`.
 - Motion uses CSS only and turns off completely under reduced motion. The docs do not move at all.
 - The landing and the docs share one base (fonts, tokens, base elements, site nav with the Nowaki mark, buttons, favicon); the docs ship zero client JS.
 - Works in English and Japanese: ja headings use phrase-aware line breaking and fall back to a system Mincho.

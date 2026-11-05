@@ -47,6 +47,7 @@ The site is built with Nowaki itself from the published npm packages, so it doub
   - Terms follow Astro's Japanese docs: アイランド / クライアントアイランド / ハイドレート / レンダリング; live islands are 「Jetstream アイランド」. Never 島. Also デフォルト (not 既定), ヘッダー, サーバー, プレゼンス.
   - Body is です・ます, one idea per sentence, with a clear subject; a space between Japanese and Latin words.
   - Glue phrases with U+2060 / U+00A0 and allow breaks with `<wbr>` only where the component renders HTML; check breaks with and without `word-break: auto-phrase`.
+  - Japanese headings are gothic (ブロック体), not Mincho (owner, 2026-11-05); see DESIGN.md.
 
 ## Brand Commitments
 

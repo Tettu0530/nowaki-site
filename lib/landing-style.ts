@@ -100,6 +100,13 @@ html{scrollbar-color:#262b33 var(--ground)}
   .copybar .copybar__cmd{white-space:normal;overflow-wrap:anywhere}
 }
 
+/* Japanese pages set display headings in gothic, not Mincho: Geist Serif has no Japanese glyphs, and the
+   fallback mixed Mincho kana with serif Latin. Latin-only display text (the English tagline, the release
+   numeral, the 野分 next to the logo) keeps Geist Serif, as on the English pages. */
+:lang(ja){--serif:"Geist","Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+:lang(ja) :is(.brand small,.rel__num,[lang="en"]){--serif:"Geist Serif","Hiragino Mincho ProN","Yu Mincho","Noto Serif JP",serif}
+:lang(ja) :is(.sec h2,.bench__head h3,.close h2,.xo h1):not([lang="en"]){font-weight:600;letter-spacing:0}
+
 `;
 
 /** Landing-only rules. */
