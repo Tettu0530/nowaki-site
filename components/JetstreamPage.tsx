@@ -1,4 +1,4 @@
-// /jetstream and /ja/jetstream: how a live island works, in 0.15.0 terms.
+// /jetstream and /ja/jetstream: how a live island works, in 0.16.0 terms.
 import Code from "./Code.tsx";
 import { Page, Opener, Sec, Rows, Table, FitLists, Close, html } from "./Explainer.tsx";
 import { JETSTREAM, LIVE_JS_KB } from "../lib/explainers.ts";

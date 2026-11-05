@@ -46,7 +46,9 @@ nowaki prerender --out public   # the same output, written where you choose`} />
         <a href="/docs/routing/">Routing &amp; data</a>). If the app has <code>routes/_404.tsx</code>,
         the output includes <code>404.html</code>, which Cloudflare Pages, Netlify and GitHub Pages
         serve for unknown paths. Static output has no server to answer Jetstream events: live islands
-        keep their initial SSR, and each event is reported as <code>nowaki:live-error</code>.
+        keep their initial SSR, and since 0.16 the pages ship no live.js. <code>nowaki build</code>{" "}
+        also writes <code>.br</code> and <code>.gz</code> files next to the client assets, so a host
+        that uploads the whole directory uploads those too.
       </p>
 
       <h2>Cloudflare Workers (edge)</h2>
@@ -77,7 +79,11 @@ vercel deploy --prebuilt    # uploads .vercel/output as-is`} />
         <code>nowaki start</code> runs a Rust (axum) front for static serving and HTML assembly with
         a Node renderer behind it, and it's what holds the Jetstream WebSocket. Use it when you want
         server push: <code>publish()</code>, rooms that update every member, and presence. Those live
-        in one process, so run a single instance for them.
+        in one process, so run a single instance for them; rooms are saved to{" "}
+        <code>.nowaki/live-rooms.json</code> and come back after a restart. Since 0.16 it serves
+        pre-compressed assets (br or gzip) from memory with ETags and 304s, fills the ISR cache right
+        after startup (<code>NOWAKI_ISR_WARM=0</code> turns that off), and stops the Node renderer
+        with SIGTERM and a 3 s grace period.
       </p>
     </>
   );

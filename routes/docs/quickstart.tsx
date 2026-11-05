@@ -28,10 +28,28 @@ npm install`} />
         <code>islands/</code> hydrate in the browser. Transform and SSR errors appear as a
         full-screen overlay, and saving fixes them reloads automatically.
       </p>
+      <p>
+        While <code>nowaki dev</code> runs, coding agents can inspect the app over MCP{" "}
+        <span class="badge">v0.16</span>. The startup banner prints the URL and the command that adds it
+        to Claude Code:
+      </p>
+      <Code src={`claude mcp add --transport http nowaki http://127.0.0.1:<port>/__nowaki/mcp`} />
+      <p>
+        The tools are read-only: <code>routes</code> (the route table with layouts, middleware and
+        boundaries), <code>module_graph</code> (a file's imports, importers and islands),{" "}
+        <code>recent_errors</code> (the last 50 build, SSR, live and HMR errors) and{" "}
+        <code>dev_config</code> (port, <code>NOWAKI_*</code> flags, Jetstream connections and rooms).
+        The endpoint answers only loopback clients; <code>nowaki start</code> and the adapters don't
+        serve it.
+      </p>
 
       <h2>Build &amp; serve</h2>
       <Code src={`npm run build   # → nowaki build   (scope-hoisted, content-hashed ESM + SSR modules)
 npm run start   # → nowaki start   (Rust front + Node renderer)`} />
+      <p>
+        The build prints each route's first-load JS and suggests islands that could ship none; see{" "}
+        <a href="/docs/routing/">budgets</a>.
+      </p>
 
       <h2>Project layout</h2>
       <Code src={`my-app/

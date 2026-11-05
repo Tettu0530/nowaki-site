@@ -28,6 +28,7 @@ export default function Security() {
         <tr><td>Jetstream POST events <span class="badge">v0.15</span></td><td><code>POST /__nowaki/live-event</code> has the server function gate: JSON only, the <code>x-nowaki-live: 1</code> header, cross-site requests rejected, and a 64&nbsp;KiB body cap. <code>live.authorize</code> can refuse any event, and an event can call only the island's own handlers.</td></tr>
         <tr><td>Jetstream state signature</td><td>HMAC over the island name, the issue time and the state, verified before each render and handler, rejected after <code>NOWAKI_LIVE_MAX_AGE</code>.</td></tr>
         <tr><td>Internal live endpoint <span class="badge">v0.14.1</span></td><td><code>nowaki dev</code> and <code>nowaki start</code> don't expose the sidecar's <code>/__nowaki/live-render</code> (404).</td></tr>
+        <tr><td>Dev MCP endpoint <span class="badge">v0.16</span></td><td><code>/__nowaki/mcp</code> exists only under <code>nowaki dev</code>, is read-only, and answers only loopback clients with a loopback <code>Host</code> and <code>Origin</code>, also under <code>--host</code>.</td></tr>
         <tr><td>Generic production 500s</td><td>Stack traces and file paths never reach the client.</td></tr>
       </table>
 
