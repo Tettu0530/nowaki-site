@@ -127,7 +127,7 @@ export default function Landing({ locale }: { locale: Locale }) {
               </p>
             </div>
             <div class="pitch">
-              <h1 class="rise" style="--rd:.1s">
+              <h1 class="rise" style="--rd:.1s" lang={locale === "ja" ? "en" : undefined}>
                 <span dangerouslySetInnerHTML={{ __html: s.hero.h1a }} />
                 <span dangerouslySetInnerHTML={{ __html: s.hero.h1b }} />
               </h1>
