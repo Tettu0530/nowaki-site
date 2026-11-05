@@ -69,6 +69,7 @@ html{scrollbar-color:#262b33 var(--ground)}
 .nav__links a{color:var(--muted);transition:color .2s}
 .nav__links a:hover,.nav__links a[aria-current]{color:var(--fg)}
 .nav__links .btn--solid,.nav__links .btn--solid:hover{color:var(--ground)}
+.nav .btn{height:34px;padding:0 14px;font-size:.85rem;border-radius:8px}
 .lang{display:flex;white-space:nowrap;flex:none;gap:.15rem;padding:2px;border:1px solid var(--line);border-radius:8px;font-size:.8rem}
 .lang a{padding:3px 8px;border-radius:6px}
 .lang a[aria-current]{background:var(--raise-2);color:var(--fg)}

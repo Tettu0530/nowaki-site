@@ -9,7 +9,7 @@ import type { Locale } from "../lib/i18n.ts";
 // Compare and GitHub fold into a <details> menu, below 760px everything does, so it
 // needs no JavaScript. The docs are English only and the 404 has no counterpart, so
 // they drop the language switch; elsewhere it points at this page in the other language.
-export type NavPage = "home" | "jetstream" | "architecture" | "docs" | "other";
+export type NavPage = "home" | "jetstream" | "architecture" | "benchmarks" | "docs" | "other";
 
 export default function SiteNav({
   locale = "en",
@@ -22,7 +22,7 @@ export default function SiteNav({
 }) {
   const s = STRINGS[locale];
   const base = locale === "ja" ? "/ja/" : "/";
-  const compare = page === "home" ? "#compare" : `${base}#compare`;
+  const compare = `${base}benchmarks/`;
   const cur = (p: NavPage) => (page === p ? "page" : undefined);
   const hasLang = page !== "docs" && page !== "other";
 
@@ -54,7 +54,7 @@ export default function SiteNav({
           <a class="hide-sm" href="/docs/" aria-current={cur("docs")}>
             {s.nav.docs}
           </a>
-          <a class="hide-sm hide-md" href={compare}>
+          <a class="hide-sm hide-md" href={compare} aria-current={cur("benchmarks")}>
             {s.nav.compare}
           </a>
           <a class="hide-sm hide-md" href={GH}>
@@ -80,7 +80,9 @@ export default function SiteNav({
               <a class="menu__sm" href="/docs/" aria-current={cur("docs")}>
                 {s.nav.docs}
               </a>
-              <a href={compare}>{s.nav.compare}</a>
+              <a href={compare} aria-current={cur("benchmarks")}>
+                {s.nav.compare}
+              </a>
               <a href={GH}>GitHub</a>
               {hasLang ? lang("menu__lang") : null}
             </div>

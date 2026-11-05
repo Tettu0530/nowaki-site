@@ -1,4 +1,5 @@
 import { BASE_CSS, LANDING_CSS, EXPLAINER_CSS, FONT_PRELOADS, FAVICON } from "./landing-style.ts";
+import { HOME_CSS } from "./home-style.ts";
 
 export const locales = ["en", "ja"] as const;
 export type Locale = (typeof locales)[number];
@@ -13,7 +14,7 @@ export const STRINGS = {
     title: "Nowaki: a full-stack web framework on a Rust toolchain, installed with npm",
     desc: "Nowaki (野分) is a full-stack web framework on a Rust toolchain (oxc). Pages render to HTML; only the islands you mark ship JavaScript, and Jetstream islands ship none. Installed with npm, no Rust required.",
     ogTitle: "Nowaki: full-stack like Next.js, islands like Astro, installed with npm",
-    nav: { docs: "Docs", jetstream: "Jetstream", architecture: "Architecture", github: "GitHub", compare: "Compare", start: "Get started", lang: "Language", menu: "Menu" },
+    nav: { docs: "Docs", jetstream: "Jetstream", architecture: "Architecture", github: "GitHub", compare: "Benchmarks", start: "Get started", lang: "Language", menu: "Menu" },
     hero: {
       latest: "Latest release",
       notes: "Release notes",
@@ -143,13 +144,75 @@ export const STRINGS = {
       trademark: "Next.js is a trademark of Vercel, Inc. Astro is a trademark of The Astro Technology Company. Nuxt, SvelteKit and other names are trademarks of their respective owners. Nowaki is an independent project, not affiliated with or endorsed by any of them.",
     },
     copy: { copy: "copy", copied: "copied" },
+    home: {
+      release: { label: "Latest release", name: "“Chinook”", summary: "about 4x faster rendering and route JS budgets." },
+      mapLabel: "A page as an island map: the sea is HTML with no JavaScript; Search hydrates on load, Comments when it scrolls into view; Likes is a Jetstream island whose events go to nowaki start and come back as HTML.",
+      server: "Rust front, Node renderer",
+      proofLead: "Two copy buttons and the page router are the only code that runs here. Every animation on this page is CSS.",
+      jet: {
+        h2: "Live islands, zero component JS.",
+        lead: "With Jetstream, an island keeps its state on the server. A click goes up, Node renders the island again, and a {live}\u00a0KB runtime morphs the new HTML in place.",
+        lanes: [
+          { h: "Browser", s: "0 bytes of component JS" },
+          { h: "Rust front", s: "holds the WebSocket" },
+          { h: "Node renderer", s: "runs the handler" },
+        ],
+        caps: [
+          { t: "Click", d: "data-live=\"like\"" },
+          { t: "Up", d: "over the socket" },
+          { t: "Render", d: "new state, signed" },
+          { t: "Down", d: "an HTML patch" },
+          { t: "Morph", d: "in place" },
+        ],
+        note: "Simulated in CSS on this page. Press Like to send one event round the loop.",
+        points: [
+          { t: "Forms and inputs", d: "Submit, input and change events, with keyed rows that keep their elements." },
+          { t: "Rooms and live queries", d: "Tabs in a room share one state, and <code>publish()</code> pushes server changes." },
+          { t: "Every server target", d: "A WebSocket on <code>nowaki start</code>, one POST per event on the adapters." },
+        ],
+      },
+      build: {
+        lead: "A Rust toolchain (oxc) parses, bundles and hashes; Preact renders on Node, so npm packages keep working. Every build reports the JavaScript each route ships.",
+        panes: ["Write a route", "Mark an island", "Ship"],
+        counter: "// Counter.tsx: hydrates in view",
+        likes: "// Likes.tsx: stays on the server",
+      },
+      bench: {
+        h2: "Five frameworks, one blog.",
+        lead: "The same blog in each framework, built and served on one machine, one framework at a time.",
+        leads: "Nowaki is best on {n} of these {m}.",
+        leastJs: "{leader} ships the least JavaScript.",
+        tabs: ["Requests per second", "Static build", "Dev server", "JavaScript"],
+        notes: [
+          "A post page rendered on every request, each framework's own server in one Node process. Higher is better.",
+          "Every page of a 1000-page blog written to HTML. Lower is better.",
+          "From a cold start until the first page of the 1000-page blog returns. Lower is better.",
+          "Everything the browser runs for the home page with one island, gzip, router included. Lower is better.",
+        ],
+        fanout: "p95 for one change to reach 1000 live connections.",
+        ttfb: "time to first byte, p50. {other}: {them}\u00a0ms.",
+        memLeast: "at idle, the least of the five servers.",
+        mem: "at idle.",
+        src: "Medians on {machine}, {date}: 5 runs for the servers, 10 after a warm-up for builds and dev. Source: Tettu0530/nowaki benchmarks/compare at {commit}.",
+        more: "All benchmarks and the method",
+      },
+      fitLead: "A personal open-source project, MIT licensed. It is alpha: use it for side projects and experiments, not yet for production-critical work.",
+    },
+    benchPage: {
+      title: "Benchmarks: five frameworks, measured · Nowaki",
+      desc: "Every number on nowaki.dev, with the method: a small app's dev and build times, one blog at 1 to 1000 pages, and each framework's production server, measured against Astro, SvelteKit, Next.js and Nuxt.",
+      h1: "Five frameworks, measured.",
+      lead: "Every number on nowaki.dev comes from these runs: a small app for dev and build times, one blog at 1 to 1000 pages, and each framework's own production server. One framework at a time on one machine; results that favor others are shown as measured.",
+      back: "Back to the overview",
+      method: "Harness and raw runs",
+    },
   },
 
   ja: {
     title: "Nowaki | Rust 製ツールチェーンのフルスタック Web フレームワーク",
     desc: "Nowaki（野分）は、Rust 製のツールチェーン（oxc）で動くフルスタック Web フレームワークです。ページはサーバーで HTML にレンダリングし、JavaScript を送るのは指定したアイランドだけです。Jetstream アイランドは、コンポーネントの JavaScript を一切送りません。npm でインストールでき、Rust は必要ありません。",
     ogTitle: "Nowaki | Rust 製ツールチェーンのフルスタック Web フレームワーク",
-    nav: { docs: "ドキュメント", jetstream: "Jetstream", architecture: "アーキテクチャ", github: "GitHub", compare: "比較", start: "はじめる", lang: "言語", menu: "メニュー" },
+    nav: { docs: "ドキュメント", jetstream: "Jetstream", architecture: "アーキテクチャ", github: "GitHub", compare: "ベンチマーク", start: "はじめる", lang: "言語", menu: "メニュー" },
     hero: {
       latest: "最新リリース",
       notes: "リリースノート（英語）",
@@ -172,7 +235,7 @@ export const STRINGS = {
       ],
     },
     proof: {
-      h2: "このページの JavaScript は {kb} KB",
+      h2: "このページの JavaScript は {kb} KB",
       lead: "このページで実行されるのは、2つのコピーボタンのコードだけです。動いて見える部分は、すべて CSS で実装しています。",
       groups: ["このサイト（gzip 圧縮後）"],
       bars: [
@@ -284,6 +347,68 @@ export const STRINGS = {
       trademark: "Next.js は Vercel, Inc.、Astro は The Astro Technology Company の商標です。Nuxt、SvelteKit などの名称は、それぞれの権利者の商標です。Nowaki は独立したプロジェクトであり、いずれの企業とも提携・公認関係はありません。",
     },
     copy: { copy: "コピー", copied: "コピーしました" },
+    home: {
+      release: { label: "最新リリース", name: "「Chinook」", summary: "レンダリングが約4倍高速になり、ルートごとの JS バジェットが入りました。" },
+      mapLabel: "ページをアイランドの地図として描いた図。海の部分は JavaScript のない HTML です。Search は読み込み時に、Comments は画面に入ったときにハイドレートします。Likes は Jetstream アイランドで、イベントは nowaki start に送られ、HTML になって戻ってきます。",
+      server: "Rust フロントと Node レンダラー",
+      proofLead: "このページで実行されるのは、2つのコピーボタンとページルーターのコードだけです。ページ上のアニメーションは、すべて CSS で実装しています。",
+      jet: {
+        h2: "コンポーネントの JS なしで動くアイランド",
+        lead: "Jetstream アイランドは、状態をサーバーで持ちます。クリックがサーバーに届くと Node がアイランドを再レンダリングし、{live}\u00a0KB のランタイムが新しい HTML をその場で反映します。",
+        lanes: [
+          { h: "ブラウザ", s: "コンポーネントの JS は 0 バイト" },
+          { h: "Rust フロント", s: "WebSocket を保持" },
+          { h: "Node レンダラー", s: "handler を実行" },
+        ],
+        caps: [
+          { t: "クリック", d: "data-live=\"like\"" },
+          { t: "送信", d: "ソケット経由" },
+          { t: "レンダリング", d: "新しい状態に署名" },
+          { t: "返送", d: "HTML のパッチ" },
+          { t: "反映", d: "その場で更新" },
+        ],
+        note: "このデモは CSS で再現したものです。「いいね」を押すと、イベントが1往復します。",
+        points: [
+          { t: "フォームと入力", d: "submit、input、change のイベントに対応し、キー付きの行は要素を保ったまま更新されます。" },
+          { t: "rooms と live query", d: "同じ room のタブは1つの状態を共有し、<code>publish()</code> でサーバー側の変更を届けます。" },
+          { t: "すべてのサーバー環境", d: "<code>nowaki start</code> では WebSocket、各アダプターではイベントごとに POST を1回送ります。" },
+        ],
+      },
+      build: {
+        lead: "パース、バンドル、ハッシュ化は Rust 製のツールチェーン（oxc）が担当します。レンダリングは Node 上の Preact で行うので、npm パッケージがそのまま使えます。ビルドのたびに、各ルートが送る JavaScript の量も表示します。",
+        panes: ["ルートを書く", "アイランドを指定する", "デプロイする"],
+        counter: "// Counter.tsx：画面に入ったらハイドレート",
+        likes: "// Likes.tsx：サーバーで動作",
+      },
+      bench: {
+        h2: "5つのフレームワークを<wbr>同じブログで比較",
+        lead: "同じブログを各フレームワークで作り、1台のマシンで1つずつビルドして動かしました。",
+        leads: "Nowaki は {m} 項目のうち {n} 項目で最も良い値でした。",
+        leastJs: "JavaScript の量は {leader} が最も少なくなっています。",
+        tabs: ["1秒あたりのリクエスト数", "静的ビルド", "dev サーバー", "JavaScript の量"],
+        notes: [
+          "記事ページを毎回レンダリングした場合の値です。各フレームワーク標準のサーバーを、Node のプロセス1つで動かしています。多いほど優れています。",
+          "1000ページのブログの全ページを HTML に出力するまでの時間です。短いほど優れています。",
+          "コールドスタートから、1000ページのブログの最初のページを返すまでの時間です。短いほど優れています。",
+          "アイランドが1つあるトップページで、ブラウザが実行する JavaScript の合計です（gzip 圧縮後、ルーターを含む）。少ないほど優れています。",
+        ],
+        fanout: "1つの変更が1000本の接続に届くまでの時間（p95）。",
+        ttfb: "記事ページの TTFB（p50）。{other} は {them}\u00a0ms。",
+        memLeast: "待機時のメモリ使用量。5つのサーバーの中で最も少ない値です。",
+        mem: "待機時のメモリ使用量。",
+        src: "{machine} で計測した中央値です（{date}）。サーバーは5回、ビルドと dev はウォームアップを除く10回計測しました。出典：Tettu0530/nowaki の benchmarks/compare（{commit}）。",
+        more: "すべてのベンチマークと計測方法",
+      },
+      fitLead: "Tettu0530 による個人の OSS で、MIT ライセンスです。現在は alpha 版のため、本番環境の重要な用途ではなく、個人のプロジェクトや検証に使ってください。",
+    },
+    benchPage: {
+      title: "ベンチマーク · Nowaki",
+      desc: "nowaki.dev に載せている数値と計測方法の一覧です。小さなアプリでの開発・ビルドの時間、1〜1000ページのブログ、各フレームワークの本番サーバーを、Astro、SvelteKit、Next.js、Nuxt と比較しています。",
+      h1: "5つのフレームワークの<wbr>計測結果",
+      lead: "nowaki.dev に載せている数値は、すべてこのページの計測によるものです。小さなアプリでの開発・ビルドの時間、1〜1000ページのブログ、各フレームワーク標準の本番サーバーを、1台のマシンで1つずつ計測しました。Nowaki に不利な結果も、そのまま載せています。",
+      back: "トップページに戻る",
+      method: "計測スクリプトと生データ（英語）",
+    },
   },
 } as const;
 
@@ -304,7 +429,7 @@ ${FAVICON}
 <link rel="alternate" hreflang="ja" href="https://nowaki.dev/ja/" />
 <link rel="alternate" hreflang="x-default" href="https://nowaki.dev/" />
 ${FONT_PRELOADS}
-<style>${BASE_CSS}${LANDING_CSS}</style>`;
+<style>${BASE_CSS}${LANDING_CSS}${HOME_CSS}</style>`;
 }
 
 /** <head> for an explainer page: /<slug>/ in English, /ja/<slug>/ in Japanese. */
