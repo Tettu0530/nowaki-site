@@ -56,7 +56,7 @@ export const JETSTREAM = {
       ],
       note: "Median of 3 sets on an Apple M2, with Nowaki 0.16.1 built from the v0.16.1 tag. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. In 0.15 every connection asked for its own render, one after another; 0.16 renders once per publish and shares it with every connection that can use it (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>). The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
       method: "The harness and every set",
-      href: "https://github.com/Tettu0530/nowaki/blob/a97a3c0/BENCHMARKS.md#jetstream-fan-out--1000-connections",
+      href: "https://github.com/Tettu0530/nowaki/blob/a17e4d9/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
     more: {
       h2: "Also new in 0.15.",
@@ -171,7 +171,7 @@ export const JETSTREAM = {
       ],
       note: "Apple M2 で3セット計測した中央値です。Nowaki は v0.16.1 のタグからビルドしました。受信側のクライアントは同じマシン上の Node プロセス1つなので、1000通を処理する時間も数値に含まれます。0.15 では接続ごとに順番にレンダリングしていましたが、0.16 では publish ごとに1回だけレンダリングし、その結果を使えるすべての接続で共有します（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。デプロイ用のアダプターにはサーバーからの push がないため、この数値は nowaki dev と nowaki start にのみ当てはまります。",
       method: "計測方法とすべての結果（英語）",
-      href: "https://github.com/Tettu0530/nowaki/blob/a97a3c0/BENCHMARKS.md#jetstream-fan-out--1000-connections",
+      href: "https://github.com/Tettu0530/nowaki/blob/a17e4d9/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
     more: {
       h2: "0.15 で追加された機能",
