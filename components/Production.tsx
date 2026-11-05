@@ -51,8 +51,12 @@ export default function Production({ locale }: { locale: Locale }) {
   const now = prod.nowaki;
   const fmt = new Intl.NumberFormat(locale === "ja" ? "ja-JP" : "en-US", { maximumFractionDigits: 0 });
   const list = (xs: string[]) => (locale === "ja" ? xs.join(" と ") : xs.join(" and "));
+  // The fastest other framework by TTFB p50, to set Nowaki's next to it.
+  const rival = plain.filter((p) => p.framework !== "nowaki").sort((a, b) => a.ttfbP50 - b.ttfbP50)[0];
+  const ms = (v: number) => v.toFixed(2);
   const notes = [
     rank > 1 ? t.rank.replace("{rank}", t.ordinals[rank - 1]) : "",
+    now && rival ? t.ttfb.replace("{us}", ms(now.ttfbP50)).replace("{other}", rival.label).replace("{them}", ms(rival.ttfbP50)) : "",
     t.isr.replace("{noisr}", list(noIsr)),
     t.mem,
     csp && now ? t.csp.replace("{csp}", fmt.format(csp.postRps)).replace("{plain}", fmt.format(now.postRps)) : "",

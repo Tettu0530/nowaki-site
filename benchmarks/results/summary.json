@@ -1,33 +1,33 @@
 {
-  "measured": "2026-11-04",
+  "measured": "2026-11-05",
   "machine": "Apple M2, 8 cores, 16 GB, darwin 25.6.0, node v24.14.0",
   "frameworks": [
     {
       "framework": "nowaki",
       "label": "Nowaki",
-      "version": "0.15.0",
+      "version": "0.16.0",
       "runs": 3,
-      "devMs": 171,
-      "devFirstMs": 224,
+      "devMs": 158,
+      "devFirstMs": 202,
       "buildCmd": "prerender .",
-      "buildMs": 180,
+      "buildMs": 187,
       "jsKB": 11.4,
       "jsFiles": 7,
       "idleKB": 2.8,
       "devRuns": [
-        866,
-        151,
-        171
+        1246,
+        158,
+        150
       ],
       "devFirstRuns": [
-        928,
-        196,
-        224
+        1316,
+        202,
+        201
       ],
       "buildRuns": [
-        178,
-        190,
-        180
+        200,
+        187,
+        159
       ]
     },
     {

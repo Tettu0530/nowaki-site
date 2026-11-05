@@ -18,7 +18,7 @@ export default function Jetstream() {
 
       <p>
         A regular island ships its component JS and runs in the browser. A Jetstream island ships
-        none: the server holds its state, re-renders on events, and sends HTML that a 1.9&nbsp;KB
+        none: the server holds its state, re-renders on events, and sends HTML that a 2.0&nbsp;KB
         (gzip) runtime morphs in. It's Nowaki's answer to "content-driven but dynamic" UIs (live
         counters, forms, polls, presence) without shipping a client framework.
       </p>
