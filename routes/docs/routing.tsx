@@ -172,6 +172,15 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
         that set a cookie are treated as per-user and never cached, so keep ISR pages free of
         request-specific data.
       </p>
+      <p>
+        What a render reads from the request decides how shared caches may keep it{" "}
+        <span class="badge">v0.16.2</span>. A page whose render read <code>cookie</code>,{" "}
+        <code>authorization</code>, every header, or the body is sent with{" "}
+        <code>Cache-Control: private, no-cache</code>, so a CDN never serves one visitor's page to
+        another. A page that read other headers stays <code>public, s-maxage</code> and names them in{" "}
+        <code>Vary</code>. <code>streaming = "early"</code> pages send their headers before any
+        loader runs, so they are never marked shareable.
+      </p>
 
       <h2>Static paths for dynamic routes <span class="badge">v0.13</span></h2>
       <p>
