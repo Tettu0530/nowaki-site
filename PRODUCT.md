@@ -41,6 +41,12 @@ The site is built with Nowaki itself from the published npm packages, so it doub
 - **No liquid glass (decided 2026-11-02).** The SVG-displacement lens (`backdrop-filter: url()`) was prototyped and dropped: it renders only in Chromium, and WebKit reports `@supports` true while drawing nothing. Do not reintroduce Chromium-only visual effects.
 - Scroll-driven CSS animations are fine as enhancement, but Firefox lacks `animation-timeline`, so motion needs an IntersectionObserver/WAAPI fallback and content must be visible without either.
 - Two locales on the landing (en, ja); typography and layout must work for Japanese text as well as English.
+- **Japanese copy reads like a Japanese OSS site, not a translation (decided 2026-11-05).** The owner found the earlier ja copy 胡散臭い (machine-translated feel). Reference: ja.vite.dev, ja.react.dev, ja.vuejs.org, docs.astro.build/ja. Rules:
+  - Headings never end with 。; write noun phrases or short descriptive phrases (「動作環境」「デフォルトで安全」), not translated English slogans.
+  - The hero tagline stays in English ("Full-stack like Next.js. Islands like Astro.", marked `lang="en"`), as Vite, Vue and TypeScript do; the Japanese starts with a plain description sentence (「Nowaki は、…フルスタック Web フレームワークです。」).
+  - Terms follow Astro's Japanese docs: アイランド / クライアントアイランド / ハイドレート / レンダリング; live islands are 「Jetstream アイランド」. Never 島. Also デフォルト (not 既定), ヘッダー, サーバー, プレゼンス.
+  - Body is です・ます, one idea per sentence, with a clear subject; a space between Japanese and Latin words.
+  - Glue phrases with U+2060 / U+00A0 and allow breaks with `<wbr>` only where the component renders HTML; check breaks with and without `word-break: auto-phrase`.
 
 ## Brand Commitments
 
