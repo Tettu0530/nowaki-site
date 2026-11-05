@@ -1,14 +1,14 @@
 // Copy for the explainer pages (/jetstream, /architecture, and /ja/ versions).
-// Every statement is true of Nowaki 0.15.0 (checked against the v0.15.0 tag of
+// Every statement is true of Nowaki 0.16.0 (checked against the v0.16.0 tag of
 // Tettu0530/nowaki, its CHANGELOG, ROADMAP and SECURITY.md). Measured values: live.js 1968 B
-// gzip from a 0.15.0 build of a page with one live island; {devMs} comes from benchmarks/results/summary.json.
+// gzip from a 0.15.0 build of a page with one live island (not re-measured on 0.16.0); {devMs} comes from benchmarks/results/summary.json.
 
 export const LIVE_JS_KB = "1.9";
 
 export const JETSTREAM = {
   en: {
     title: "Jetstream: live islands with no component JavaScript · Nowaki",
-    desc: "How Nowaki's Jetstream islands work in 0.15: state on the server, events over a WebSocket or one POST each, HTML patches back, and a 1.9 KB runtime. Rooms, live queries and forms, where each part runs, and what is not there yet.",
+    desc: "How Nowaki's Jetstream islands work in 0.16: state on the server, events over a WebSocket or one POST each, and HTML patches back. Rooms, live queries and forms, where each part runs, and what is not there yet.",
     h1: "Live islands that ship no component JavaScript.",
     lead: "A Jetstream island keeps its state on the server. A click, a keystroke or a submitted form goes to the server, your handler runs, the island renders again, and the browser applies the new HTML in place. The component's code never leaves the server.",
     ctaDocs: "Read the Jetstream docs",
@@ -44,7 +44,7 @@ export const JETSTREAM = {
         { t: "shared", d: "The room's first state. Handlers receive it and return the next one, and every member gets the new HTML." },
         { t: "Presence", d: "<code>data-nowaki-presence=\"poll:demo\"</code> shows how many connections are in the room, over the WebSocket." },
       ],
-      note: "Rooms are held in the memory of one server process. They don't reach other instances, and they start empty after a restart. On the deploy adapters a room island handles events, but the other members are not pushed.",
+      note: "Rooms are shared within one server process and don't reach other instances. Since 0.16, <code>nowaki start</code> saves them to <code>.nowaki/live-rooms.json</code> and restores them after a restart (<code>NOWAKI_LIVE_ROOMS_FILE=off</code> keeps them in memory); <code>nowaki dev</code> and the adapters don't save them. On the deploy adapters a room island handles events, but the other members are not pushed.",
     },
     fanout: {
       h2: "One change, 1000 connections.",
@@ -54,7 +54,7 @@ export const JETSTREAM = {
         { v: "67.5\u00a0ms", d: "p95 per patch for a room: one vote reaching the other 999 members." },
         { v: "0 missed", d: "of more than 149,850 patches in each scenario." },
       ],
-      note: "Median of 3 sets on an Apple M2, with Nowaki 0.15.0 built from source. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. Patches go out one connection after another, which is being worked on (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>). The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
+      note: "Median of 3 sets on an Apple M2, with Nowaki 0.15.0 built from source. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. In 0.15 every connection asked for its own render; 0.16 renders once per publish and shares it with every connection that can use it (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>), and these numbers will be measured again. The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
       method: "The harness and every set",
       href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
@@ -64,7 +64,7 @@ export const JETSTREAM = {
         { t: "Forms and inputs", d: "<code>data-live-submit</code> on a form sends its fields as an object, without navigating. <code>data-live-input</code> sends a field's value while typing, debounced by <code>data-live-debounce</code> (150 ms by default), and <code>data-live-change</code> fires on commit. Checkboxes and radios send <code>{ value, checked }</code>." },
         { t: "Keyed rows", d: "Children with <code>data-key</code> are matched by key when a patch arrives, so filtered or reordered rows keep their elements, and a focused field's value is never overwritten." },
         { t: "Live queries", d: "<code>live.subscribe</code> names topics and <code>live.load</code> reloads the state. After server code changes data, <code>publish(topic)</code> from <code>@nowaki-dev/runtime</code> reloads every subscribed island and pushes the patch, with no event from the browser. It reaches connections in the same process; on the deploy adapters it does nothing for now." },
-        { t: "Request context", d: "Handlers call <code>getContext()</code> to read the cookies and the <code>authorization</code>, <code>accept-language</code> and <code>user-agent</code> headers of the WebSocket upgrade. <code>live.authorize</code> runs before each handler, and anything but <code>true</code> refuses the event." },
+        { t: "Request context", d: "Handlers call <code>getContext()</code> to read the cookies and the <code>authorization</code>, <code>accept-language</code> and <code>user-agent</code> headers of the WebSocket upgrade. <code>live.authorize</code> runs before each handler, and anything but <code>true</code> refuses the event. An island that reads the request, or has <code>live.authorize</code>, is rendered per connection on a publish; the rest share one render." },
         { t: "Choosing the transport", d: "live.js uses the WebSocket where there is one, and sends an event as a POST whenever the socket isn't open. <code>&lt;meta name=\"nowaki-live\" content=\"post\"&gt;</code> or <code>\"ws\"</code> in a page's head pins it." },
       ],
     },
@@ -81,9 +81,9 @@ export const JETSTREAM = {
       h2: "State stays on the server, signed.",
       lead: "The browser keeps a copy of the state only to resume. It cannot change it.",
       rows: [
-        { t: "Signed", d: "Every state carries an HMAC-SHA256 signature with its issue time. A tampered state is refused, and a signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (a day by default) no longer verifies. Every patch is re-signed, so an island in use does not expire." },
+        { t: "Signed", d: "Every state carries an HMAC-SHA256 signature with its issue time. A tampered state is refused, and a signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (a day by default) no longer verifies. Every patch is re-signed, so an island in use does not expire. Since 0.16 an expired but genuine state is reported as stale: the page gets a cancelable <code>nowaki:live-stale</code> event and reloads for fresh state." },
         { t: "Per connection, or per room", d: "Without a room, the state belongs to one connection: two tabs are two islands. With <code>live.room</code>, every member shares one state." },
-        { t: "One process", d: "Rooms, <code>publish()</code> and presence live in one server process. They don't reach other instances, and rooms start empty after a restart." },
+        { t: "One process", d: "Rooms, <code>publish()</code> and presence live in one server process and don't reach other instances. Since 0.16, <code>nowaki start</code> keeps rooms across a restart in <code>.nowaki/live-rooms.json</code>." },
         { t: "Survives a reconnect", d: "Patches carry the signed state and the element keeps it, so after a dropped connection the island resumes where it was. Events sent while the socket is down go over POST." },
         { t: "Set a secret", d: "Set <code>NOWAKI_LIVE_SECRET</code> in production. Without it each process signs with its own random key, so state cannot resume after a restart or on another instance, and production servers warn at startup. On the adapters it is required once more than one instance or Worker isolate can answer, or events fail the signature check." },
         { t: "Origin check", d: "The WebSocket upgrade must come from the page's own origin. A POST event passes the same gate as server functions: JSON only, an <code>x-nowaki-live</code> header, no cross-site requests, 64 KiB at most. Behind a reverse proxy, set <code>NOWAKI_TRUST_PROXY=1</code>." },
@@ -99,7 +99,7 @@ export const JETSTREAM = {
         { k: "<code>nowaki dev</code>", v: "Live over the WebSocket: events, <code>publish()</code>, rooms with presence", ok: true },
         { k: "<code>nowaki start</code>", v: "Live over the WebSocket: events, <code>publish()</code>, rooms with presence", ok: true },
         { k: "node, bun, deno, vercel and cloudflare adapters", v: "Live, one POST per event. No server push: <code>publish()</code> does nothing, other room members are not updated, and there is no presence.", ok: true },
-        { k: "Static output (<code>nowaki prerender</code>, static adapter)", v: "First HTML only. live.js still loads, but nothing answers its POSTs: the island keeps its first HTML and the page gets <code>nowaki:live-error</code>." },
+        { k: "Static output (<code>nowaki prerender</code>, static adapter)", v: "First HTML only. There is no server to answer events, so since 0.16 static pages ship no live.js." },
       ],
     },
     fit: {
@@ -114,9 +114,8 @@ export const JETSTREAM = {
       notTitle: "Not yet",
       not: [
         "Rooms, publish and presence across several instances: they live in one process.",
-        "Rooms that survive a server restart (planned).",
         "Server push on the deploy adapters: events work, pushes don't.",
-        "Notifications for stale state, and a resume token (planned).",
+        "A resume token for a state that has gone stale (deferred).",
         "Static hosting: there is no server to answer events.",
       ],
     },
@@ -124,7 +123,7 @@ export const JETSTREAM = {
   },
   ja: {
     title: "Jetstream：コンポーネント JS を送らない live の島 · Nowaki",
-    desc: "Nowaki 0.15 の Jetstream の仕組み。状態はサーバーに置き、イベントは WebSocket で、または1件ずつ POST で送り、HTML のパッチが返ってきます。ランタイムは 1.9 KB。rooms・live query・フォームと、それぞれが動く環境、まだできないことをまとめました。",
+    desc: "Nowaki 0.16 の Jetstream の仕組み。状態はサーバーに置き、イベントは WebSocket で、または1件ずつ POST で送り、HTML のパッチが返ってきます。rooms・live query・フォームと、それぞれが動く環境、まだできないことをまとめました。",
     h1: "コンポーネントの JavaScript を<wbr>送らない、live の島。",
     lead: "Jetstream の島は状態をサーバーに置きます。クリック・入力・フォームの送信がサーバーへ届くと、handler が実行されて島が描き直され、ブラウザは新しい HTML をその場で反映します。コンポーネントのコードはサーバーから出ません。",
     ctaDocs: "Jetstream のドキュメント（英語）",
@@ -160,7 +159,7 @@ export const JETSTREAM = {
         { t: "shared", d: "room の最初の状態です。handler はこれを受け取って次の状態を返し、メンバー全員に新しい HTML が届きます。" },
         { t: "在席表示", d: "<code>data-nowaki-presence=\"poll:demo\"</code> を付けた要素に、room にいる接続の数が表示されます。WebSocket のときだけです。" },
       ],
-      note: "rooms はサーバーのプロセス1つのメモリに置きます。ほかのインスタンスには届かず、再起動すると空になります。デプロイ用のアダプタでも room の島はイベントを処理しますが、ほかのメンバーには push されません。",
+      note: "rooms はサーバーのプロセス1つの中で共有され、ほかのインスタンスには届きません。0.16 からは、<code>nowaki start</code> が rooms を <code>.nowaki/live-rooms.json</code> に保存し、再起動のあとに戻します（<code>NOWAKI_LIVE_ROOMS_FILE=off</code> ならメモリだけに置きます）。<code>nowaki dev</code> とアダプタでは保存しません。デプロイ用のアダプタでも room の島はイベントを処理しますが、ほかのメンバーには push されません。",
     },
     fanout: {
       h2: "1つの変更を<wbr>1000本の接続へ。",
@@ -170,7 +169,7 @@ export const JETSTREAM = {
         { v: "67.5\u00a0ms", d: "room のパッチ1通ごとの p95。1票がほかの999のメンバーに届くまでです。" },
         { v: "取りこぼし 0", d: "シナリオごとに 149,850 通を超えるパッチのうち、届かなかったものはありません。" },
       ],
-      note: "Apple M2 で3セットを測った中央値です。Nowaki 0.15.0 はソースからビルドして使いました。受け手のクライアントは同じマシンで動く Node のプロセス1つなので、1000通を処理する時間も数値に含まれます。パッチは接続ごとに順に送っていて、この送り方の改良を進めています（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。デプロイ用のアダプタにはサーバーからの push がないので、この数値は nowaki dev と nowaki start だけに当てはまります。",
+      note: "Apple M2 で3セットを測った中央値です。Nowaki 0.15.0 はソースからビルドして使いました。受け手のクライアントは同じマシンで動く Node のプロセス1つなので、1000通を処理する時間も数値に含まれます。0.15 では接続ごとに描画していましたが、0.16 では publish ごとに1回だけ描画し、使える接続どうしで共有します（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。この数値は測り直します。デプロイ用のアダプタにはサーバーからの push がないので、この数値は nowaki dev と nowaki start だけに当てはまります。",
       method: "計測の方法とすべての結果（英語）",
       href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
@@ -180,7 +179,7 @@ export const JETSTREAM = {
         { t: "フォームと入力", d: "フォームに <code>data-live-submit</code> を付けると、ページを移動せずに、入力欄の値をオブジェクトにまとめて送ります。<code>data-live-input</code> は入力中の値を送り、<code>data-live-debounce</code>（既定は150\u00a0ms）で間引きます。<code>data-live-change</code> は値が確定したときに送ります。チェックボックスとラジオボタンは <code>{ value, checked }</code> を送ります。" },
         { t: "key 付きの行", d: "<code>data-key</code> を付けた子要素は、パッチを当てるときに key で対応づけられます。絞り込みや並べ替えのあとも行の要素はそのまま残り、フォーカス中の入力欄の値が上書きされることもありません。" },
         { t: "live query", d: "<code>live.subscribe</code> でトピックを指定し、<code>live.load</code> で状態を読み直します。サーバーのコードでデータを変えたあと、<code>@nowaki-dev/runtime</code> の <code>publish(topic)</code> を呼ぶと、購読しているすべての島が読み直され、ブラウザからのイベントなしでパッチが届きます。届くのは同じプロセスの接続だけです。デプロイ用のアダプタでは、<code>publish()</code> は今のところ何もしません。" },
-        { t: "リクエストの情報", d: "handler の中で <code>getContext()</code> を呼ぶと、WebSocket の接続を始めたリクエストの Cookie と、<code>authorization</code>・<code>accept-language</code>・<code>user-agent</code> のヘッダを読めます。<code>live.authorize</code> は handler の前に毎回実行され、<code>true</code> 以外を返すとイベントを拒否します。" },
+        { t: "リクエストの情報", d: "handler の中で <code>getContext()</code> を呼ぶと、WebSocket の接続を始めたリクエストの Cookie と、<code>authorization</code>・<code>accept-language</code>・<code>user-agent</code> のヘッダを読めます。<code>live.authorize</code> は handler の前に毎回実行され、<code>true</code> 以外を返すとイベントを拒否します。リクエストの情報を読む島や <code>live.authorize</code> を持つ島は、publish のときに接続ごとに描画され、それ以外の島は1回の描画を共有します。" },
         { t: "送り方の指定", d: "live.js は WebSocket があればそれを使い、ソケットがつながっていないあいだのイベントは POST で送ります。ページの head に <code>&lt;meta name=\"nowaki-live\" content=\"post\"&gt;</code> か <code>\"ws\"</code> を書くと、送り方を固定できます。" },
       ],
     },
@@ -197,9 +196,9 @@ export const JETSTREAM = {
       h2: "状態は署名付きで<wbr>サーバーに置く。",
       lead: "ブラウザが状態の写しを持つのは、再開のためだけです。ブラウザから書き換えることはできません。",
       rows: [
-        { t: "署名", d: "状態にはすべて、発行時刻を含む HMAC-SHA256 の署名が付きます。改ざんされた状態は受け付けず、<code>NOWAKI_LIVE_MAX_AGE</code>（既定は1日）より古い署名も無効になります。パッチのたびに署名し直すので、使われている島が期限切れになることはありません。" },
+        { t: "署名", d: "状態にはすべて、発行時刻を含む HMAC-SHA256 の署名が付きます。改ざんされた状態は受け付けず、<code>NOWAKI_LIVE_MAX_AGE</code>（既定は1日）より古い署名も無効になります。パッチのたびに署名し直すので、使われている島が期限切れになることはありません。0.16 からは、期限が切れただけの正しい状態は「古い」として扱います。ページはキャンセルできる <code>nowaki:live-stale</code> イベントを受け取り、読み込み直して新しい状態を取ります。" },
         { t: "接続ごとか room ごと", d: "room を指定しなければ、状態は接続ごとです。タブが2つなら島も2つです。<code>live.room</code> を指定すると、メンバー全員で1つの状態を共有します。" },
-        { t: "プロセス1つ", d: "rooms・<code>publish()</code>・在席表示は、サーバーのプロセス1つの中で動きます。ほかのインスタンスには届かず、再起動すると rooms は空になります。" },
+        { t: "プロセス1つ", d: "rooms・<code>publish()</code>・在席表示は、サーバーのプロセス1つの中で動き、ほかのインスタンスには届きません。0.16 からは、<code>nowaki start</code> を再起動しても、rooms は <code>.nowaki/live-rooms.json</code> から戻ります。" },
         { t: "再接続しても続く", d: "パッチには署名付きの状態が入っていて、要素がそれを保持します。そのため接続が切れたあとも、島は切れる前の状態から再開します。ソケットが切れているあいだのイベントは POST で送ります。" },
         { t: "秘密鍵を設定する", d: "本番では <code>NOWAKI_LIVE_SECRET</code> を設定してください。未設定だと鍵はプロセスごとにランダムなので、再起動のあとや別のインスタンスでは状態を再開できません。未設定のまま起動すると、本番のサーバーは警告を出します。アダプタでは、2つ以上のインスタンスや Worker の isolate がリクエストを受ける構成なら必須です。設定しないと、イベントが署名の確認で失敗します。" },
         { t: "Origin の確認", d: "受け付ける WebSocket の接続は、ページと同じオリジンからのものだけです。POST のイベントには、サーバー関数と同じ確認があります。受け付けるのは 64 KiB までの JSON だけで、<code>x-nowaki-live</code> ヘッダが必須です。別サイトからのリクエストは拒否します。リバースプロキシの後ろでは <code>NOWAKI_TRUST_PROXY=1</code> を設定してください。" },
@@ -215,7 +214,7 @@ export const JETSTREAM = {
         { k: "<code>nowaki dev</code>", v: "WebSocket で live：イベント、<code>publish()</code>、在席表示つきの rooms", ok: true },
         { k: "<code>nowaki start</code>", v: "WebSocket で live：イベント、<code>publish()</code>、在席表示つきの rooms", ok: true },
         { k: "node・bun・deno・vercel・cloudflare アダプタ", v: "live（イベントごとに POST を1回）。サーバーからの push はありません。<code>publish()</code> は何もせず、room のほかのメンバーは更新されず、在席表示もありません。", ok: true },
-        { k: "静的出力（<code>nowaki prerender</code>、static アダプタ）", v: "最初の HTML だけ。live.js は読み込まれますが、POST に応えるサーバーがありません。島は最初の HTML のまま残り、ページに <code>nowaki:live-error</code> が届きます。" },
+        { k: "静的出力（<code>nowaki prerender</code>、static アダプタ）", v: "最初の HTML だけ。イベントに応えるサーバーがないので、0.16 からは静的なページに live.js を入れません。" },
       ],
     },
     fit: {
@@ -230,9 +229,8 @@ export const JETSTREAM = {
       notTitle: "まだできない",
       not: [
         "複数のインスタンスにまたがる rooms・publish・在席表示。今はプロセス1つの中だけです。",
-        "サーバーを再起動しても残る rooms（予定）。",
         "デプロイ用のアダプタでの、サーバーからの push。イベントは動きますが、push はありません。",
-        "状態が古くなったことの通知と、resume token（予定）。",
+        "古くなった状態を引き継ぐための resume token（見送り）。",
         "静的なホスティング。イベントに応えるサーバーがありません。",
       ],
     },
@@ -253,7 +251,7 @@ export const ARCHITECTURE = {
       lead: "nowaki start runs both. The Rust front faces the network; the Node renderer stays on localhost.",
       boxes: [
         { t: "Browser", items: ["HTML from the server", "islands.js hydrates each island on its client:* directive", "the page router, fetched when idle", "live.js, only on pages with a live island"] },
-        { t: "Rust front", sub: "axum", items: ["files under /_nowaki/, cached as immutable", "HTML assembly: preload links, island and live scripts", "ISR cache (x-nowaki-cache: HIT, STALE, MISS)", "the Jetstream WebSocket at /__nowaki/live"] },
+        { t: "Rust front", sub: "axum", items: ["files under /_nowaki/ from memory: immutable, br or gzip, ETag and 304", "HTML assembly: preload links, island and live scripts", "ISR cache (x-nowaki-cache: HIT, STALE, MISS), filled at startup", "the Jetstream WebSocket at /__nowaki/live"] },
         { t: "Node renderer", sub: "Preact", items: ["server rendering of the route", "loaders and actions", "server functions (\"use server\")", "Jetstream handlers"] },
       ],
       links: ["HTTP, WebSocket", "HTTP on 127.0.0.1"],
@@ -341,7 +339,7 @@ export const ARCHITECTURE = {
       lead: "nowaki start は両方を起動します。ネットワークに面するのは Rust のフロントで、Node のレンダラーは localhost の外に出ません。",
       boxes: [
         { t: "ブラウザ", items: ["サーバーが描いた HTML", "islands.js が client:* に従って島をハイドレート", "ページルーターはアイドル状態になってから取得", "live.js は live の島があるページだけ"] },
-        { t: "Rust フロント", sub: "axum", items: ["/_nowaki/ のファイルを immutable で配信", "HTML の組み立て：preload リンク、島と live のスクリプト", "ISR キャッシュ（x-nowaki-cache：HIT・STALE・MISS）", "Jetstream の WebSocket（/__nowaki/live）"] },
+        { t: "Rust フロント", sub: "axum", items: ["/_nowaki/ のファイルをメモリから配信（immutable、br か gzip、ETag と 304）", "HTML の組み立て：preload リンク、島と live のスクリプト", "ISR キャッシュ（x-nowaki-cache：HIT・STALE・MISS）、起動時に描いて用意", "Jetstream の WebSocket（/__nowaki/live）"] },
         { t: "Node レンダラー", sub: "Preact", items: ["ルートのサーバー描画", "loader と action", "サーバー関数（\"use server\"）", "Jetstream の handler"] },
       ],
       links: ["HTTP、WebSocket", "127.0.0.1 上の HTTP"],

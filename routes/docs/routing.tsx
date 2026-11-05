@@ -89,10 +89,40 @@ export const POST = async (ctx) => ctx.json({ received: await ctx.bodyJson() });
 
       <h2>Streaming SSR</h2>
       <p>
-        Opt a route into streaming with <code>export const streaming = true</code>; the shell is sent
-        first and the body streams in, lowering time-to-first-byte for slow pages. Today that holds on
-        the node adapter. Under <code>nowaki dev</code> and <code>nowaki start</code> the Rust front
-        still waits for the whole response before sending it.
+        Opt a route into streaming with <code>export const streaming = true</code>: loaders run first,
+        then the shell is sent and the body streams in. Since 0.16, <code>nowaki dev</code> and{" "}
+        <code>nowaki start</code> pass streamed responses (streaming pages, <code>ReadableStream</code>{" "}
+        API responses, SSE) through as they are written; regular pages are still assembled whole.
+      </p>
+      <p>
+        <code>export const streaming = "early"</code> <span class="badge">v0.16</span> sends the
+        document shell before any loader runs, so the first byte doesn't wait for data. Once the shell
+        is sent, the status and headers are fixed: <code>meta</code> sees only the static{" "}
+        <code>title</code> and <code>head</code>, a loader redirect becomes a client-side{" "}
+        <code>location.replace</code>, a loader error renders the nearest <code>error.tsx</code> with
+        status 200, and cookies set by a loader are not sent. The shell always loads the islands
+        runtime.
+      </p>
+
+      <h2>First-load JS budgets <span class="badge">v0.16</span></h2>
+      <p>
+        Every <code>nowaki build</code> and <code>nowaki prerender</code> prints the gzip size of the
+        JavaScript each page route loads first (the islands runtime and its preloads, every client
+        island the route and its layouts can render, and the live runtime), and writes it to{" "}
+        <code>dist/route-js.json</code>. The lazy router chunk is not counted. A route can set a budget
+        that fails the build when it goes over:
+      </p>
+      <Code src={`// routes/index.tsx
+export const budget = { js: 12 };   // KB, gzip
+
+// routes/about.tsx
+export const budget = { js: 0 };    // this page ships no client JS`} />
+      <p>
+        The value is read from the AST and must be a number literal; a budget the build can't read fails
+        the build instead of being ignored. The build also points out client islands that could ship no
+        JS: ones that only keep state and handle click or form events (they could be live islands), and
+        ones with no state or handlers (they could be plain components). <code>NOWAKI_HINTS=0</code>{" "}
+        hides the hints.
       </p>
 
       <h2>Incremental static regeneration (ISR)</h2>
@@ -109,7 +139,11 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
         Under <code>nowaki start</code>, the Rust front keeps the cache in memory (single-flight
         revalidation, an <code>x-nowaki-cache: HIT&#8202;|&#8202;STALE&#8202;|&#8202;MISS</code> header
         per response). Nowaki also sends <code>Cache-Control: s-maxage, stale-while-revalidate</code>,
-        so the same page gets ISR for free on a CDN or edge adapter (Cloudflare, Vercel). Responses
+        so the same page gets ISR for free on a CDN or edge adapter (Cloudflare, Vercel). Since 0.16,{" "}
+        <code>nowaki start</code> renders every ISR page once right after startup (static routes with a
+        positive <code>revalidate</code>, plus the <code>staticPaths</code> of dynamic ones, capped at{" "}
+        <code>NOWAKI_ISR_MAX</code>), so the first visitor already gets a cached page; route middleware
+        and loaders run at boot, and <code>NOWAKI_ISR_WARM=0</code> turns it off. Responses
         that set a cookie are treated as per-user and never cached, so keep ISR pages free of
         request-specific data.
       </p>

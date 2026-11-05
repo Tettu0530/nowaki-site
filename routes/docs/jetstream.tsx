@@ -1,7 +1,7 @@
 import { DOCS_HEAD } from "../../lib/docs-style.ts";
 import Code from "../../components/Code.tsx";
 
-// Kept in line with the 0.15.0 CHANGELOG, ROADMAP and runtime types in Tettu0530/nowaki.
+// Kept in line with the 0.15.0 and 0.16.0 CHANGELOG, ROADMAP and runtime types in Tettu0530/nowaki.
 export const lang = "en";
 export const title = "Nowaki docs · Jetstream islands";
 export const head = DOCS_HEAD;
@@ -9,7 +9,7 @@ export const head = DOCS_HEAD;
 export default function Jetstream() {
   return (
     <>
-      <h1>Jetstream islands <span class="badge">v0.15</span></h1>
+      <h1>Jetstream islands <span class="badge">v0.16</span></h1>
       <p class="lead">
         Server-reactive islands. State lives on the server; events go to it over a WebSocket or one
         POST each, and the server answers with an HTML patch, with <strong>zero component
@@ -152,6 +152,12 @@ export function POST(ctx) {
   publish("ticks");
   return ctx.json({ ticks });
 }`} />
+      <p>
+        Since 0.16 a publish is rendered once <span class="badge">v0.16</span>: the first connection
+        renders, and connections with the same island, state and topic reuse that HTML. An island with{" "}
+        <code>live.authorize</code>, or whose render called <code>getContext()</code>, is still rendered
+        per connection. The same applies to rooms.
+      </p>
 
       <h2>Request context and authorization <span class="badge">v0.15</span></h2>
       <p>
@@ -178,18 +184,20 @@ export const live = {
         <tr><th>Run with</th><th>Events</th><th>Server push (<code>publish</code>, rooms)</th><th>Presence</th></tr>
         <tr><td><code>nowaki dev</code>, <code>nowaki start</code></td><td>WebSocket (POST while it's down)</td><td>Yes, to connections in the same process</td><td>Yes</td></tr>
         <tr><td>node, bun, deno, vercel, cloudflare adapters</td><td>One POST per event</td><td>No: <code>publish</code> is a no-op and other room members aren't pushed</td><td>No</td></tr>
-        <tr><td>Static output (<code>nowaki prerender</code>, static adapter)</td><td>None: the island keeps its first HTML</td><td>No</td><td>No</td></tr>
+        <tr><td>Static output (<code>nowaki prerender</code>, static adapter)</td><td>None: the island keeps its first HTML, and no live.js is shipped</td><td>No</td><td>No</td></tr>
       </table>
       <p>
-        On static output live.js still loads, but nothing answers its POSTs: each event is reported as{" "}
-        <code>nowaki:live-error</code> and the page keeps working.
+        Static output has no server to answer events, so since 0.16 its pages ship no live.js; the
+        build lists the pages that have live islands, as a note.
       </p>
 
       <div class="note">
-        <strong>One process.</strong> Rooms, <code>publish()</code> and presence live in the memory of
-        one server process. They don't reach other instances, and rooms start empty after a restart.
-        Still open in v0.15: rooms that survive a restart, stale-state notifications with a resume
-        token, and a fan-out benchmark.
+        <strong>One process.</strong> Rooms, <code>publish()</code> and presence live in one server
+        process and don't reach other instances. Since 0.16, <code>nowaki start</code> writes the rooms'
+        shared state to <code>.nowaki/live-rooms.json</code> (at most every 2 s after a change, and on
+        shutdown) and loads it on the next start; <code>NOWAKI_LIVE_ROOMS_FILE</code> picks another
+        file, or <code>off</code> keeps rooms in memory. <code>nowaki dev</code> and the adapters don't
+        save rooms. Deferred: a resume token, and rooms shared across instances.
       </div>
 
       <h2>Presence &amp; scaling <span class="badge">v0.9</span></h2>
@@ -201,7 +209,8 @@ export const live = {
 
       <h2>Signatures, timeouts and errors <span class="badge">v0.14</span></h2>
       <ul>
-        <li><strong>Signed state</strong>: every state is signed with HMAC-SHA256 over the island name, the issue time and the state, and verified before each render and handler. A signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (86400 seconds by default) is rejected; every patch is re-signed, so an island in use doesn't expire.</li>
+        <li><strong>Signed state</strong>: every state is signed with HMAC-SHA256 over the island name, the issue time and the state, and verified before each render and handler. A signature older than <code>NOWAKI_LIVE_MAX_AGE</code> (86400 seconds by default) is not accepted; every patch is re-signed, so an island in use doesn't expire.</li>
+        <li><strong>Stale pages</strong> <span class="badge">v0.16</span>: a genuine but expired signature comes back as <code>reason: "stale"</code> over the WebSocket and as HTTP 409 over POST. The client dispatches a cancelable <code>nowaki:live-stale</code> event and, unless the app calls <code>preventDefault()</code>, reloads the page for fresh signed state. A tampered or future-dated signature is still refused with 403.</li>
         <li><strong>Set <code>NOWAKI_LIVE_SECRET</code></strong> in production. Without it each process uses its own random key: state can't resume after a restart or on another instance, and production servers warn at startup. On the adapters, set it whenever more than one instance (or Worker isolate) can serve a request, or live events fail the signature check. The Cloudflare <code>wrangler.jsonc</code> enables <code>nodejs_compat_populate_process_env</code> so Worker vars and secrets reach <code>process.env</code>.</li>
         <li><strong>Renders off the session loop</strong>: one render at a time per connection, with up to 32 events queued behind it, so pings, presence and new events keep flowing.</li>
         <li><strong>Timeouts and errors</strong>: a render slower than <code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code> (10000 by default) or one that fails is reported as <code>{`{ type: "error", nid, reason }`}</code> (<code>timeout</code>, <code>render failed</code> or <code>busy</code>) and dispatched as a <code>nowaki:live-error</code> window event. The island keeps its last HTML and state.</li>
