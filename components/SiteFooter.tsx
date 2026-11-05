@@ -22,6 +22,7 @@ export default function SiteFooter({ locale }: { locale: Locale }) {
           <nav aria-label="Footer">
             <a href={`${base}jetstream/`}>{s.nav.jetstream}</a>
             <a href={`${base}architecture/`}>{s.nav.architecture}</a>
+            <a href={`${base}benchmarks/`}>{s.nav.compare}</a>
             <a href="/docs/">{s.nav.docs}</a>
             <a href={GH}>GitHub</a>
             <a href={NPM}>npm</a>

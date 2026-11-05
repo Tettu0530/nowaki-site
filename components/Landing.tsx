@@ -1,106 +1,84 @@
+// The landing page, redesigned 2026-11-05 from the approved prototype. Seven beats: the island-map
+// hero, this page's JavaScript, Jetstream, the build figure, one benchmark chart with four tabs, where
+// it stands, and the close. The full benchmarks live on /benchmarks. Every number is computed: the
+// ledger from the build (lib/bundle.ts), the bench tabs and facts from benchmarks/scaling/summary.json.
+// Every animation is CSS (lib/home-style.ts); the only script is the copy-button island.
 import CopyCommand from "../islands/CopyCommand.tsx";
 import SiteNav from "./SiteNav.tsx";
 import SiteFooter from "./SiteFooter.tsx";
-import BuildFlow from "./BuildFlow.tsx";
-import IslandMap, { IslandEl } from "./IslandMap.tsx";
-import { STRINGS, GH, SITE_GH } from "../lib/i18n.ts";
+import { STRINGS, GH } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 import { NOWAKI_RELEASE, NOWAKI_VERSION } from "../lib/version.ts";
 import { shipped } from "../lib/bundle.ts";
-import { BENCH } from "../lib/benchmarks.ts";
-import Scaling from "./Scaling.tsx";
-import Production from "./Production.tsx";
+import { SCALING, SOURCE_COMMIT } from "../lib/scaling.ts";
+import { JETSTREAM, LIVE_JS_KB } from "../lib/explainers.ts";
 
-const CHANGELOG = `${GH}/blob/main/CHANGELOG.md`;
+const FWS = ["nowaki", "astro", "sveltekit", "next", "nuxt"] as const;
+const minor = (v: string) => v.split(".").slice(0, 2).join(".");
+const int = (v: number) => Math.round(v).toLocaleString("en-US");
 
 function Arrow() {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" style="display:inline-block;vertical-align:-2px;margin-left:.35em">
+    <svg class="h-arrow" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true">
       <path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
   );
 }
 
-function Mark({ no = false }: { no?: boolean }) {
-  return no ? (
-    <svg class="mark-no" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-      <circle cx="6" cy="6" r="4.5" fill="none" stroke="currentColor" stroke-width="1.2" />
-    </svg>
-  ) : (
-    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" style="color:var(--susuki)">
-      <path d="M2.2 6.4 4.8 9 9.8 3.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-  );
-}
-
-// The five-framework head-to-head: one group per metric, each sorted from best to worst,
-// bars drawn to scale against the group's largest value, Nowaki in susuki.
-const METRICS = [
-  { key: "devFirstMs", unit: "ms", digits: 0 },
-  { key: "buildMs", unit: "ms", digits: 0 },
-  { key: "jsKB", unit: "KB", digits: 1 },
-] as const;
-
-function Bench({ locale }: { locale: Locale }) {
-  if (!BENCH) return null;
-  const b = STRINGS[locale].compare.bench;
-  const now = BENCH.frameworks.find((f) => f.framework === "nowaki");
-  const note = b.note
-    .replace("{runs}", String(now?.runs ?? 3))
-    .replace("{machine}", BENCH.machine.split(",").slice(0, 3).join(","))
-    .replace("{date}", BENCH.measured)
-    .replace("{idle}", String(now?.idleKB ?? 0));
+/** An island snapped to the 24px lattice: x, y, w, h in cells, d = when it surfaces. */
+function Isl({ x, y, w, h, d, live, label }: { x: number; y: number; w: number; h: number; d: number; live?: boolean; label: string }) {
   return (
-    <div class="bench" id="bench">
-      <div class="bench__head">
-        <h3 dangerouslySetInnerHTML={{ __html: b.h3 }} />
-        <p class="lead">{b.lead}</p>
-      </div>
-      <div class="bench__groups">
-        {METRICS.map((m, gi) => {
-          const rows = [...BENCH.frameworks].sort((x, y) => x[m.key] - y[m.key]);
-          const max = Math.max(...rows.map((r) => r[m.key]));
-          return (
-            <div class="bars__group">
-              <h4>{b.groups[gi]}</h4>
-              {rows.map((r) => {
-                const us = r.framework === "nowaki";
-                const v = r[m.key];
-                return (
-                  <div>
-                    <div class="bar__top">
-                      <span class={`bar__label${us ? " is-us" : ""}`}>
-                        {r.label} <small>{r.version.split(".").slice(0, 2).join(".")}</small>
-                      </span>
-                      <span class={`bar__val${us ? "" : " is-muted"}`}>
-                        {v.toFixed(m.digits)} {m.unit}
-                      </span>
-                    </div>
-                    <div class="bar__track">
-                      <div class={`bar__fill${us ? "" : " is-muted"}`} style={`width:${Math.max((v / max) * 100, 1).toFixed(1)}%`} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-      <p class="note bench__note" dangerouslySetInnerHTML={{ __html: note }} />
-      <a class="tlink bench__src" href={`${SITE_GH}/tree/main/benchmarks`}>
-        {b.method}
-        <Arrow />
-      </a>
+    <div class={`h-isl${live ? " h-isl--live" : ""}`} style={`--x:${x};--y:${y};--w:${w};--h:${h};--d:${d}s`}>
+      <span class="h-isl__label" dangerouslySetInnerHTML={{ __html: label }} />
     </div>
   );
 }
 
-const num = (v: string) => Number.parseFloat(v.replace(/[^\d.]/g, "")) || 0;
+// The four bench tabs. "high" metrics sort descending, the rest ascending.
+type Metric = { better: "high" | "low"; get: (fw: string) => number | undefined; fmt: (v: number) => string };
+const METRICS: Metric[] = [
+  { better: "high", get: (fw) => SCALING?.prod?.[fw]?.postRps, fmt: int },
+  { better: "low", get: (fw) => SCALING?.frameworks[fw]?.cells["1000x1"]?.static.median, fmt: (v) => `${int(v)} ms` },
+  { better: "low", get: (fw) => SCALING?.frameworks[fw]?.cells["1000x1"]?.devFirst.median, fmt: (v) => `${int(v)} ms` },
+  { better: "low", get: (fw) => SCALING?.frameworks[fw]?.cells["10x1"]?.home.jsKB, fmt: (v) => `${v.toFixed(1)} KB` },
+];
+
+function benchModel() {
+  if (!SCALING?.prod) return null;
+  const fws = FWS.filter((fw) => SCALING!.frameworks[fw] && METRICS.every((m) => m.get(fw) !== undefined));
+  const ranks = METRICS.map((m) => {
+    const sorted = [...fws].sort((a, b) => (m.better === "high" ? m.get(b)! - m.get(a)! : m.get(a)! - m.get(b)!));
+    const max = Math.max(...fws.map((fw) => m.get(fw)!));
+    return { order: (fw: string) => sorted.indexOf(fw as (typeof fws)[number]) + 1, width: (fw: string) => `${Math.max((m.get(fw)! / max) * 100, 1).toFixed(1)}%`, first: sorted[0] };
+  });
+  const rows = fws.map((fw) => ({
+    fw,
+    label: `${SCALING!.frameworks[fw].label} ${minor(SCALING!.frameworks[fw].version)}`,
+    vars: METRICS.map((_, i) => `--o${i + 1}:${ranks[i].order(fw)};--w${i + 1}:${ranks[i].width(fw)}`).join(";"),
+    values: METRICS.map((m) => m.fmt(m.get(fw)!)),
+  }));
+  const wins = ranks.filter((r) => r.first === "nowaki").length;
+  const jsLeader = SCALING!.frameworks[ranks[3].first].label;
+  const prod = SCALING!.prod!;
+  const now = prod.nowaki;
+  const others = FWS.filter((fw) => fw !== "nowaki" && prod[fw]);
+  const rival = others.map((fw) => prod[fw]).sort((a, b) => a.ttfbP50 - b.ttfbP50)[0];
+  const memLeast = others.every((fw) => prod[fw].idleMB > now.idleMB);
+  return { rows, wins, total: METRICS.length, jsLeader, now, rival, memLeast };
+}
 
 export default function Landing({ locale }: { locale: Locale }) {
   const s = STRINGS[locale];
+  const h = s.home;
+  const base = locale === "ja" ? "/ja/" : "/";
   const ship = shipped(["CopyCommand"]);
-  const t = (x: string) => x.replaceAll("{kb}", String(ship?.kb ?? 14));
+  const kb = ship ? (ship.total / 1024).toFixed(1) : "11";
+  // Japanese names the ledger rows; English shows the role as computed.
+  const roles = ("roles" in s.proof.ledger ? s.proof.ledger.roles : {}) as Record<string, string>;
+  const bm = benchModel();
+  const fanout = JETSTREAM[locale].fanout.stats[0].v.replace(/\.0(?=\s)/, "");
+  const machine = SCALING ? SCALING.machine.split(",").slice(0, 3).join(",") : "";
+  let k = 0;
 
   return (
     <>
@@ -111,257 +89,398 @@ export default function Landing({ locale }: { locale: Locale }) {
       <SiteNav locale={locale} page="home" />
 
       <main id="main">
-        <section class="hero">
-          <IslandMap keyLabels={s.hero.key} />
-          <div class="wrap hero__grid">
-            <div class="rel">
-              <span class="rel__num rise" style="--rd:.05s" aria-label={`${s.hero.latest}: Nowaki ${NOWAKI_RELEASE}`}>
-                {NOWAKI_RELEASE}
-              </span>
-              <a class="rel__link tlink rise" style="--rd:.15s" href={CHANGELOG}>
-                {s.hero.notes}
-                <Arrow />
-              </a>
-              <p class="rel__full rise" style="--rd:.2s">
-                {s.hero.latest} · <code>nowaki@{NOWAKI_VERSION}</code> · alpha
-              </p>
-            </div>
-            <div class="pitch">
-              <h1 class="rise" style="--rd:.1s" lang={locale === "ja" ? "en" : undefined}>
+        {/* ── hero: the island map ── */}
+        <section class="h-hero" aria-labelledby="hero-h">
+          <div class="wrap h-hero__in">
+            <div>
+              <h1 id="hero-h" lang={locale === "ja" ? "en" : undefined}>
                 <span dangerouslySetInnerHTML={{ __html: s.hero.h1a }} />
                 <span dangerouslySetInnerHTML={{ __html: s.hero.h1b }} />
               </h1>
-              <p class="pitch__sub rise" style="--rd:.2s">
-                {s.hero.sub}
-              </p>
-              <div class="pitch__cta rise" style="--rd:.3s">
+              <p class="h-sub">{s.hero.sub}</p>
+              <div class="h-cta">
                 <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
                 <a class="btn btn--line" href="/docs/quickstart/">
                   {s.hero.docs}
                 </a>
               </div>
-              <p class="pitch__note rise" style="--rd:.36s">
-                {s.hero.note}
+              <p class="h-release">
+                <span>
+                  {h.release.label}{" "}
+                  <strong>
+                    {NOWAKI_RELEASE}
+                    {locale === "ja" ? "" : " "}
+                    {h.release.name}
+                  </strong>
+                  {locale === "ja" ? "：" : ": "}
+                  {h.release.summary}
+                </span>
+                <a class="tlink" href={`${GH}/releases/tag/v${NOWAKI_VERSION}`}>
+                  {s.hero.notes}
+                </a>
               </p>
+              <p class="h-alpha">{s.hero.note}</p>
             </div>
-          </div>
-        </section>
-
-        <section class="new" aria-labelledby="new-h">
-          <div class="wrap new__in">
-            <div class="new__h">
-              <h2 id="new-h">{s.release.h2}</h2>
-            </div>
-            <div class="new__list">
-              {s.release.items.map((it) => (
-                <div class="new__item">
-                  <h3>{it.title}</h3>
-                  <p dangerouslySetInnerHTML={{ __html: it.body }} />
+            <figure class="h-fig">
+              <div class="h-map" role="img" aria-label={h.mapLabel}>
+                <div class="h-map__sea h-lattice" />
+                <Isl x={2} y={2} w={9} h={2} d={0.25} label={"&lt;Search <b>client:load</b> /&gt;"} />
+                <Isl x={9} y={7} w={11} h={4} d={1.15} label={"&lt;Comments <b>client:visible</b> /&gt;"} />
+                <Isl x={2} y={13} w={6} h={3} d={0.7} live label={"&lt;Likes <b>live</b> /&gt;"} />
+                <div class="h-wire" style="--x:8;--y:14.5;--w:7;--d:1.4s">
+                  <span>/__nowaki/live</span>
+                  <i class="h-out" />
+                  <i class="h-back" />
                 </div>
-              ))}
-            </div>
+                <div class="h-srv" style="--x:15;--y:13.5;--w:6;--h:2;--d:1.5s">
+                  <b>nowaki start</b>
+                  <small>{h.server}</small>
+                </div>
+              </div>
+              <figcaption class="h-legend">
+                <span>
+                  <i class="h-k-html" />
+                  {s.hero.key[0]}
+                </span>
+                <span>
+                  <i class="h-k-isl" />
+                  {s.hero.key[1]}
+                </span>
+                <span>
+                  <i class="h-k-live" />
+                  {s.hero.key[2]}
+                </span>
+              </figcaption>
+            </figure>
           </div>
         </section>
 
-        <section class="sec wrap" aria-labelledby="proof-h">
-          <div class="sec__head">
-            <h2 id="proof-h">{t(s.proof.h2)}</h2>
-            <p class="lead">{t(s.proof.lead)}</p>
-          </div>
-          <div class="proof">
-          <div class="bars">
-            {s.proof.groups.map((g, gi) => {
-              const rows = s.proof.bars.filter((b) => b.group === gi);
-              const max = Math.max(...rows.map((b) => num(t(b.value))));
-              return (
-                <div class="bars__group">
-                  <h3>{g}</h3>
-                  {rows.map((bar) => {
-                    const muted = "muted" in bar && bar.muted;
-                    return (
-                      <div>
-                        <div class="bar__top">
-                          <span class="bar__label">{bar.label}</span>
-                          <span class={`bar__val${muted ? " is-muted" : ""}`}>{t(bar.value)}</span>
-                        </div>
-                        <div class="bar__track">
-                          <div class={`bar__fill${muted ? " is-muted" : ""}`} style={`width:${Math.max((num(t(bar.value)) / max) * 100, 1).toFixed(1)}%`} />
-                        </div>
-                      </div>
-                    );
+        {/* ── this page's JavaScript, from the build ── */}
+        {ship ? (
+          <section class="h-sec" id="proof" aria-labelledby="proof-h">
+            <div class="wrap">
+              <div class="h-rail">
+                <h2 id="proof-h">{s.proof.h2.replaceAll("{kb}", kb)}</h2>
+                <p>{h.proofLead}</p>
+              </div>
+              <div class="h-body">
+                <div class="h-stack" role="img" aria-label={`${kb} KB`}>
+                  {ship.files.map((f) => {
+                    const cls = f.role.endsWith(" island") ? "h-kisl" : `h-k${k++}`;
+                    return <i class={cls} style={`--kb:${(f.bytes / 1024).toFixed(2)}`} />;
                   })}
                 </div>
-              );
-            })}
-            <p class="note" dangerouslySetInnerHTML={{ __html: s.proof.note }} />
-          </div>
-          <aside class="ledger" aria-labelledby="ledger-h">
-            {ship ? (
-              <>
-                <h3 id="ledger-h">{t(s.proof.ledger.h3)}</h3>
-                <table class="ledger__t">
-                  <tbody>
-                    {ship.files.map((f) => (
-                      <tr>
-                        <th scope="row">
-                          {("roles" in s.proof.ledger ? (s.proof.ledger.roles as Record<string, string>)[f.role] : undefined) ?? f.role}
+                <ul class="h-ledger">
+                  {(() => {
+                    let j = 0;
+                    return ship.files.map((f) => {
+                      const cls = f.role.endsWith(" island") ? "h-kisl" : `h-k${j++}`;
+                      return (
+                        <li class={cls}>
+                          <span>{roles[f.role] ?? f.role}</span>
                           <code>{f.file}</code>
-                        </th>
-                        <td>{(f.bytes / 1024).toFixed(1)} KB</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                  <tfoot>
-                    <tr>
-                      <th scope="row">{s.proof.ledger.total}</th>
-                      <td>{(ship.total / 1024).toFixed(1)} KB</td>
-                    </tr>
-                  </tfoot>
-                </table>
-                <p class="ledger__src">{s.proof.ledger.note}</p>
-              </>
-            ) : null}
-          </aside>
-          </div>
-        </section>
-
-        <section class="sec wrap" aria-labelledby="jet-h">
-          <div class="sec__head">
-            <h2 id="jet-h">{s.jet.h2}</h2>
-            <p class="lead">{s.jet.lead}</p>
-          </div>
-          {/* A zero-JS simulation: the checkbox state drives every step through CSS. */}
-          <div class="jet">
-            <input type="checkbox" id="jet-run" class="jet__toggle" aria-label={s.jet.demo.label} aria-describedby="jet-note" />
-            <div class="jet__bar">
-              <label for="jet-run" class="jet__btn" aria-hidden="true">
-                <svg class="jet__heart" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="M8 13.6 2.6 8.4A3.3 3.3 0 0 1 8 4.2a3.3 3.3 0 0 1 5.4 4.2Z" fill="currentColor" fill-opacity="0" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
-                </svg>
-                <span class="jet__swap">
-                  <span class="jet__off">{s.jet.demo.like} · 12</span>
-                  <span class="jet__on">{s.jet.demo.liked} · 13</span>
-                </span>
-              </label>
-              <span class="jet__meta">
-                {s.jet.demo.state}{" "}
-                <code class="jet__swap">
-                  <span class="jet__off">liked: false</span>
-                  <span class="jet__on jet__on--state">liked: true</span>
-                </code>
-              </span>
-              <span class="jet__meta">
-                {s.jet.demo.js} <b>{s.jet.demo.jsVal}</b>
-              </span>
-            </div>
-          <ol class="rail" style="list-style:none;margin:0;padding:0">
-            {s.jet.steps.map((h, i) => (
-              <li class="hop" style={`--i:${i}`}>
-                <h3>{h.t}</h3>
-                <p>{h.d}</p>
-              </li>
-            ))}
-          </ol>
-          <p class="jet__note" id="jet-note" dangerouslySetInnerHTML={{ __html: s.jet.demo.note }} />
-          <a class="tlink jet__more" href={locale === "ja" ? "/ja/jetstream/" : "/jetstream/"}>
-            {s.jet.demo.more}
-            <Arrow />
-          </a>
-          </div>
-        </section>
-
-        <section class="sec wrap" aria-labelledby="build-h">
-          <div class="sec__head">
-            <h2 id="build-h">{s.build.h2}</h2>
-            <a class="tlink" href="/docs/">
-              {s.build.more}
-              <Arrow />
-            </a>
-          </div>
-          <BuildFlow locale={locale} />
-        </section>
-
-        <section class="sec wrap" id="compare" aria-labelledby="cmp-h">
-          <div class="sec__head">
-            <h2 id="cmp-h">{s.compare.h2}</h2>
-            <p class="lead">{s.compare.lead}</p>
-          </div>
-          <div class="tbl" role="region" aria-labelledby="cmp-h" tabIndex={0}>
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">
-                    <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)">{locale === "ja" ? "項目" : "Feature"}</span>
-                  </th>
-                  {s.compare.cols.map((c, i) => (
-                    <th scope="col" class={i === 0 ? "is-n" : undefined}>
-                      {c}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {s.compare.rows.map((r) => (
-                  <tr>
-                    <th scope="row">
-                      {r.feature}
-                      {"highlight" in r && r.highlight ? <span class="jet-tag">{s.compare.onlyTag}</span> : null}
-                    </th>
-                    <td class="is-n">{r.nowaki}</td>
-                    <td>{r.next}</td>
-                    <td>{r.astro}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p class="note">{s.compare.note}</p>
-          <Bench locale={locale} />
-          <Scaling locale={locale} />
-          <Production locale={locale} />
-        </section>
-
-        <section class="sec wrap" aria-labelledby="fit-h">
-          <div class="sec__head">
-            <h2 id="fit-h">{s.fit.h2}</h2>
-            <a class="tlink" href={`${GH}/blob/main/ROADMAP.md`}>
-              {s.fit.roadmap}
-              <Arrow />
-            </a>
-          </div>
-          <div class="fit">
-            {[
-              { title: s.fit.forTitle, items: s.fit.for, no: false },
-              { title: s.fit.notTitle, items: s.fit.not, no: true },
-              { title: s.fit.soonTitle, items: s.fit.soon, no: true },
-            ].map((col) => (
-              <div>
-                <h3 class={col.no ? "is-no" : undefined}>{col.title}</h3>
-                <ul>
-                  {col.items.map((x) => (
-                    <li>
-                      <Mark no={col.no} />
-                      <span>{x}</span>
-                    </li>
-                  ))}
+                          <b>{(f.bytes / 1024).toFixed(1)} KB</b>
+                        </li>
+                      );
+                    });
+                  })()}
+                  <li class="h-total">
+                    <span>{s.proof.ledger.total}</span>
+                    <code>{s.proof.ledger.note}</code>
+                    <b>{kb} KB</b>
+                  </li>
                 </ul>
               </div>
-            ))}
+            </div>
+          </section>
+        ) : null}
+
+        {/* ── Jetstream: a CSS-only round trip ── */}
+        <section class="h-sec" id="jet" aria-labelledby="jet-h">
+          <div class="wrap">
+            <div class="h-rail">
+              <h2 id="jet-h">{h.jet.h2}</h2>
+              <p>{h.jet.lead.replace("{live}", LIVE_JS_KB)}</p>
+              <a class="tlink" href={`${base}jetstream/`}>
+                {s.jet.demo.more}
+                <Arrow />
+              </a>
+            </div>
+            <div class="h-body">
+              <div class="h-jd">
+                <input type="checkbox" id="h-like" class="h-toggle" aria-label={s.jet.demo.label} aria-describedby="h-jd-note" />
+                <div class="h-lanes">
+                  <div class="h-lane">
+                    <span class="h-lane__h">{h.jet.lanes[0].h}</span>
+                    <label for="h-like" class="h-like" aria-hidden="true">
+                      <svg viewBox="0 0 16 16" aria-hidden="true">
+                        <path d="M8 13.6 2.6 8.4A3.3 3.3 0 0 1 8 4.2a3.3 3.3 0 0 1 5.4 4.2Z" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" />
+                      </svg>
+                      <span class="h-sw">
+                        <span class="h-off">{s.jet.demo.like} · 41</span>
+                        <span class="h-on">{s.jet.demo.liked} · 42</span>
+                      </span>
+                    </label>
+                    <span class="h-lane__s">{h.jet.lanes[0].s}</span>
+                  </div>
+                  <div class="h-lane">
+                    <span class="h-lane__h">{h.jet.lanes[1].h}</span>
+                    <span class="h-lane__s">{h.jet.lanes[1].s}</span>
+                  </div>
+                  <div class="h-lane">
+                    <span class="h-lane__h">{h.jet.lanes[2].h}</span>
+                    <span class="h-state">
+                      {"{ likes: "}
+                      <b class="h-sw">
+                        <span class="h-off">41</span>
+                        <span class="h-on">42</span>
+                      </b>
+                      {" }"}
+                    </span>
+                    <span class="h-lane__s">{h.jet.lanes[2].s}</span>
+                  </div>
+                  <div class="h-track" aria-hidden="true">
+                    <i class="h-pkt" />
+                  </div>
+                </div>
+                <ol class="h-caps">
+                  {h.jet.caps.map((c, i) => (
+                    <li style={`--i:${i}`}>
+                      <b>{c.t}</b>
+                      {c.d}
+                    </li>
+                  ))}
+                </ol>
+                <small class="h-jd__note" id="h-jd-note">
+                  {h.jet.note}
+                </small>
+              </div>
+              <ul class="h-points">
+                {h.jet.points.map((p) => (
+                  <li>
+                    <b>{p.t}</b>
+                    <span dangerouslySetInnerHTML={{ __html: p.d }} />
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </section>
 
-        <section class="sec close" aria-labelledby="close-h">
-          <div class="map map--close" aria-hidden="true">
-            <div class="map__sea" />
-            <IslandEl i={{ name: "Counter", directive: "client:visible", c: 9, r: 5, w: 9, h: 3, t: 0, wide: true }} />
-          </div>
+        {/* ── build: three panes joined by moving packets ── */}
+        <section class="h-sec h-wide" id="build" aria-labelledby="build-h">
           <div class="wrap">
-            <h2 id="close-h" dangerouslySetInnerHTML={{ __html: s.close.h2 }} />
-            <div class="close__cta">
-              <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
-              <a class="btn btn--line" href="/docs/quickstart/">
-                {s.close.docs}
+            <div class="h-wide__head">
+              <h2 id="build-h">{s.build.h2}</h2>
+              <div>
+                <p>{h.build.lead}</p>
+                <a class="tlink" href="/docs/">
+                  {s.build.more}
+                  <Arrow />
+                </a>
+              </div>
+            </div>
+            <div class="h-flow">
+              <div class="h-pane">
+                <div class="h-pane__h">
+                  <h3>{h.build.panes[0]}</h3>
+                  <span>routes/index.tsx</span>
+                </div>
+                <pre>
+                  <span class="k">export const</span> loader = () =&gt; db.posts();{"\n\n"}
+                  <span class="k">export default function</span> Home({"{ data }"}) {"{\n"}
+                  {"  "}
+                  <span class="k">return</span> ({"\n"}
+                  {"    <main>\n"}
+                  {"      <Posts items={data} />\n"}
+                  {"      <Counter "}
+                  <span class="h">client:visible</span>
+                  {" />\n"}
+                  {"      <Likes />\n"}
+                  {"    </main>\n"}
+                  {"  );\n}"}
+                </pre>
+              </div>
+              <div class="h-link" aria-hidden="true">
+                <i />
+              </div>
+              <div class="h-pane">
+                <div class="h-pane__h">
+                  <h3>{h.build.panes[1]}</h3>
+                  <span>islands/</span>
+                </div>
+                <div>
+                  <pre>
+                    <span class="c">{h.build.counter}</span>
+                    {"\n"}
+                    <span class="k">export default function</span> Counter() {"{\n"}
+                    {"  "}
+                    <span class="k">const</span> [n, set] = useState(0);{"\n  …\n}"}
+                  </pre>
+                  <pre>
+                    <span class="c">{h.build.likes}</span>
+                    {"\n"}
+                    <span class="h">export const live</span> = {"{\n"}
+                    {"  state: () => ({ likes: 0 }),\n"}
+                    {"  on: { like: (s) => ({ likes: s.likes + 1 }) },\n};"}
+                  </pre>
+                </div>
+              </div>
+              <div class="h-link" aria-hidden="true">
+                <i style="--d:1.2s" />
+              </div>
+              <div class="h-pane">
+                <div class="h-pane__h">
+                  <h3>{h.build.panes[2]}</h3>
+                  <span>nowaki build</span>
+                </div>
+                <ul class="h-term">
+                  <li>
+                    <span class="h-dim">$</span> nowaki build
+                  </li>
+                  <li>
+                    <span class="h-ok">✓</span> index.html<span class="h-sz">HTML</span>
+                  </li>
+                  <li>
+                    <span class="h-ok">✓</span> Counter.03ac9eac.js<span class="h-sz">0.2 KB</span>
+                  </li>
+                  <li>
+                    <span class="h-ok">✓</span> islands.js<span class="h-sz">1.1 KB</span>
+                  </li>
+                  <li>
+                    <span class="h-ok">✓</span> live.js<span class="h-sz">{LIVE_JS_KB} KB</span>
+                  </li>
+                  <li>
+                    <span class="h-dim">·</span> Likes<span class="h-sz">0 KB, live</span>
+                  </li>
+                  <li>
+                    <span class="h-dim">·</span> / within its JS budget
+                  </li>
+                  <li>
+                    <span class="h-dim">$</span> nowaki start
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── benchmarks: one chart, four metrics ── */}
+        {bm ? (
+          <section class="h-sec" id="bench" aria-labelledby="bench-h">
+            <div class="wrap">
+              <div class="h-rail">
+                <h2 id="bench-h" dangerouslySetInnerHTML={{ __html: h.bench.h2 }} />
+                <p>
+                  {h.bench.lead}
+                  {locale === "ja" ? "" : " "}
+                  {h.bench.leads.replace("{n}", String(bm.wins)).replace("{m}", String(bm.total))}
+                  {locale === "ja" ? "" : " "}
+                  {h.bench.leastJs.replace("{leader}", bm.jsLeader)}
+                </p>
+                <a class="tlink" href={`${base}benchmarks/`}>
+                  {h.bench.more}
+                  <Arrow />
+                </a>
+              </div>
+              <div class="h-body">
+                <div>
+                  {[1, 2, 3, 4].map((n) => (
+                    <input type="radio" name="h-metric" id={`hm${n}`} class="h-toggle" checked={n === 1} aria-label={h.bench.tabs[n - 1]} />
+                  ))}
+                  <div class="h-tabs" aria-hidden="true">
+                    {h.bench.tabs.map((t, i) => (
+                      <label for={`hm${i + 1}`}>{t}</label>
+                    ))}
+                  </div>
+                  <div class="h-chart">
+                    {bm.rows.map((r) => (
+                      <div class={`h-bar${r.fw === "nowaki" ? " is-us" : ""}`} style={r.vars}>
+                        <div class="h-bar__top">
+                          <span>{r.label}</span>
+                          <b>
+                            {r.values.map((v, i) => (
+                              <span class={`h-v h-v${i + 1}`}>{v}</span>
+                            ))}
+                          </b>
+                        </div>
+                        <div class="h-trk">
+                          <div class="h-fill" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {h.bench.notes.map((t, i) => (
+                    <p class={`h-mnote h-mnote${i + 1}`}>{t}</p>
+                  ))}
+                </div>
+                <div class="h-facts">
+                  <div class="h-fact">
+                    <b>{fanout}</b>
+                    <span>{h.bench.fanout}</span>
+                  </div>
+                  <div class="h-fact">
+                    <b>{bm.now.ttfbP50.toFixed(2)} ms</b>
+                    <span>{h.bench.ttfb.replace("{other}", bm.rival.label).replace("{them}", bm.rival.ttfbP50.toFixed(2))}</span>
+                  </div>
+                  <div class="h-fact">
+                    <b>{Math.round(bm.now.idleMB)} MB</b>
+                    <span>{bm.memLeast ? h.bench.memLeast : h.bench.mem}</span>
+                  </div>
+                </div>
+                <p class="h-src">{h.bench.src.replace("{machine}", machine).replace("{date}", SCALING!.measured).replace("{commit}", SOURCE_COMMIT)}</p>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {/* ── where it stands ── */}
+        <section class="h-sec" aria-labelledby="fit-h">
+          <div class="wrap">
+            <div class="h-rail">
+              <h2 id="fit-h">{s.fit.h2}</h2>
+              <p>{h.fitLead}</p>
+              <a class="tlink" href={`${GH}/blob/main/ROADMAP.md`}>
+                {s.fit.roadmap}
+                <Arrow />
               </a>
+            </div>
+            <div class="h-body">
+              <div class="h-lists">
+                {[
+                  { cls: "h-ok", title: s.fit.forTitle, items: s.fit.for },
+                  { cls: "h-no", title: s.fit.notTitle, items: s.fit.not },
+                  { cls: "h-soon", title: s.fit.soonTitle, items: s.fit.soon },
+                ].map((c) => (
+                  <div class={c.cls}>
+                    <h3>{c.title}</h3>
+                    <ul>
+                      {c.items.map((x) => (
+                        <li>{x}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── close: one island waiting for your app ── */}
+        <section class="h-close" aria-labelledby="close-h">
+          <div class="h-close__sea h-lattice" aria-hidden="true" />
+          <div class="wrap">
+            <div class="h-close__copy">
+              <h2 id="close-h" dangerouslySetInnerHTML={{ __html: s.close.h2 }} />
+              <div class="h-cta" style="margin:0">
+                <CopyCommand cmd="npm create nowaki@latest" labelCopy={s.copy.copy} labelCopied={s.copy.copied} />
+                <a class="btn btn--line" href="/docs/quickstart/">
+                  {s.close.docs}
+                </a>
+              </div>
+            </div>
+            <div class="h-map" aria-hidden="true">
+              <Isl x={1} y={2} w={10} h={3} d={0} live label={"&lt;YourApp /&gt;"} />
             </div>
           </div>
         </section>
