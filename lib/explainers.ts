@@ -1,9 +1,9 @@
 // Copy for the explainer pages (/jetstream, /architecture, and /ja/ versions).
 // Every statement is true of Nowaki 0.16.0 (checked against the v0.16.0 tag of
-// Tettu0530/nowaki, its CHANGELOG, ROADMAP and SECURITY.md). Measured values: live.js 1968 B
-// gzip from a 0.15.0 build of a page with one live island (not re-measured on 0.16.0); {devMs} comes from benchmarks/results/summary.json.
+// Tettu0530/nowaki, its CHANGELOG, ROADMAP and SECURITY.md). Measured values: live.js 2051 B
+// gzip from a 0.16.0 server build of a page with one live island; {devMs} comes from benchmarks/results/summary.json.
 
-export const LIVE_JS_KB = "1.9";
+export const LIVE_JS_KB = "2.0";
 
 export const JETSTREAM = {
   en: {
@@ -50,13 +50,13 @@ export const JETSTREAM = {
       h2: "One change, 1000 connections.",
       lead: "How long one change on the server takes to reach every subscribed connection under nowaki start: 1000 WebSocket connections, the same change repeated 150 times.",
       stats: [
-        { v: "63.2\u00a0ms", d: "p95 per patch for a live query: one publish() reaching 1000 subscribed islands." },
-        { v: "67.5\u00a0ms", d: "p95 per patch for a room: one vote reaching the other 999 members." },
+        { v: "27.0\u00a0ms", d: "p95 per patch for a live query: one publish() reaching 1000 subscribed islands. 63.2\u00a0ms on 0.15." },
+        { v: "29.5\u00a0ms", d: "p95 per patch for a room: one vote reaching the other 999 members. 67.5\u00a0ms on 0.15." },
         { v: "0 missed", d: "of more than 149,850 patches in each scenario." },
       ],
-      note: "Median of 3 sets on an Apple M2, with Nowaki 0.15.0 built from source. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. In 0.15 every connection asked for its own render; 0.16 renders once per publish and shares it with every connection that can use it (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>), and these numbers will be measured again. The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
+      note: "Median of 3 sets on an Apple M2, with Nowaki 0.16.0 built from the v0.16.0 tag. The receiving client is one Node process on the same machine, so handling 1000 messages is part of each number. In 0.15 every connection asked for its own render, one after another; 0.16 renders once per publish and shares it with every connection that can use it (<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">issue #97</a>). The deploy adapters have no server push, so this applies to nowaki dev and nowaki start only.",
       method: "The harness and every set",
-      href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
+      href: "https://github.com/Tettu0530/nowaki/blob/a97a3c0/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
     more: {
       h2: "Also new in 0.15.",
@@ -72,10 +72,10 @@ export const JETSTREAM = {
       h2: "What reaches the browser.",
       stats: [
         { v: "0 bytes", d: "of the island's component code. A live island gets no client chunk at all." },
-        { v: "{live} KB", d: "gzip: live.js in 0.15.0, the whole runtime. It loads only on pages that have a live island." },
+        { v: "{live} KB", d: "gzip: live.js in 0.16.0, the whole runtime. It loads only on pages that have a live island." },
         { v: "1 socket", d: "per page under nowaki dev and nowaki start, events up and HTML down. On the adapters each event is one POST. The rest of the page is plain server-rendered HTML." },
       ],
-      note: "Measured from a 0.15.0 build of a page with one live island.",
+      note: "Measured from a 0.16.0 server build of a page with one live island.",
     },
     state: {
       h2: "State stays on the server, signed.",
@@ -165,13 +165,13 @@ export const JETSTREAM = {
       h2: "1つの変更を<wbr>1000本の接続へ。",
       lead: "nowaki start で、サーバー側の1つの変更が、購読しているすべての接続に届くまでの時間を測りました。WebSocket の接続を1000本開き、同じ変更を150回くり返しました。",
       stats: [
-        { v: "63.2\u00a0ms", d: "live query のパッチ1通ごとの p95。1回の publish() が、購読している1000個の島に届くまでです。" },
-        { v: "67.5\u00a0ms", d: "room のパッチ1通ごとの p95。1票がほかの999のメンバーに届くまでです。" },
+        { v: "27.0\u00a0ms", d: "live query のパッチ1通ごとの p95。1回の publish() が、購読している1000個の島に届くまでです。0.15 では 63.2\u00a0ms でした。" },
+        { v: "29.5\u00a0ms", d: "room のパッチ1通ごとの p95。1票がほかの999のメンバーに届くまでです。0.15 では 67.5\u00a0ms でした。" },
         { v: "取りこぼし 0", d: "シナリオごとに 149,850 通を超えるパッチのうち、届かなかったものはありません。" },
       ],
-      note: "Apple M2 で3セットを測った中央値です。Nowaki 0.15.0 はソースからビルドして使いました。受け手のクライアントは同じマシンで動く Node のプロセス1つなので、1000通を処理する時間も数値に含まれます。0.15 では接続ごとに描画していましたが、0.16 では publish ごとに1回だけ描画し、使える接続どうしで共有します（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。この数値は測り直します。デプロイ用のアダプタにはサーバーからの push がないので、この数値は nowaki dev と nowaki start だけに当てはまります。",
+      note: "Apple M2 で3セットを測った中央値です。Nowaki 0.16.0 は v0.16.0 のタグからビルドして使いました。受け手のクライアントは同じマシンで動く Node のプロセス1つなので、1000通を処理する時間も数値に含まれます。0.15 では接続ごとに順に描画していましたが、0.16 では publish ごとに1回だけ描画し、その結果を使えるすべての接続で共有します（<a class=\"tlink\" href=\"https://github.com/Tettu0530/nowaki/issues/97\">Issue #97</a>）。デプロイ用のアダプタにはサーバーからの push がないので、この数値は nowaki dev と nowaki start だけに当てはまります。",
       method: "計測の方法とすべての結果（英語）",
-      href: "https://github.com/Tettu0530/nowaki/blob/0eff385/BENCHMARKS.md#jetstream-fan-out--1000-connections",
+      href: "https://github.com/Tettu0530/nowaki/blob/a97a3c0/BENCHMARKS.md#jetstream-fan-out--1000-connections",
     },
     more: {
       h2: "0.15 で入ったほかの機能。",
@@ -187,10 +187,10 @@ export const JETSTREAM = {
       h2: "ブラウザに届くもの。",
       stats: [
         { v: "0 バイト", d: "島のコンポーネントのコードは届きません。live の島にはクライアント用のチャンク自体がありません。" },
-        { v: "{live} KB", d: "gzip 後の live.js（0.15.0）。ランタイムはこれだけで、live の島があるページでだけ読み込みます。" },
+        { v: "{live} KB", d: "gzip 後の live.js（0.16.0）。ランタイムはこれだけで、live の島があるページでだけ読み込みます。" },
         { v: "ソケット1本", d: "nowaki dev と nowaki start では、ページごとに1本で、イベントを送り HTML を受け取ります。アダプタでは、イベントごとに POST を1回送ります。ページのほかの部分はサーバーで描いたふつうの HTML です。" },
       ],
-      note: "live の島を1つ置いたページを 0.15.0 でビルドして測りました。",
+      note: "live の島を1つ置いたページを、0.16.0 のサーバー向けビルドで測りました。",
     },
     state: {
       h2: "状態は署名付きで<wbr>サーバーに置く。",
