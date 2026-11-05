@@ -76,6 +76,31 @@ export default function (ctx) {
   ctx.setHeader("x-frame-options", "DENY");
 }`} />
 
+      <h2>CSS <span class="badge">v0.16.1</span></h2>
+      <p>
+        CSS that a route, a layout, or a component they use imports is linked into the page. The
+        build follows each page route's imports (the route, every <code>_layout</code> above it, and
+        their components), writes each file once to <code>dist/client</code> as{" "}
+        <code>&lt;name&gt;.&lt;hash&gt;.css</code>, and adds a{" "}
+        <code>&lt;link rel="stylesheet"&gt;</code> to the page's <code>head</code>, layouts first. That
+        holds for <code>nowaki start</code>, every adapter, <code>nowaki prerender</code> and streaming
+        shells, and the SPA router swaps the links on client navigation. Under{" "}
+        <code>nowaki dev</code> the links come from the dev server and the page reloads when a file
+        changes.
+      </p>
+      <Code src={`// routes/_layout.tsx
+import "../styles/site.css";          // linked on every page under this layout
+
+// routes/blog/[slug].tsx
+import styles from "./post.module.css"; // CSS Modules: scoped class names, linked too
+
+// a plain .css import's default export is its text
+import css from "./print.css";
+export const head = \`<style>\${css}</style>\`;`} />
+      <p>
+        CSS Modules are scoped the same way as their class names, and CSS from packages is included.
+      </p>
+
       <h2>API routes</h2>
       <p>
         Files under <code>routes/api/</code> are handlers. Export per-method functions
