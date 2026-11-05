@@ -58,7 +58,6 @@ export default function Production({ locale }: { locale: Locale }) {
     rank > 1 ? t.rank.replace("{rank}", t.ordinals[rank - 1]) : "",
     now && rival ? t.ttfb.replace("{us}", ms(now.ttfbP50)).replace("{other}", rival.label).replace("{them}", ms(rival.ttfbP50)) : "",
     t.isr.replace("{noisr}", list(noIsr)),
-    prod["nowaki+isr"] ? t.isrNote : "",
     t.mem,
     csp && now ? t.csp.replace("{csp}", fmt.format(csp.postRps)).replace("{plain}", fmt.format(now.postRps)) : "",
   ].filter(Boolean);
