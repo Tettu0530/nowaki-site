@@ -89,6 +89,9 @@ export const HOME_CSS = `
 .h-ledger .h-total{border-bottom:0;font-weight:500;color:var(--fg)}
 .h-ledger .h-total::before{background:transparent}
 .h-ledger .h-total b{color:var(--susuki)}
+.h-ledger .h-later{border-bottom:0;padding-top:4px;color:var(--faint);font-size:.86rem}
+.h-ledger .h-later::before{background:transparent;border:1px dashed var(--line-strong);width:8px;height:8px}
+.h-ledger .h-later b{color:var(--muted)}
 .h-k0{--c:rgb(236 238 241 / .62)}.h-k1{--c:rgb(236 238 241 / .46)}.h-k2{--c:rgb(236 238 241 / .34)}.h-k3{--c:rgb(236 238 241 / .26)}.h-k4{--c:rgb(236 238 241 / .2)}.h-k5{--c:rgb(236 238 241 / .16)}.h-k6{--c:rgb(236 238 241 / .12)}.h-kisl{--c:var(--susuki)}
 
 /* jetstream: three lanes, one packet, toggled by a checkbox (no JS) */

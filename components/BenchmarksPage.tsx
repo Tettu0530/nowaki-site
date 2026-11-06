@@ -5,6 +5,7 @@ import { Page, Opener } from "./Explainer.tsx";
 import Bench from "./Bench.tsx";
 import Scaling from "./Scaling.tsx";
 import Production from "./Production.tsx";
+import DocsSite from "./DocsSite.tsx";
 import { STRINGS, SITE_GH } from "../lib/i18n.ts";
 import type { Locale } from "../lib/i18n.ts";
 
@@ -54,6 +55,7 @@ export default function BenchmarksPage({ locale }: { locale: Locale }) {
         <Bench locale={locale} />
         <Scaling locale={locale} />
         <Production locale={locale} />
+        <DocsSite locale={locale} />
       </section>
     </Page>
   );
