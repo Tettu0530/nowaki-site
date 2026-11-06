@@ -189,6 +189,13 @@ export default function Landing({ locale }: { locale: Locale }) {
                     <code>{s.proof.ledger.note}</code>
                     <b>{kb} KB</b>
                   </li>
+                  {ship.later.length ? (
+                    <li class="h-later">
+                      <span>{h.later}</span>
+                      <code>{ship.later.map((f) => f.file).join(" + ")}</code>
+                      <b>{(ship.laterTotal / 1024).toFixed(1)} KB</b>
+                    </li>
+                  ) : null}
                 </ul>
               </div>
             </div>
@@ -442,6 +449,10 @@ export default function Landing({ locale }: { locale: Locale }) {
               <p>{h.fitLead}</p>
               <a class="tlink" href={`${GH}/blob/main/ROADMAP.md`}>
                 {s.fit.roadmap}
+                <Arrow />
+              </a>
+              <a class="tlink" href="/docs/migrate-astro/">
+                {h.astro}
                 <Arrow />
               </a>
             </div>

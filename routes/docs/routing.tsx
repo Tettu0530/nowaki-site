@@ -227,9 +227,10 @@ route("/nope");                 // ✗ unknown route
       <h2>Loading &amp; error UI, and the Router Cache</h2>
       <p>
         Pages with an island get a client router: internal links navigate by swapping the body and
-        re-hydrating, so visited pages stay interactive. The router loads <em>after</em> first paint
-        (on idle), so it never weighs down initial load: first paint ships only the hydration
-        runtime, and the navigation machinery streams in behind it. Three conventions shape that
+        re-hydrating, so visited pages stay interactive. The router loads on intent{" "}
+        <span class="badge">v0.17</span>: it starts loading when a same-origin link is hovered,
+        focused, or touched, so first paint ships only the hydration runtime. A click that comes
+        before it arrives is replayed as a client navigation once it loads. Three conventions shape that
         experience, and they mirror Next.js' <code>loading.tsx</code> / <code>error.tsx</code>.
       </p>
       <table>

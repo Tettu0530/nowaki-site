@@ -250,7 +250,7 @@ export const ARCHITECTURE = {
       h2: "Two runtimes, one command.",
       lead: "nowaki start runs both. The Rust front faces the network; the Node renderer stays on localhost.",
       boxes: [
-        { t: "Browser", items: ["HTML from the server", "islands.js hydrates each island on its client:* directive", "the page router, fetched when idle", "live.js, only on pages with a live island"] },
+        { t: "Browser", items: ["HTML from the server", "islands.js hydrates each island on its client:* directive", "the page router, fetched when a link is touched", "live.js, only on pages with a live island"] },
         { t: "Rust front", sub: "axum", items: ["files under /_nowaki/ from memory: immutable, br or gzip, ETag and 304", "HTML assembly: preload links, island and live scripts", "ISR cache (x-nowaki-cache: HIT, STALE, MISS), filled at startup", "the Jetstream WebSocket at /__nowaki/live"] },
         { t: "Node renderer", sub: "Preact", items: ["server rendering of the route", "loaders and actions", "server functions (\"use server\")", "Jetstream handlers"] },
       ],
@@ -294,7 +294,7 @@ export const ARCHITECTURE = {
       h2: "Client: islands first, router later.",
       rows: [
         { t: "Islands", d: "islands.js finds each island and imports its chunk on its directive: <code>client:load</code>, <code>idle</code>, <code>visible</code>, <code>media</code> or <code>only</code>." },
-        { t: "Router", d: "The client router is fetched once the page is idle, so the first load carries only the islands. Visited pages stay cached for 30 seconds." },
+        { t: "Router", d: "The client router starts loading when a same-origin link is hovered, focused or touched, so the first load carries only the islands; a click that comes first is replayed once it arrives. Visited pages stay cached for 30 seconds." },
         { t: "Live islands", d: "Jetstream islands get no chunk; live.js handles them over one socket, or one POST per event on the adapters." },
       ],
     },
@@ -338,7 +338,7 @@ export const ARCHITECTURE = {
       h2: "1つのコマンドで<wbr>2つの⁠ランタイムを起動",
       lead: "nowaki start は両方を起動します。外部からのリクエストを受けるのは Rust のフロントで、Node のレンダラーは localhost の外には公開されません。",
       boxes: [
-        { t: "ブラウザ", items: ["サーバーがレンダリングした HTML", "islands.js が client:* に従ってアイランドをハイドレート", "ページルーターはアイドル時に取得", "live.js は Jetstream アイランドのあるページのみ"] },
+        { t: "ブラウザ", items: ["サーバーがレンダリングした HTML", "islands.js が client:* に従ってアイランドをハイドレート", "ページルーターはリンクに触れたときに取得", "live.js は Jetstream アイランドのあるページのみ"] },
         { t: "Rust フロント", sub: "axum", items: ["/_nowaki/ のファイルをメモリから配信（immutable、br または gzip、ETag と 304）", "HTML の組み立て：preload リンク、アイランドと Jetstream のスクリプト", "ISR キャッシュ（x-nowaki-cache：HIT・STALE・MISS）、起動時に事前レンダリング", "Jetstream の WebSocket（/__nowaki/live）"] },
         { t: "Node レンダラー", sub: "Preact", items: ["ルートのサーバーレンダリング", "loader と action", "サーバー関数（\"use server\"）", "Jetstream の handler"] },
       ],
@@ -382,7 +382,7 @@ export const ARCHITECTURE = {
       h2: "クライアント：<wbr>先にアイランド、<wbr>ルーターは後から",
       rows: [
         { t: "アイランド", d: "islands.js がアイランドを見つけ、<code>client:load</code>、<code>idle</code>、<code>visible</code>、<code>media</code>、<code>only</code> の各ディレクティブに従ってチャンクを import します。" },
-        { t: "ルーター", d: "クライアントルーターはページがアイドル状態になってから取得するため、最初に読み込むのはアイランドだけです。表示したページは30秒間キャッシュします。" },
+        { t: "ルーター", d: "クライアントルーターは、同じオリジンのリンクにホバー、フォーカス、タップしたときに読み込み始めるため、最初に読み込むのはアイランドだけです。読み込み前のクリックは、読み込み後にページ遷移として再実行します。表示したページは30秒間キャッシュします。" },
         { t: "Jetstream アイランド", d: "Jetstream アイランドにはチャンクがなく、live.js が1本のソケットで処理します。アダプターでは、イベントごとに POST を1回送ります。" },
       ],
     },

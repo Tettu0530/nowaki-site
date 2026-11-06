@@ -7,12 +7,14 @@ const NAV = [
   { href: "/docs/", label: "Overview" },
   { href: "/docs/quickstart/", label: "Quickstart" },
   { href: "/docs/routing/", label: "Routing & data" },
+  { href: "/docs/content/", label: "Content sites" },
   { href: "/docs/server-functions/", label: "Server functions" },
   { href: "/docs/jetstream/", label: "Jetstream islands" },
   { href: "/docs/plugins/", label: "Plugins & virtual modules" },
   { href: "/docs/deploy/", label: "Deploy" },
   { href: "/docs/security/", label: "Security" },
   { href: "/docs/migrate/", label: "Migrate from Next.js" },
+  { href: "/docs/migrate-astro/", label: "Migrate from Astro" },
 ];
 
 const pad = (n: number) => String(n).padStart(2, "0");
