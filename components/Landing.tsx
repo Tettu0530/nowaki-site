@@ -381,9 +381,9 @@ export default function Landing({ locale }: { locale: Locale }) {
                 <p>
                   {h.bench.lead}
                   {locale === "ja" ? "" : " "}
-                  {h.bench.leads.replace("{n}", String(bm.wins)).replace("{m}", String(bm.total))}
+                  {(bm.wins === bm.total ? h.bench.leadsAll : h.bench.leads).replace("{n}", String(bm.wins)).replace("{m}", bm.wins === bm.total && locale === "en" ? ["zero", "one", "two", "three", "four", "five"][bm.total] ?? String(bm.total) : String(bm.total))}
                   {locale === "ja" ? "" : " "}
-                  {h.bench.leastJs.replace("{leader}", bm.jsLeader)}
+                  {bm.jsLeader === "Nowaki" ? h.bench.jsNote : h.bench.leastJs.replace("{leader}", bm.jsLeader)}
                 </p>
                 <a class="tlink" href={`${base}benchmarks/`}>
                   {h.bench.more}

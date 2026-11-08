@@ -29,7 +29,7 @@ export type Prod = {
 };
 export type Scaling = { measured: string; machine: string; frameworks: Record<string, ScalingFw>; prod?: Record<string, Prod> };
 
-export const SOURCE_COMMIT = "a17e4d9";
+export const SOURCE_COMMIT = "42a4136";
 export const PAGES = [1, 10, 100, 1000] as const;
 
 function load(): Scaling | null {
