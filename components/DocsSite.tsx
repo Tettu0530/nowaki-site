@@ -77,7 +77,7 @@ export default function DocsSite({ locale }: { locale: Locale }) {
         {t.slower.replace("{min}", Math.min(...ratios).toFixed(1)).replace("{max}", Math.max(...ratios).toFixed(1))}{" "}
         {t.js.replace("{nowaki}", String(jsOf(now))).replace("{astro}", String(jsOf(astro)))}
       </p>
-      <p class="note bench__note">{t.note.replace("{machine}", machine).replace("{date}", DATA.measured).replace("{astro}", astro.version)}</p>
+      <p class="note bench__note">{t.note.replace("{machine}", machine).replace("{date}", DATA.measured).replace("{nowaki}", now.version).replace("{astro}", astro.version)}</p>
       <p style="display:flex;flex-wrap:wrap;gap:8px 24px">
         <a class="tlink bench__src" href={`${GH}/blob/main/BENCHMARKS.md#docs-site--nowaki-vs-astro`}>
           {t.method}

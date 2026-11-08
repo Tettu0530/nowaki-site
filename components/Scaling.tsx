@@ -106,8 +106,11 @@ export default function Scaling({ locale }: { locale: Locale }) {
   const now = js.find((r) => r.k === "nowaki");
   const least = js[0];
   const leastEverywhere = Object.keys(least.f.cells).every((c) => fws.every(([, f]) => f.cells[c].home.jsKB >= least.f.cells[c].home.jsKB));
+  const second = js[1];
   const leader =
-    now && least.k !== "nowaki" && leastEverywhere
+    now && least.k === "nowaki" && leastEverywhere && second
+      ? t.usLeader.replace("{rival}", second.f.label).replace("{a}", second.per.toFixed(2)).replace("{b}", now.per.toFixed(2))
+      : now && least.k !== "nowaki" && leastEverywhere
       ? t.leader.replaceAll("{leader}", least.f.label).replace("{a}", least.per.toFixed(2)).replace("{b}", now.per.toFixed(2))
       : "";
   const note = t.note.replace("{machine}", SCALING.machine.split(",").slice(0, 3).join(",")).replace("{date}", SCALING.measured);
