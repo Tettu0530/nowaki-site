@@ -8,6 +8,7 @@ const NAV = [
   { href: "/docs/quickstart/", label: "Quickstart" },
   { href: "/docs/routing/", label: "Routing & data" },
   { href: "/docs/content/", label: "Content sites" },
+  { href: "/docs/larger-apps/", label: "Routing for larger apps" },
   { href: "/docs/server-functions/", label: "Server functions" },
   { href: "/docs/jetstream/", label: "Jetstream islands" },
   { href: "/docs/plugins/", label: "Plugins & virtual modules" },

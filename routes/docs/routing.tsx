@@ -13,6 +13,10 @@ export default function Routing() {
         File-based routes with nested layouts, middleware, server loaders, form actions, and API
         routes. If you've used Next.js or Remix, this will feel familiar.
       </p>
+      <p>
+        Route groups, slots, intercepting routes, i18n and config redirects are covered in{" "}
+        <a href="/docs/larger-apps/">Routing for larger apps</a>.
+      </p>
 
       <h2>File conventions</h2>
       <table>

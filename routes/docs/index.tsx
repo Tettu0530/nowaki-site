@@ -52,6 +52,7 @@ export default function Overview() {
         <li><strong>Lazy hydration</strong>: Astro-style <code>client:load</code> / <code>client:idle</code> / <code>client:visible</code> / <code>client:media</code> / <code>client:only</code> directives control <em>when</em> an island hydrates.</li>
         <li><strong>Jetstream islands</strong>: server-reactive islands that update over a WebSocket (or one POST per event on the adapters) with <em>zero</em> component JS on the client, plus rooms, live queries and form events.</li>
         <li><strong><a href="/docs/content/">Content sites</a></strong>: typed Markdown and MDX collections, build-time code highlighting, responsive AVIF images, SEO metadata with a generated sitemap, and self-hosted fonts.</li>
+        <li><strong><a href="/docs/larger-apps/">Routing for larger apps</a></strong>: route groups, parallel and intercepting routes, config redirects, i18n routing, sessions, and typed environment variables.</li>
         <li><strong>Plugins</strong>: <code>transform</code> hooks and virtual modules (<code>resolveId</code> / <code>load</code>); a <code>.tsrx</code> bridge.</li>
         <li><strong>Images</strong>: <code>&lt;Image&gt;</code> and <code>?image</code> imports generate AVIF and the original format at several widths, with <code>width</code> and <code>height</code> from the file, encoded in pure Rust and cached (see <a href="/docs/content/">Content sites</a>).</li>
         <li><strong>Deploy anywhere</strong>: Node, Bun, Deno, static prerender, Cloudflare Workers, or Vercel via build adapters.</li>
