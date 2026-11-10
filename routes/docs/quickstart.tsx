@@ -96,6 +96,40 @@ npx nowaki upgrade --to 0.11.0  # or pin a version`} />
         before 1.0), so reach for <code>nowaki upgrade</code>: or install <code>@latest</code> by
         hand. Pre-1.0, skim the release notes first; a minor can carry breaking changes.
       </p>
+
+      <h2>Upgrading to 0.18</h2>
+      <ul>
+        <li><strong>Unknown keys in <code>nowaki.config</code> are now an error.</strong> The config is validated at build (and dev) time, so a typo fails instead of being ignored.</li>
+        <li>
+          <strong>Copy the new type files from the template.</strong> <code>nowaki-env.d.ts</code> is
+          ambient again (asset wildcards, <code>ImportMetaEnv</code>, <code>ImportMeta</code>), so{" "}
+          <code>import hero from "./hero.jpg?image"</code> type-checks. The preact JSX additions for{" "}
+          <code>client:*</code> moved to a new <code>nowaki-jsx.d.ts</code>. Copy both files from a
+          new app and add both to <code>tsconfig.json</code> <code>include</code>.{" "}
+          <code>nowaki upgrade</code> doesn't copy template files.
+        </li>
+        <li>Layouts receive a <code>slots</code> prop (an empty object when they own no <code>@slot</code>).</li>
+        <li><code>staticPaths</code> receives an argument (<code>{`{ locale }`}</code> with i18n, <code>{`{}`}</code> otherwise).</li>
+        <li>Two route files with the same URL shape are an error when one of them is in a <code>(group)</code>.</li>
+        <li>A page that reads <code>ctx.session</code> can't be prerendered (static output fails with the page named). In production, <code>ctx.session</code> needs <code>NOWAKI_SESSION_SECRET</code>.</li>
+      </ul>
+      <Code src={`// tsconfig.json
+{
+  "include": [
+    "nowaki-env.d.ts",
+    "nowaki-jsx.d.ts",
+    ".nowaki/types.d.ts",
+    "nowaki.config.*",
+    "routes",
+    "islands",
+    "components",
+    "lib",
+    "actions"
+  ]
+}`} />
+      <p>
+        The new routing features are covered in <a href="/docs/larger-apps/">Routing for larger apps</a>.
+      </p>
     </>
   );
 }
