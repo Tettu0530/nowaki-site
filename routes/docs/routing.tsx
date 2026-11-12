@@ -89,8 +89,8 @@ export default function (ctx) {
         <code>&lt;link rel="stylesheet"&gt;</code> to the page's <code>head</code>, layouts first. That
         holds for <code>nowaki start</code>, every adapter, <code>nowaki prerender</code> and streaming
         shells, and the SPA router swaps the links on client navigation. Under{" "}
-        <code>nowaki dev</code> the links come from the dev server and the page reloads when a file
-        changes.
+        <code>nowaki dev</code> the links come from the dev server, and since 0.19 a changed
+        stylesheet is swapped in without a reload (see <a href="/docs/quickstart/#hmr">HMR</a>).
       </p>
       <Code src={`// routes/_layout.tsx
 import "../styles/site.css";          // linked on every page under this layout
@@ -110,7 +110,9 @@ export const head = \`<style>\${css}</style>\`;`} />
         Files under <code>routes/api/</code> are handlers. Export per-method functions
         (<code>GET</code>, <code>POST</code>, …) or a <code>default</code>; return a{" "}
         <code>Response</code> (streaming supported) or a value to JSON-encode. Unmatched methods get a
-        405.
+        405. Since 0.19, a cross-site POST, PUT, PATCH or DELETE gets 403 before the handler runs,
+        as for page actions; see <a href="/docs/security/#cross-site-requests">Cross-site requests</a>{" "}
+        for who is affected and <code>export const csrf = false</code>.
       </p>
       <Code src={`// routes/api/echo.ts
 export const GET = (ctx) => ctx.json({ q: ctx.url.searchParams.get("q") });
@@ -168,7 +170,9 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
         Under <code>nowaki start</code>, the Rust front keeps the cache in memory (single-flight
         revalidation, an <code>x-nowaki-cache: HIT&#8202;|&#8202;STALE&#8202;|&#8202;MISS</code> header
         per response). Nowaki also sends <code>Cache-Control: s-maxage, stale-while-revalidate</code>,
-        so the same page gets ISR for free on a CDN or edge adapter (Cloudflare, Vercel). Since 0.16,{" "}
+        so a CDN in front of the app, such as Vercel's, can cache the page too. Cloudflare doesn't
+        cache what a Worker returns, so since 0.19 the cloudflare adapter's Worker keeps its own ISR
+        cache (see <a href="#on-demand-revalidation">On-demand revalidation</a>). Since 0.16,{" "}
         <code>nowaki start</code> renders every ISR page once right after startup (static routes with a
         positive <code>revalidate</code>, plus the <code>staticPaths</code> of dynamic ones, capped at{" "}
         <code>NOWAKI_ISR_MAX</code>), so the first visitor already gets a cached page; route middleware
@@ -184,6 +188,73 @@ export const loader = async ({ params }) => ({ post: await db.post(params.slug) 
         another. A page that read other headers stays <code>public, s-maxage</code> and names them in{" "}
         <code>Vary</code>. <code>streaming = "early"</code> pages send their headers before any
         loader runs, so they are never marked shareable.
+      </p>
+
+      <h2 id="on-demand-revalidation">On-demand revalidation <span class="badge">v0.19</span></h2>
+      <p>
+        <code>revalidatePath(path)</code> and <code>revalidateTag(tag)</code> from{" "}
+        <code>@nowaki-dev/runtime</code> purge ISR pages before their <code>revalidate</code> window
+        ends. <code>export const tags</code> tags a page: an array, or a function of{" "}
+        <code>{`{ params, data }`}</code>. Purged pages are deleted, so the next request renders
+        fresh. This post from <code>examples/gallery</code> is tagged <code>photos</code> and{" "}
+        <code>photo:&lt;id&gt;</code>, and its caption action purges only that post:
+      </p>
+      <Code src={`// routes/posts/[id].tsx
+import { revalidateTag } from "@nowaki-dev/runtime";
+import { localePath } from "@nowaki-dev/runtime/navigation";
+
+export const revalidate = 3600;
+export const tags = ({ params }) => ["photos", \`photo:\${params.id}\`];
+
+export async function action(ctx) {
+  const id = String(ctx.params.id);
+  setCaption(id, String((await ctx.formData()).get("caption") ?? "").trim());
+  revalidateTag(\`photo:\${id}\`);   // this post, in every locale
+  return ctx.redirect(localePath(\`/posts/\${id}\`, ctx.locale), 303);
+}`} />
+      <p>
+        <code>revalidatePath</code> takes an app path, as in <code>&lt;Link href&gt;</code>, and
+        purges every query and <code>Vary</code> variant, every locale, the basePath form, and both
+        trailing-slash forms under <code>"ignore"</code>. Page actions and API routes now run inside
+        the request context, so <code>getContext()</code> works there too.
+      </p>
+      <table>
+        <tr><th>Where</th><th>What a call purges</th></tr>
+        <tr><td><code>nowaki start</code></td><td>The in-memory ISR cache. Called from a page action, an API route, a server function or a live handler, the purge happens before that response is sent, so the redirect after an action already shows new content. Calls outside a request (or after its response was sent) reach the cache through the sidecar's stdout.</td></tr>
+        <tr><td>vercel adapter</td><td>ISR pages send <code>Vercel-Cache-Tag</code> with their <code>tags</code> and their own path, and a call deletes those tags from Vercel's CDN (<code>dangerouslyDeleteByTag</code> from <code>@vercel/functions</code>) before the action's response goes out, waiting at most 2 s.</td></tr>
+        <tr><td>cloudflare adapter</td><td><code>revalidatePath</code> deletes the page from the local data center's Cache API. With <code>CLOUDFLARE_ZONE_ID</code> and <code>CLOUDFLARE_API_TOKEN</code> set on the Worker, both calls also purge every data center by <code>Cache-Tag</code> through the zone purge API, waiting at most 2 s before the action's response.</td></tr>
+        <tr><td><code>nowaki dev</code></td><td>Nothing: dev has no cache and only records the calls (the dev toolbar and the MCP endpoint list them).</td></tr>
+        <tr><td>node, bun, deno adapters, static output</td><td>Nothing: they have no cache to purge, so the calls are a no-op (warned once).</td></tr>
+      </table>
+      <p>
+        <strong>More than one <code>nowaki start</code> process.</strong> The ISR cache is per
+        process. To fan a purge out, set <code>NOWAKI_REVALIDATE_SECRET</code> and send{" "}
+        <code>POST /__nowaki/revalidate</code> to each instance. The endpoint is off (404) without
+        the secret.
+      </p>
+      <Code src={`curl -X POST https://app.example.com/__nowaki/revalidate \\
+  -H "Authorization: Bearer $NOWAKI_REVALIDATE_SECRET" \\
+  -H "content-type: application/json" \\
+  -d '{ "paths": ["/blog/hello"], "tags": ["posts"] }'`} />
+      <p>
+        <strong>Vercel.</strong> Add <code>@vercel/functions</code> to the app's dependencies; the
+        build copies it into the function. Without it the tags are still sent (purge them from the
+        dashboard or the REST API) and the first revalidate call warns once. Tags longer than
+        Vercel's 256 bytes are sent as a hash.
+      </p>
+      <p>
+        <strong>Cloudflare.</strong> The Worker now caches ISR pages in the Cache API of each data
+        center. It stores the same pages <code>nowaki start</code> does: an{" "}
+        <code>export const revalidate</code> render with status 200 and a shared{" "}
+        <code>Cache-Control</code>. A page that reads cookies, the session or{" "}
+        <code>authorization</code>, sets a cookie, or streams is never stored. Variants follow what
+        the render read (headers and the query), stale pages are served while one background render
+        (<code>ctx.waitUntil</code>) replaces them, <code>NOWAKI_CSP</code> re-nonces each cached
+        response, and responses show <code>x-nowaki-cache: HIT</code> / <code>STALE</code> /{" "}
+        <code>MISS</code>. The token needs the Cache Purge permission. Without the two variables (and
+        on workers.dev, which has no zone) the purge is local only and <code>revalidateTag</code>{" "}
+        clears nothing (warned once). The Cache API works on custom domains, not in the dashboard
+        editor or previews. Apps without ISR pages run as before.
       </p>
 
       <h2>Static paths for dynamic routes <span class="badge">v0.13</span></h2>
@@ -261,6 +332,42 @@ export default function Error({ error, reset }: ErrorPageProps) {
         and opt a single link out with <code>data-no-router</code>. If there's no <code>loading.tsx</code>,
         a slim top progress bar is shown instead; if there's no <code>error.tsx</code>, a minimal retry
         screen appears.
+      </p>
+
+      <h2 id="view-transitions">View Transitions <span class="badge">v0.19</span></h2>
+      <p>
+        The client router can run a navigation inside <code>document.startViewTransition</code>.
+        It is opt-in:
+      </p>
+      <ul>
+        <li><code>&lt;Link viewTransition&gt;</code>, or <code>data-nowaki-transition</code> on an <code>&lt;a&gt;</code> or on an element around links, does it for that navigation.</li>
+        <li><code>export const viewTransition = true</code> on a route does it for every navigation to and from the page, and adds <code>@view-transition {`{ navigation: auto }`}</code>, so full page loads between such pages (zero-JS pages, static output) transition too.</li>
+        <li>Slot modals (intercepting routes) transition the same way.</li>
+      </ul>
+      <p>
+        <code>transitionName(name)</code> from <code>@nowaki-dev/runtime/navigation</code> returns a{" "}
+        <code>style</code> with a valid <code>view-transition-name</code>, for an element that should
+        morph into the next page's. In <code>examples/gallery</code> a post card's thumbnail and the
+        post's photo share a name:
+      </p>
+      <Code src={`// routes/posts/index.tsx
+import { Image } from "@nowaki-dev/runtime/image";
+import { Link, route, transitionName } from "@nowaki-dev/runtime/navigation";
+
+<Link viewTransition href={route("/posts/[id]", { id: photo.id })}>
+  <Image src={photo.image} alt={photoTitle(photo)} width={120} style={transitionName(\`photo-\${photo.id}\`)} />
+</Link>
+
+// routes/posts/[id].tsx
+<Image src={photo.image} alt={photoTitle(photo)} style={transitionName(\`photo-\${photo.id}\`)} />
+<Link viewTransition href="/posts">All posts</Link>`} />
+      <p>
+        The transition carries the type <code>forward</code> or <code>back</code>. It is skipped when
+        the browser lacks the API, the visitor prefers reduced motion, or the browser already
+        animated a back gesture; the page is then swapped as before. Hydration, page scripts and{" "}
+        <code>nowaki:page-load</code> run after the new page is in, and a navigation superseded
+        during a transition swaps nothing. Pages without the export render byte-identical HTML, and
+        the code is in the lazy router chunk, so first-load JS is unchanged.
       </p>
     </>
   );

@@ -283,7 +283,7 @@ export const ARCHITECTURE = {
       lead: "Since 0.14 the defaults close the common holes. They are only defaults: what your app sets wins.",
       rows: [
         { t: "Security headers", d: "Every response from <code>nowaki dev</code>, <code>nowaki start</code> (ISR hits and static files included), every adapter, and the <code>_headers</code> that <code>nowaki prerender</code> writes carries <code>nosniff</code>, <code>x-frame-options: SAMEORIGIN</code>, a referrer policy and <code>cross-origin-opener-policy: same-origin</code>, plus <code>frame-ancestors 'self'</code> when the app sends no CSP." },
-        { t: "Cross-site posts", d: "Page actions answer a cross-site non-GET request with 403. API routes only warn for now; <code>export const csrf</code> turns the check on or off per route." },
+        { t: "Cross-site posts", d: "Page actions, API routes and file routes answer a cross-site POST, PUT, PATCH or DELETE with 403 before the handler runs (API and file routes since 0.19.3). A webhook or callback that authenticates another way opts out with <code>export const csrf = false</code>." },
         { t: "Server functions", d: "<code>serverFn(schema, impl)</code> validates the first argument with any Standard Schema library before your code runs, and <code>nowaki build</code> warns about functions that take arguments without it. In production only <code>ServerFnError</code> messages reach the client, and bodies over 1 MiB get 413." },
         { t: "CSP, opt-in", d: "With <code>NOWAKI_CSP=report-only</code> or <code>enforce</code>, every <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> gets a per-response nonce, made fresh even for ISR hits. It is off by default." },
         { t: "Forwarded headers", d: "The Rust front drops client-sent <code>x-forwarded-*</code> headers and sets the host itself. Behind a reverse proxy, set <code>NOWAKI_TRUST_PROXY=1</code>." },
@@ -371,7 +371,7 @@ export const ARCHITECTURE = {
       lead: "0.14 以降、よくある脆弱性はデフォルトの設定で防いでいます。あくまでデフォルト値なので、アプリ側で設定した値が優先されます。",
       rows: [
         { t: "セキュリティヘッダー", d: "<code>nowaki dev</code>、<code>nowaki start</code>（ISR のヒットと静的ファイルを含む）、すべてのアダプターのレスポンスと、<code>nowaki prerender</code> が出力する <code>_headers</code> に、<code>nosniff</code>、<code>x-frame-options: SAMEORIGIN</code>、Referrer-Policy、<code>cross-origin-opener-policy: same-origin</code> を付けます。アプリが CSP を送らない場合は、<code>frame-ancestors 'self'</code> も付けます。" },
-        { t: "クロスサイトの送信", d: "別サイトから action への GET 以外のリクエストには 403 を返します。API ルートでは、当面は警告を出すだけです。<code>export const csrf</code> で、ルートごとに検証の有無を切り替えられます。" },
+        { t: "クロスサイトの送信", d: "別サイトからの POST、PUT、PATCH、DELETE には、action、API ルート、ファイルルートのどれでも、ハンドラーを実行する前に 403 を返します（API ルートとファイルルートは 0.19.3 から）。Webhook やコールバックのように別の方法で認証するルートは、<code>export const csrf = false</code> で対象から外せます。" },
         { t: "サーバー関数", d: "<code>serverFn(schema, impl)</code> は、Standard Schema に対応したライブラリで第1引数を検証してからコードを実行します。引数を受け取るのに検証のない関数には、<code>nowaki build</code> が警告を出します。本番環境でクライアントに届くのは <code>ServerFnError</code> のメッセージだけです。1 MiB を超える body には 413 を返します。" },
         { t: "CSP（オプトイン）", d: "<code>NOWAKI_CSP=report-only</code> または <code>enforce</code> を設定すると、すべての <code>&lt;script&gt;</code> と <code>&lt;style&gt;</code> にレスポンスごとの nonce を付けます。ISR のキャッシュから返す場合も、nonce は毎回生成し直します。デフォルトでは無効です。" },
         { t: "転送ヘッダー", d: "Rust のフロントは、クライアントが付けた <code>x-forwarded-*</code> を破棄し、ホストを自身で設定します。リバースプロキシの背後では <code>NOWAKI_TRUST_PROXY=1</code> を設定してください。" },

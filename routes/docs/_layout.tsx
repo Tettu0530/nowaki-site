@@ -13,6 +13,7 @@ const NAV = [
   { href: "/docs/jetstream/", label: "Jetstream islands" },
   { href: "/docs/plugins/", label: "Plugins & virtual modules" },
   { href: "/docs/deploy/", label: "Deploy" },
+  { href: "/docs/observability/", label: "Observability" },
   { href: "/docs/security/", label: "Security" },
   { href: "/docs/migrate/", label: "Migrate from Next.js" },
   { href: "/docs/migrate-astro/", label: "Migrate from Astro" },

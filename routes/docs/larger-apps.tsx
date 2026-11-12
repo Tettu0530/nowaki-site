@@ -23,7 +23,13 @@ export default function LargerApps() {
         under <code>basePath: "/gallery"</code> in English and Japanese. A photo opens in a modal on
         client navigation and as a full page on reload, sign-in uses <code>ctx.session</code> behind
         an <code>(account)</code> route group, and <code>env.ts</code> stops the build without{" "}
-        <code>GALLERY_ADMIN_PASSWORD</code>. The samples below come from it.
+        <code>GALLERY_ADMIN_PASSWORD</code>. The samples below come from it. Since 0.19.3 it also
+        meets the v0.19 exit criteria under <code>/gallery/posts</code>: ISR posts tagged{" "}
+        <code>photos</code> / <code>photo:&lt;id&gt;</code>, a signed-in caption edit that calls{" "}
+        <code>revalidateTag</code>, a list-to-post View Transition with <code>transitionName()</code>{" "}
+        on the photo, a Likes island for HMR, and a <code>budget</code> (see{" "}
+        <a href="/docs/routing/#on-demand-revalidation">On-demand revalidation</a> and{" "}
+        <a href="/docs/routing/#view-transitions">View Transitions</a>).
       </div>
 
       <h2>Route groups</h2>
@@ -101,11 +107,32 @@ export default {
   redirects: [{ source: "/photos/[id]", destination: "/photo/[id]", permanent: true }],
   headers: [{ source: "/login", headers: { "x-robots-tag": "noindex" } }],
 };`} />
+      <p>
+        <strong>With <code>i18n</code>, rules are locale-aware</strong>{" "}
+        <span class="badge">v0.18.1</span>. A rule's source matches the path without its locale
+        prefix, so a <code>/login</code> rule matches <code>/login</code> and{" "}
+        <code>/ja/login</code>. An internal redirect destination lands on that page in the request's
+        locale (<code>/ja/old</code> → <code>/ja/new</code>; <code>/en/old</code> → <code>/new</code>{" "}
+        without <code>prefixDefaultLocale</code>), and a rewrite keeps the request's locale prefix,
+        so <code>ctx.locale</code> / <code>getLocale()</code> stay right after it. External
+        destinations, and destinations that start with a locale themselves, are kept as written.{" "}
+        <code>locale: false</code> on a rule matches the path with the locale prefix and leaves the
+        destination as written. Without <code>i18n</code> nothing changes.
+      </p>
+      <Code src={`// nowaki.config.mjs
+export default {
+  i18n: { locales: ["en", "ja"], defaultLocale: "en" },
+  redirects: [
+    { source: "/old", destination: "/new" },                       // /ja/old → /ja/new
+    { source: "/ja/legacy", destination: "/ja/", locale: false },  // matched as written
+  ],
+};`} />
       <p>Where they apply:</p>
       <ul>
         <li><code>nowaki dev</code>, <code>nowaki start</code>, the node / bun / deno / vercel adapters and the Cloudflare worker apply them in this order: basePath, trailing slash, redirects, rewrites, then assets, <code>public/</code> files and routes.</li>
         <li>On Vercel, redirects and headers are also emitted as platform routes in <code>config.json</code>.</li>
         <li>The static adapter writes <code>_redirects</code> (rewrites as 200 rules) and appends the headers to <code>_headers</code>, warning about rules a static host can't express.</li>
+        <li>With <code>i18n</code>, Vercel gets one native redirect route per locale (plus the unprefixed one) and header routes with an optional locale segment. Static <code>_redirects</code> / <code>_headers</code> get a line or block per locale; a static host has no lookahead, so a source that starts with a parameter also matches locale-prefixed paths there (the build warns).</li>
       </ul>
 
       <h2>basePath and trailingSlash</h2>
@@ -117,6 +144,28 @@ export default {
         written. <code>import.meta.env.BASE_URL</code> is <code>"/app/"</code>. Config rules are
         relative to the base.
       </p>
+      <p>
+        <code>href(path, {`{ locale, basePath }`})</code> <span class="badge">v0.18.1</span> from{" "}
+        <code>@nowaki-dev/runtime/navigation</code> (and <code>@nowaki-dev/runtime</code>) returns a
+        path as the browser requests it, built the way <code>&lt;Link&gt;</code> builds its href: the
+        current locale, then the basePath. Use it for URLs <code>&lt;Link&gt;</code> doesn't build,
+        such as a form <code>action</code>, <code>fetch</code> or <code>location</code>.{" "}
+        <code>locale</code> picks another locale (<code>false</code>: no prefix), and{" "}
+        <code>basePath: false</code> leaves the base out. It works on the server and in islands.{" "}
+        <code>examples/gallery</code> uses it instead of reading <code>import.meta.env.BASE_URL</code>{" "}
+        by hand.
+      </p>
+      <Code src={`// routes/posts/[id].tsx
+import { href } from "@nowaki-dev/runtime/navigation";
+
+<form method="post" action={href(\`/posts/\${photo.id}\`)}>   {/* /gallery/ja/posts/… on a Japanese page */}
+  …
+</form>
+
+href("/logout");                    // with the current locale and the base
+href("/about", { locale: "en" });   // another locale
+href("/about", { locale: false });  // no locale prefix
+href("/about", { basePath: false }); // no base`} />
       <p>
         <code>trailingSlash</code> is <code>"never"</code>, <code>"always"</code> or{" "}
         <code>"ignore"</code> (the default, which keeps the request's path). With <code>"never"</code> or{" "}
@@ -135,6 +184,16 @@ export default {
         <code>getLocale()</code> (in components and islands too) give the locale;{" "}
         <code>localePath(path, locale)</code> and <code>&lt;Link locale="ja"&gt;</code> build
         localized links.
+      </p>
+      <p>
+        <strong><code>&lt;Link&gt;</code> keeps the current locale</strong>{" "}
+        <span class="badge">v0.18.1</span>: on <code>/ja/x</code>,{" "}
+        <code>&lt;Link href="/about"&gt;</code> renders <code>/ja/about</code>. An href that already
+        has a locale prefix keeps it, <code>locale="en"</code> switches as before, and{" "}
+        <code>locale={"{false}"}</code> leaves the href as written (the base is still added). The
+        server reads the request's locale and the browser reads{" "}
+        <code>&lt;html data-nowaki-i18n&gt;</code>, so both render the same href. Without{" "}
+        <code>i18n</code> nothing changes.
       </p>
       <ul>
         <li>Pages get <code>&lt;html lang&gt;</code> from the locale. When <code>site</code> is set, they get <code>&lt;link rel="alternate" hreflang&gt;</code> for every locale plus <code>x-default</code>, and sitemap.xml lists every locale.</li>
