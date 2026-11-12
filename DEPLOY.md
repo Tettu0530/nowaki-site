@@ -24,13 +24,15 @@ is interactive on a purely static host.
 
 ```bash
 npx wrangler login                  # or export CLOUDFLARE_API_TOKEN=...
-# The nowaki project lives in the VorEdge account; pin it when the login sees several.
-CLOUDFLARE_ACCOUNT_ID=3b79d96c12fec34121b8d6cf0918aeeb \
+# The nowaki project lives in the Tettu0530 account (moved from VorEdge on 2026-11-12).
+CLOUDFLARE_ACCOUNT_ID=50cb5fb0fc6ff6261641b0e8c9008ad4 \
   npx wrangler pages deploy public --project-name nowaki --branch main
 ```
 
-The first run creates the `nowaki` Pages project; later runs publish a new
-version. (DNS for nowaki.dev is already on Cloudflare.)
+The `nowaki` Pages project already exists, so each run publishes a new version.
+To recreate it, run `npx wrangler pages project create nowaki --production-branch main --force`
+once: wrangler 4.160+ otherwise delegates the new project to Workers and fails.
+(DNS for nowaki.dev is already on Cloudflare, in the same account.)
 
 ## 3. Attach the domain
 
