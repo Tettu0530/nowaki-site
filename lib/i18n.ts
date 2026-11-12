@@ -146,7 +146,7 @@ export const STRINGS = {
     },
     copy: { copy: "copy", copied: "copied" },
     home: {
-      release: { label: "Latest release", name: "“Sirocco”", summary: "routing for larger apps: route groups, parallel and intercepting routes, redirects, i18n, sessions and typed environment variables." },
+      release: { label: "Latest release", name: "“Bora”", summary: "on-demand revalidation, View Transitions, observability, HMR that keeps island state, and a dev toolbar." },
       mapLabel: "A page as an island map: the sea is HTML with no JavaScript; Search hydrates on load, Comments when it scrolls into view; Likes is a Jetstream island whose events go to nowaki start and come back as HTML.",
       server: "Rust front, Node renderer",
       proofLead: "The copy buttons are the only code that runs when the page loads. The page router waits until you point at a link. Every animation on this page is CSS.",
@@ -366,7 +366,7 @@ export const STRINGS = {
     },
     copy: { copy: "コピー", copied: "コピーしました" },
     home: {
-      release: { label: "最新リリース", name: "「Sirocco」", summary: "ルートグループ、並列ルートと割り込みルート、リダイレクト、多言語のルーティング、セッション、型付きの環境変数など、大きめのアプリ向けのルーティングが入りました。" },
+      release: { label: "最新リリース", name: "「Bora」", summary: "オンデマンドの再検証、View Transitions、オブザーバビリティ、アイランドの状態を保つ HMR、開発用のツールバーが入りました。" },
       mapLabel: "ページをアイランドの地図として描いた図。海の部分は JavaScript のない HTML です。Search は読み込み時に、Comments は画面に入ったときにハイドレートします。Likes は Jetstream アイランドで、イベントは nowaki start に送られ、HTML になって戻ってきます。",
       server: "Rust フロントと Node レンダラー",
       proofLead: "ページを読み込んだときに実行されるのは、コピーボタンのコードだけです。ページルーターは、リンクにカーソルを合わせたときなどに読み込みます。ページ上のアニメーションは、すべて CSS で実装しています。",
