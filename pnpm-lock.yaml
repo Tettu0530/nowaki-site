@@ -10,13 +10,13 @@ importers:
     dependencies:
       '@nowaki-dev/runtime':
         specifier: ^0.19.3
-        version: 0.19.3(preact-render-to-string@6.8.2)(preact@10.29.8)
+        version: 0.19.3(preact-render-to-string@6.8.2)(preact@11.2.0)
       preact:
-        specifier: ^10.25.4
-        version: 10.29.8(preact-render-to-string@6.8.2)
+        specifier: ^11.2.0
+        version: 11.2.0(preact-render-to-string@6.8.2)
       preact-render-to-string:
         specifier: ^6.8.2
-        version: 6.8.2(preact@10.29.8)
+        version: 6.8.2(preact@11.2.0)
     devDependencies:
       nowaki:
         specifier: ^0.19.3
@@ -67,10 +67,10 @@ packages:
     peerDependencies:
       preact: '>=10 || >= 11.0.0-0'
 
-  preact@10.29.8:
-    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
+  preact@11.2.0:
+    resolution: {integrity: sha512-/HfHI/7N84e6GrWBJ3J280z3mLaRJiDcSvj/A+y/4AbLnND/1UlGHe1sR6oYuTGwId0nP7dqDU9OnLxMPZ7xBg==}
     peerDependencies:
-      preact-render-to-string: '>=5'
+      preact-render-to-string: '>=6.7.0'
     peerDependenciesMeta:
       preact-render-to-string:
         optional: true
@@ -89,10 +89,10 @@ snapshots:
   '@nowaki-dev/cli-linux-x64-gnu@0.19.3':
     optional: true
 
-  '@nowaki-dev/runtime@0.19.3(preact-render-to-string@6.8.2)(preact@10.29.8)':
+  '@nowaki-dev/runtime@0.19.3(preact-render-to-string@6.8.2)(preact@11.2.0)':
     dependencies:
-      preact: 10.29.8(preact-render-to-string@6.8.2)
-      preact-render-to-string: 6.8.2(preact@10.29.8)
+      preact: 11.2.0(preact-render-to-string@6.8.2)
+      preact-render-to-string: 6.8.2(preact@11.2.0)
 
   nowaki@0.19.3:
     optionalDependencies:
@@ -101,10 +101,10 @@ snapshots:
       '@nowaki-dev/cli-linux-arm64-gnu': 0.19.3
       '@nowaki-dev/cli-linux-x64-gnu': 0.19.3
 
-  preact-render-to-string@6.8.2(preact@10.29.8):
+  preact-render-to-string@6.8.2(preact@11.2.0):
     dependencies:
-      preact: 10.29.8(preact-render-to-string@6.8.2)
+      preact: 11.2.0(preact-render-to-string@6.8.2)
 
-  preact@10.29.8(preact-render-to-string@6.8.2):
+  preact@11.2.0(preact-render-to-string@6.8.2):
     optionalDependencies:
-      preact-render-to-string: 6.8.2(preact@10.29.8)
+      preact-render-to-string: 6.8.2(preact@11.2.0)
