@@ -3,22 +3,7 @@
 import SiteNav from "../../components/SiteNav.tsx";
 import { GH, NPM, CRATES } from "../../lib/i18n.ts";
 
-const NAV = [
-  { href: "/docs/", label: "Overview" },
-  { href: "/docs/quickstart/", label: "Quickstart" },
-  { href: "/docs/routing/", label: "Routing & data" },
-  { href: "/docs/content/", label: "Content sites" },
-  { href: "/docs/larger-apps/", label: "Routing for larger apps" },
-  { href: "/docs/server-functions/", label: "Server functions" },
-  { href: "/docs/jetstream/", label: "Jetstream islands" },
-  { href: "/docs/plugins/", label: "Plugins & virtual modules" },
-  { href: "/docs/deploy/", label: "Deploy" },
-  { href: "/docs/observability/", label: "Observability" },
-  { href: "/docs/security/", label: "Security" },
-  { href: "/docs/stability/", label: "Stability & support" },
-  { href: "/docs/migrate/", label: "Migrate from Next.js" },
-  { href: "/docs/migrate-astro/", label: "Migrate from Astro" },
-];
+import { DOC_GROUPS, DOC_NAV as NAV } from "../../lib/docs-nav.ts";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 // Pages serves each chapter at a trailing-slash URL; compare paths without it.
@@ -33,17 +18,28 @@ function Arrow({ back = false }: { back?: boolean }) {
 }
 
 function Chapters({ path }: { path: string }) {
+  let i = 0;
   return (
-    <ol class="chapters">
-      {NAV.map((n, i) => (
-        <li>
-          <a href={n.href} aria-current={norm(n.href) === path ? "page" : undefined}>
-            <i>{pad(i + 1)}</i>
-            <span>{n.label}</span>
-          </a>
-        </li>
+    <>
+      {DOC_GROUPS.map((grp) => (
+        <div class="chapters__group">
+          <p class="chapters__title">{grp.title}</p>
+          <ol class="chapters">
+            {grp.items.map((n) => {
+              i += 1;
+              return (
+                <li>
+                  <a href={n.href} aria-current={norm(n.href) === path ? "page" : undefined}>
+                    <i>{pad(i)}</i>
+                    <span class={n.mono ? "mono" : undefined}>{n.label}</span>
+                  </a>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       ))}
-    </ol>
+    </>
   );
 }
 

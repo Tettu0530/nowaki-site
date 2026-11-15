@@ -57,7 +57,7 @@ export default function ArchitecturePage({ locale }: { locale: Locale }) {
 
       <Sec id="security-h" h2={s.security.h2} lead={s.security.lead}>
         <Rows rows={s.security.rows} />
-        <a class="tlink xmore" href="/docs/security/">
+        <a class="tlink xmore" href="/docs/guides/security/">
           {s.security.more}
           <Arrow />
         </a>

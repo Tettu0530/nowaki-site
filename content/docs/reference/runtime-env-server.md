@@ -1,0 +1,61 @@
+---
+title: "@nowaki-dev/runtime/env/server"
+source: "docs/reference/runtime-env-server.md"
+generated: true
+---
+
+Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/env-server.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/packages/nowaki-runtime/env-server.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
+
+## Exports
+
+| Name | Kind | Summary |
+| --- | --- | --- |
+| [`ServerEnv`](#serverenv) | Interface | The validated environment from env.ts (`@nowaki-dev/runtime/env/server`). |
+| [`env`](#env) | Constant | Server and public variables from env.ts, validated once at startup. |
+
+## Declarations
+
+### ServerEnv
+
+Interface. `import type { ServerEnv } from "@nowaki-dev/runtime/env/server";`
+
+```ts
+export interface ServerEnv {}
+```
+
+The validated environment from env.ts (`@nowaki-dev/runtime/env/server`). `nowaki typegen` fills
+this in, so `env.X` is typed by the schema's output. Without it, any name is `unknown`.
+
+Used by: [`EnvShape`](#envshape).
+
+### env
+
+Constant. `import { env } from "@nowaki-dev/runtime/env/server";`
+
+```ts
+export declare const env: EnvShape;
+```
+
+Server and public variables from env.ts, validated once at startup. Read-only. Server-only:
+importing this module from client code (an island or a page script) fails the build. Read it in
+a loader, action or handler: a read at module load, before validation, throws.
+
+Uses: [`EnvShape`](#envshape).
+
+## Local types
+
+Not exported. They appear in the signatures above.
+
+### EnvShape
+
+Type, not exported: listed because exported declarations use it.
+
+```ts
+type EnvShape = keyof ServerEnv extends never ? {
+    readonly [name: string]: unknown;
+} : Readonly<ServerEnv>;
+```
+
+Uses: [`ServerEnv`](#serverenv).
+
+Used by: [`env`](#env).

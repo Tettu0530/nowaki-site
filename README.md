@@ -16,7 +16,8 @@ pnpm dev          # http://127.0.0.1:3000
 ## Layout
 
 ```
-routes/       pages: / (landing), /ja, and /docs/*
+routes/       pages: / (landing), /ja, /docs/ and /docs/quickstart/; /docs/[...slug] renders content/docs/
+content/docs/ the framework docs, synced from Tettu0530/nowaki: node scripts/sync-docs.mjs <tag> (never edit by hand)
 components/   shared server components
 islands/      client islands (only the copy button; the island map is CSS)
 lib/          copy (i18n.ts), landing and docs styles, version and bundle size

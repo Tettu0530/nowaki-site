@@ -18,6 +18,9 @@ const DOCS_CSS = `
 .chapters i{font:400 .78rem/1.9 var(--mono);font-style:normal;font-variant-numeric:tabular-nums}
 .chapters a[aria-current]{color:var(--fg)}
 .chapters a[aria-current] i{color:var(--susuki)}
+.chapters__group + .chapters__group{margin-top:20px}
+.chapters__title{margin:0 0 4px;font:500 .78rem var(--sans);color:var(--fg)}
+.chapters .mono{font:400 .82rem/1.9 var(--mono);overflow-wrap:anywhere}
 .side__ext{margin-top:24px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:6px;font-size:.86rem}
 .side__ext a{color:var(--muted)}.side__ext a:hover{color:var(--fg)}
 .side details{display:none}
@@ -64,6 +67,24 @@ const DOCS_CSS = `
 .doc__body tr:first-child th{border-bottom-color:var(--line-strong)}
 .doc__body td{color:var(--body)}
 .doc__body td code{white-space:nowrap}
+
+/* Synced framework docs (content/docs/, rendered by comrak). The version line closes the
+   opener band like a lead. Code arrives highlighted with a light theme's inline colors; they
+   are mapped onto the plate's palette (keywords bright, comments grey, the rest body). */
+.doc__body > h1:first-child + .docmeta{margin:14px 0 8px;padding-bottom:26px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.88rem;color:var(--muted)}
+.docmeta b{color:var(--fg);font-weight:500}
+.doc__body .docmeta a{color:var(--muted)}
+.doc__body h1 code,.chapters code{font-size:.86em}
+.md h4{margin:24px 0 8px;font:500 .98rem var(--sans);color:var(--fg)}
+.md :is(h2,h3,h4){scroll-margin-top:80px}
+.md blockquote{margin:18px 0;padding-left:16px;border-left:1px solid var(--susuki);max-width:56ch;color:var(--body)}
+.md hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.md img{max-width:100%;height:auto}
+.md pre[style]{margin:18px 0 22px;max-width:min(100%,58rem);background:#0e1115!important;border:1px solid var(--line);border-radius:12px}
+.md pre span[style]{color:var(--body)!important;font-style:normal!important;font-weight:400!important}
+.md pre span[style*="#a71d5d"],.md pre span[style*="#795da3"]{color:var(--fg)!important;font-weight:500!important}
+.md pre span[style*="#0086b3"],.md pre span[style*="#183691"]{color:var(--fg)!important}
+.md pre span[style*="#969896"]{color:#7b838f!important}
 
 .doc__body .note{margin:22px 0;padding-top:14px;border-top:1px solid var(--susuki);max-width:56ch;color:var(--body);font-size:.96rem}
 .doc__body .badge{display:inline-block;margin-left:.6rem;padding:1px 9px;border:1px solid rgb(216 191 134 / .45);border-radius:999px;font:500 .78rem var(--sans);color:var(--susuki);letter-spacing:0;vertical-align:.5em}

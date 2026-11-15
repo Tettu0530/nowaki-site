@@ -47,27 +47,26 @@ export default function Overview() {
 
       <h2>What's in the box</h2>
       <ul>
-        <li><strong>Routing &amp; data</strong>: file-based routes, nested layouts, middleware, server loaders, form actions, API routes, streaming SSR.</li>
-        <li><strong>Server functions</strong>: <code>"use server"</code> modules become typed RPC endpoints; the client gets a tiny fetch proxy.</li>
-        <li><strong>Lazy hydration</strong>: Astro-style <code>client:load</code> / <code>client:idle</code> / <code>client:visible</code> / <code>client:media</code> / <code>client:only</code> directives control <em>when</em> an island hydrates.</li>
-        <li><strong>Jetstream islands</strong>: server-reactive islands that update over a WebSocket (or one POST per event on the adapters) with <em>zero</em> component JS on the client, plus rooms, live queries and form events.</li>
-        <li><strong><a href="/docs/content/">Content sites</a></strong>: typed Markdown and MDX collections, build-time code highlighting, responsive AVIF images, SEO metadata with a generated sitemap, and self-hosted fonts.</li>
-        <li><strong><a href="/docs/larger-apps/">Routing for larger apps</a></strong>: route groups, parallel and intercepting routes, config redirects, i18n routing, sessions, and typed environment variables.</li>
-        <li><strong><a href="/docs/routing/#on-demand-revalidation">On-demand revalidation</a></strong> <span class="badge">v0.19</span>: <code>revalidatePath()</code> / <code>revalidateTag()</code> with route <code>tags</code> purge ISR pages from the <code>nowaki start</code> cache and the Vercel and Cloudflare CDNs.</li>
-        <li><strong><a href="/docs/routing/#view-transitions">View Transitions</a></strong> <span class="badge">v0.19</span>: opt-in per link (<code>&lt;Link viewTransition&gt;</code>) or per route, with <code>transitionName()</code> for elements that morph into the next page.</li>
-        <li><strong><a href="/docs/observability/">Observability</a></strong> <span class="badge">v0.19</span>: Server-Timing, JSON logs, OpenTelemetry traces over OTLP and a health endpoint, all of it off unless asked for.</li>
-        <li><strong><a href="/docs/quickstart/#hmr">HMR with state</a> and a <a href="/docs/quickstart/#dev-toolbar">dev toolbar</a></strong> <span class="badge">v0.19</span>: island edits keep their state, route and layout edits update the page in place, and the toolbar shows the page's route, islands, JS budget, ISR, live connections and errors.</li>
-        <li><strong><a href="/docs/stability/">A frozen API</a></strong> <span class="badge">v0.20</span>: the public surface is listed in <code>api/</code> and changes only in a new major from 1.0 on; <code>nowaki upgrade --check</code> lists what an app must change.</li>
-        <li><strong>Uploads and typed modules</strong> <span class="badge">v0.20</span>: <code>ctx.formData()</code> reads multipart file uploads, <code>PageModule</code> and friends type every route export, <code>defineConfig()</code> types nowaki.config, and <code>ctx.routePath</code> gives the path without basePath and locale.</li>
-        <li><strong>Plugins</strong>: <code>transform</code> hooks and virtual modules (<code>resolveId</code> / <code>load</code>); a <code>.tsrx</code> bridge.</li>
-        <li><strong>Images</strong>: <code>&lt;Image&gt;</code> and <code>?image</code> imports generate AVIF and the original format at several widths, with <code>width</code> and <code>height</code> from the file, encoded in pure Rust and cached (see <a href="/docs/content/">Content sites</a>).</li>
-        <li><strong>Deploy anywhere</strong>: Node, Bun, Deno, static prerender, Cloudflare Workers, or Vercel via build adapters.</li>
+        <li><strong><a href="/docs/guides/routing/">Routing</a> and <a href="/docs/guides/data/">data</a></strong>: file-based routes, nested layouts, middleware, loaders, form actions, API routes, <code>"use server"</code> functions and streaming SSR.</li>
+        <li><strong><a href="/docs/guides/islands/">Islands</a></strong>: <code>client:load</code> / <code>idle</code> / <code>visible</code> / <code>media</code> / <code>only</code> decide when an island hydrates, and a JS budget per route fails the build when it is exceeded.</li>
+        <li><strong><a href="/docs/guides/jetstream/">Jetstream live islands</a></strong>: server-reactive islands that update over a WebSocket (or one POST per event on the adapters) with <em>zero</em> component JS on the client, plus rooms, live queries and presence.</li>
+        <li><strong><a href="/docs/guides/content/">Content sites</a></strong>: typed Markdown, MDX and Markdoc collections with build-time highlighting (these docs are one), <a href="/docs/guides/images-and-fonts/">AVIF images and self-hosted fonts</a>, and <a href="/docs/guides/seo/">SEO metadata and sitemaps</a>.</li>
+        <li><strong>Larger apps</strong>: route groups, parallel and intercepting routes, <a href="/docs/guides/routing-config/">redirects, rewrites and headers</a>, <a href="/docs/guides/i18n/">i18n routing</a>, and <a href="/docs/guides/sessions-and-env/">sessions and typed env</a>.</li>
+        <li><strong>Production</strong>: <a href="/docs/guides/caching/">ISR with on-demand revalidation</a> and CDN purge, <a href="/docs/guides/view-transitions/">View Transitions</a>, <a href="/docs/guides/observability/">Server-Timing, JSON logs and OpenTelemetry</a>, and <a href="/docs/guides/security/">secure defaults</a> (CSRF checks, security headers, an opt-in nonce CSP).</li>
+        <li><strong><a href="/docs/guides/dev-experience/">Dev experience</a></strong>: HMR that keeps island state, a dev toolbar, an MCP endpoint for coding agents, and <code>nowaki upgrade --check</code>.</li>
+        <li><strong><a href="/docs/guides/plugins/">Plugins</a></strong>: <code>transform</code> hooks and virtual modules (<code>resolveId</code> / <code>load</code>).</li>
+        <li><strong><a href="/docs/deploy/">Deploy anywhere</a></strong>: <code>nowaki start</code>, Node, Bun, Deno, Cloudflare Workers, Vercel, or static output.</li>
       </ul>
+      <p>
+        Every export, config key, CLI flag and environment variable is in the{" "}
+        <a href="/docs/reference/">reference</a>, generated from the source.
+      </p>
 
       <div class="note">
-        Nowaki is <strong>pre-1.0</strong>. Since 0.20 the public API is frozen, and 1.0 release
-        candidates come next (see <a href="/docs/stability/">Stability &amp; support</a>). It's
-        published on npm and crates.io, but not yet recommended for production-critical work.
+        Nowaki is <strong>pre-1.0</strong>. The public API is frozen since 0.20, and the 1.0 release
+        candidates are on npm <code>next</code> (see <a href="/docs/stability/">Stability and
+        versioning</a>). It's published on npm and crates.io, but not yet recommended for
+        production-critical work.
       </div>
     </>
   );
