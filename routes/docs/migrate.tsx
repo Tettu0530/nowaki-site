@@ -57,7 +57,7 @@ export async function like(id) { /* ...runs on the server... */ }`} />
       <ul>
         <li>Use explicit file extensions in relative imports (<code>../islands/Counter.tsx</code>).</li>
         <li>No app-router streaming/Suspense semantics yet; Nowaki has opt-in <code>streaming = true</code> per route.</li>
-        <li>Nowaki is alpha: APIs can still shift. Start with a small surface and grow.</li>
+        <li>Nowaki is pre-1.0. The API is frozen since 0.20, but start with a small surface and grow.</li>
       </ul>
 
       <div class="note">

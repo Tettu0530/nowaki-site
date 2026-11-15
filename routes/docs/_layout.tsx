@@ -15,6 +15,7 @@ const NAV = [
   { href: "/docs/deploy/", label: "Deploy" },
   { href: "/docs/observability/", label: "Observability" },
   { href: "/docs/security/", label: "Security" },
+  { href: "/docs/stability/", label: "Stability & support" },
   { href: "/docs/migrate/", label: "Migrate from Next.js" },
   { href: "/docs/migrate-astro/", label: "Migrate from Astro" },
 ];

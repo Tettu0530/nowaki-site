@@ -6,7 +6,7 @@ export const lang = "en";
 export const title = "Nowaki docs · Security";
 export const head = DOCS_HEAD;
 
-// Kept in line with SECURITY.md and the 0.14.0 and 0.19.3 CHANGELOG in Tettu0530/nowaki.
+// Kept in line with SECURITY.md and the 0.14.0, 0.19.3 and 0.20.0 CHANGELOG in Tettu0530/nowaki.
 export default function Security() {
   return (
     <>
@@ -23,15 +23,17 @@ export default function Security() {
         <tr><td>Cross-site writes to page actions, API routes and file routes <span class="badge">v0.19</span></td><td>A non-GET request to a route with an <code>action</code>, and a POST, PUT, PATCH or DELETE to an API route (<code>routes/api/**</code>) or a file route (<code>feed.xml.ts</code>), gets 403 when <code>Origin</code> is another site or <code>null</code>, or <code>Sec-Fetch-Site</code> is <code>cross-site</code> without <code>Origin</code>. Requests without either header (curl, server-to-server) are allowed. API routes and file routes are covered since 0.19.</td></tr>
         <tr><td>Server function allowlist and RPC gate</td><td>Only exports of <code>"use server"</code> modules are reachable, and a call needs JSON, the <code>x-nowaki-rpc</code> header and a same-origin request.</td></tr>
         <tr><td>Server function limits</td><td>Bodies over <code>NOWAKI_FN_BODY_LIMIT</code> get 413, more than 16 arguments get 400, and in production only <code>ServerFnError</code> messages reach the client.</td></tr>
-        <tr><td>Forwarded headers</td><td>The Rust front drops client-sent <code>x-forwarded-*</code>, <code>forwarded</code>, <code>x-real-ip</code> and internal <code>x-nowaki-*</code> headers and sets <code>x-forwarded-host</code> from <code>Host</code> itself.</td></tr>
-        <tr><td>WebSocket Origin check</td><td>Cross-origin upgrades to the HMR and Jetstream sockets are refused.</td></tr>
+        <tr><td>Forwarded headers</td><td>The Rust front drops client-sent <code>x-forwarded-*</code>, <code>forwarded</code>, <code>x-real-ip</code> and internal <code>x-nowaki-*</code> headers and sets <code>x-forwarded-host</code> from <code>Host</code> itself. On the adapters, a request target like <code>//evil.test/reset</code> can't change <code>ctx.url</code>'s origin <span class="badge">v0.20</span>.</td></tr>
+        <tr><td>WebSocket Origin check</td><td>Cross-origin upgrades to the HMR and Jetstream sockets are refused. In <code>nowaki dev</code> they must come from the dev server's own origin <span class="badge">v0.20</span>, so another dev server on localhost can't listen in.</td></tr>
+        <tr><td>Dev <code>Host</code> check <span class="badge">v0.20</span></td><td><code>nowaki dev --host</code> answers only IP addresses, <code>localhost</code>, <code>*.localhost</code> and <code>*.local</code> names, which blocks DNS rebinding. List other names in <code>NOWAKI_DEV_ALLOWED_HOSTS</code>. <code>/@fs/</code> refuses credential files (<code>.npmrc</code>, <code>.dev.vars</code>, <code>.ssh/</code>, …) and never serves from the home directory.</td></tr>
+        <tr><td>Body limits <span class="badge">v0.20</span></td><td><code>ctx.formData()</code>, <code>bodyText()</code> and <code>bodyJson()</code> stop at <code>NOWAKI_FORM_BODY_LIMIT</code> (10 MiB). Server functions, live events and the revalidate endpoint stop at their own caps while the body streams in, and answer 413.</td></tr>
         <tr><td>Jetstream POST events <span class="badge">v0.15</span></td><td><code>POST /__nowaki/live-event</code> has the server function gate: JSON only, the <code>x-nowaki-live: 1</code> header, cross-site requests rejected, and a 64&nbsp;KiB body cap. <code>live.authorize</code> can refuse any event, and an event can call only the island's own handlers.</td></tr>
         <tr><td>Jetstream state signature</td><td>HMAC over the island name, the issue time and the state, verified before each render and handler, rejected after <code>NOWAKI_LIVE_MAX_AGE</code>.</td></tr>
         <tr><td>Internal live endpoint <span class="badge">v0.14.1</span></td><td><code>nowaki dev</code> and <code>nowaki start</code> don't expose the sidecar's <code>/__nowaki/live-render</code> (404).</td></tr>
         <tr><td>Dev MCP endpoint <span class="badge">v0.16</span></td><td><code>/__nowaki/mcp</code> exists only under <code>nowaki dev</code>, is read-only, and answers only loopback clients with a loopback <code>Host</code> and <code>Origin</code>, also under <code>--host</code>. The dev toolbar's data, <code>GET /__nowaki/devtools</code> <span class="badge">v0.19</span>, is behind the same gate: a LAN client under <code>--host</code> gets 403, and the toolbar hides itself.</td></tr>
         <tr><td>Revalidate endpoint <span class="badge">v0.19</span></td><td><code>POST /__nowaki/revalidate</code> is off (404) unless <code>NOWAKI_REVALIDATE_SECRET</code> is set, and then needs <code>Authorization: Bearer &lt;secret&gt;</code> (see <a href="/docs/routing/#on-demand-revalidation">On-demand revalidation</a>).</td></tr>
         <tr><td>Observability off by default <span class="badge">v0.19</span></td><td><code>Server-Timing</code> is on in <code>nowaki dev</code> only, because timings can tell a visitor something (such as whether a lookup found a user). JSON logs and traces are off unless configured, and errors still reach clients as generic messages (see <a href="/docs/observability/">Observability</a>).</td></tr>
-        <tr><td>Generic production 500s</td><td>Stack traces and file paths never reach the client.</td></tr>
+        <tr><td>Generic production 500s</td><td>Stack traces and file paths never reach the client, and since 0.20 a production <code>_500</code> page gets an empty <code>error.message</code>. The error is still logged.</td></tr>
       </table>
 
       <h2>Validate server function input</h2>
@@ -78,7 +80,7 @@ export const csrf = false;
 
 export async function POST(ctx) {
   const event = await ctx.bodyJson();
-  return { body: { received: event !== undefined } };
+  return ctx.json({ received: event !== undefined });
 }`} />
       <p>
         Behind a proxy that rewrites <code>Host</code>, forward the public host as{" "}
@@ -86,17 +88,43 @@ export async function POST(ctx) {
         <code>nowaki start</code> and the node, bun and deno adapters, or same-origin posts and API
         calls are rejected too. Since 0.15 the adapters ignore a client-sent{" "}
         <code>x-forwarded-host</code> unless that variable is set; on Vercel, whose edge sets it, it
-        is always used.
+        is always used. Since 0.20 that also holds when <code>Host</code> is a loopback name, so a
+        proxy on the same machine (nginx to <code>localhost:3000</code>) needs{" "}
+        <code>NOWAKI_TRUST_PROXY=1</code> or must forward <code>Host</code> itself.
       </p>
 
-      <h2>Content Security Policy (opt-in)</h2>
+      <h2 id="csp">Content Security Policy (opt-in)</h2>
       <p>
         <code>NOWAKI_CSP=report-only</code> sends <code>Content-Security-Policy-Report-Only</code> and{" "}
         <code>NOWAKI_CSP=enforce</code> sends <code>Content-Security-Policy</code>, with{" "}
         <code>script-src</code> and <code>style-src-elem</code> limited to <code>'self'</code> plus a
-        nonce that Nowaki adds to every <code>&lt;script&gt;</code> and <code>&lt;style&gt;</code> in
-        the HTML, including <code>export const head</code>. <code>nowaki start</code>'s ISR cache
-        re-nonces each response.
+        per-response nonce. <code>nowaki start</code>'s ISR cache and the Cloudflare Worker cache
+        give every hit a fresh one.
+      </p>
+      <p>
+        Since 0.20 the nonce goes only on the scripts and styles Nowaki emits (the islands runtime,
+        page scripts, the View Transition style) and on tags you write with{" "}
+        <code>nonce()</code>. An inline <code>&lt;script&gt;</code> or <code>&lt;style&gt;</code> that
+        reaches the page as raw HTML gets none, so an injected script is blocked under{" "}
+        <code>enforce</code>. That includes your own: an <code>export const head</code> string,{" "}
+        <code>dangerouslySetInnerHTML</code>, Markdown, MDX or Markdoc output, and HTML files in{" "}
+        <code>public/</code>. Give such a tag the nonce, or move the code to a file.
+      </p>
+      <Code src={`import { nonce } from "@nowaki-dev/runtime";
+
+export const meta = () => ({
+  head: \`<style nonce="\${nonce()}">.hero{color:#d8bf86}</style>\`,
+});
+
+export default function Page() {
+  return <script nonce={nonce()} dangerouslySetInnerHTML={{ __html: "console.log('runs under enforce')" }} />;
+}`} />
+      <p>
+        <code>nonce()</code> returns <code>""</code> when <code>NOWAKI_CSP</code> is off. A static{" "}
+        <code>export const head</code> string is evaluated once, so return the tag from{" "}
+        <code>meta()</code> instead. <code>nowaki prerender</code> writes pages without a nonce,
+        since a static file can't have one per visitor: set a static site's CSP in{" "}
+        <code>_headers</code> yourself.
       </p>
       <p>
         Start with <code>report-only</code>: inline event handlers, <code>javascript:</code> URLs and
@@ -125,13 +153,16 @@ export async function POST(ctx) {
         <tr><td><code>NOWAKI_LIVE_MAX_AGE</code></td><td>86400</td><td>Seconds after which a Jetstream signature is rejected.</td></tr>
         <tr><td><code>NOWAKI_LIVE_RENDER_TIMEOUT_MS</code></td><td>10000</td><td>A live render slower than this is reported to the client as <code>timeout</code>.</td></tr>
         <tr><td><code>NOWAKI_FN_BODY_LIMIT</code></td><td>1 MiB</td><td>Server function request bodies over this get 413.</td></tr>
+        <tr><td><code>NOWAKI_FORM_BODY_LIMIT</code></td><td>10 MiB</td><td>The cap for <code>ctx.formData()</code>, <code>bodyText()</code> and <code>bodyJson()</code>.</td></tr>
+        <tr><td><code>NOWAKI_DEV_ALLOWED_HOSTS</code></td><td>unset</td><td>Extra host names <code>nowaki dev --host</code> answers (a tunnel, an <code>/etc/hosts</code> alias), comma-separated; <code>*</code> for any.</td></tr>
         <tr><td><code>NOWAKI_REVALIDATE_SECRET</code></td><td>unset</td><td>Turns on <code>POST /__nowaki/revalidate</code>, called with <code>Authorization: Bearer &lt;secret&gt;</code>. Without it the endpoint answers 404.</td></tr>
         <tr><td><code>NOWAKI_SERVER_TIMING</code></td><td>unset (on in dev)</td><td><code>1</code> sends <code>Server-Timing</code> outside <code>nowaki dev</code>.</td></tr>
       </table>
 
       <div class="note">
-        Nowaki is alpha and not yet recommended for production-critical work. The full policy,
-        including how to report a vulnerability, is in{" "}
+        Nowaki is pre-1.0 and not yet recommended for production-critical work. Security fixes go
+        to the latest release only (see <a href="/docs/stability/#supported-versions">Supported
+        versions</a>). The full policy, including how to report a vulnerability, is in{" "}
         <a href={`${GH}/blob/main/SECURITY.md`}>SECURITY.md</a>.
       </div>
     </>
