@@ -6,7 +6,7 @@ generated: false
 
 `nowaki build` compiles the app into `dist/` and, with `--adapter`, turns it into something a
 host runs. `nowaki start` serves `dist/` itself. Every target below is built and run in CI
-([SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SUPPORT.md#deploy-adapters)); its output paths and the environment variables
+([SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SUPPORT.md#deploy-adapters)); its output paths and the environment variables
 it reads are part of the stability contract ([docs/STABILITY.md](/docs/stability/#what-is-frozen)).
 
 | Target | Build | Output | Run |

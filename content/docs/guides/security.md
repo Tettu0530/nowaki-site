@@ -7,7 +7,7 @@ generated: false
 Nowaki turns several defenses on by default (a same-origin check on writes, security headers,
 signed live state, generic production errors) and offers others as opt-ins (a CSP with a
 per-response nonce). This guide covers what an app author configures. The threat model, trust
-boundaries and the full list of defaults are in [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SECURITY.md).
+boundaries and the full list of defaults are in [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SECURITY.md).
 
 ## Cross-site writes (CSRF)
 
@@ -205,7 +205,7 @@ addresses, `localhost`, `*.localhost` and `*.local` names (others get 403, unles
 
 ## Reference
 
-- [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SECURITY.md): reporting, trust boundaries, defenses enabled by default
+- [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SECURITY.md): reporting, trust boundaries, defenses enabled by default
 - [Headers](/docs/reference/headers/) (security headers, CSP)
 - [Environment variables](/docs/reference/env-vars/) (`NOWAKI_CSP`, `NOWAKI_CSP_REPORT_URI`,
   `NOWAKI_SECURITY_HEADERS`, `NOWAKI_TRUST_PROXY`, the secrets)

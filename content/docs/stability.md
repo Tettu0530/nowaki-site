@@ -6,9 +6,9 @@ generated: false
 
 This document says what Nowaki promises to keep working across releases from 1.0.0 on, what
 counts as a breaking change, how features are deprecated, and which platforms are supported.
-[SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SUPPORT.md) says which release lines get fixes and for how long.
+[SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SUPPORT.md) says which release lines get fixes and for how long.
 
-Until 1.0.0 the 0.x rules in [CHANGELOG.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/CHANGELOG.md) apply: a minor may break, a patch
+Until 1.0.0 the 0.x rules in [CHANGELOG.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/CHANGELOG.md) apply: a minor may break, a patch
 does not. 0.20.0 is the last release that may break the public surface (see
 [Road to 1.0](#road-to-10)).
 
@@ -95,7 +95,7 @@ either covered by semver or listed below as not covered. Frozen and covered by s
   `client:*` JSX attribute types in the scaffold's `nowaki-jsx.d.ts`.
 
 The checked-in snapshots under `api/` are the exact list. CI compares them with the
-code; see "API snapshots" in [CONTRIBUTING.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/CONTRIBUTING.md).
+code; see "API snapshots" in [CONTRIBUTING.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/CONTRIBUTING.md).
 
 ## Not covered
 
@@ -161,7 +161,7 @@ Not breaking:
 A change that closes a vulnerability, or tightens a default defense, may land in a minor (or
 in a patch that ships with an advisory) even if it breaks some apps. It comes with an Upgrade
 note in the CHANGELOG, an opt-out where one is safe, and a row in
-[SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SECURITY.md#defenses-enabled-by-default). This is how 0.14 through 0.19
+[SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SECURITY.md#defenses-enabled-by-default). This is how 0.14 through 0.19
 handled new defaults (for example the API-route CSRF check in 0.19.3).
 
 ## Deprecation
@@ -182,7 +182,7 @@ Deprecations land in minors, never in patches.
 - **Minor** (`1.x.0`): additions, deprecations, security tightening under the exception above,
   raising the MSRV or dropping an end-of-life Node line.
 - **Major** (`x.0.0`): breaking changes, each with an Upgrade note. A breaking change needs an
-  accepted RFC ([rfcs/README.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/rfcs/README.md)) and the `breaking` label on its PR.
+  accepted RFC ([rfcs/README.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/rfcs/README.md)) and the `breaking` label on its PR.
 
 Every release has a `vX.Y.Z` tag and a CHANGELOG entry.
 

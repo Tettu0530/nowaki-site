@@ -7,7 +7,7 @@ generated: false
 The errors and warnings people run into, with the message (or the start of it), the cause and
 the fix. Messages are quoted as of 0.20; their exact wording is not covered by semver. If
 something isn't here, run `npx nowaki upgrade --check` (it lists known problems in an app) and
-see [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SUPPORT.md) for where to ask.
+see [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SUPPORT.md) for where to ask.
 
 - [Install and versions](#install-and-versions)
 - [Config](#config)
@@ -469,5 +469,5 @@ the schema. A directory under `content/` that `content/config.ts` doesn't export
 - `npx nowaki --version` and the `@nowaki-dev/runtime` version in `package.json` must match.
 - In dev, the toolbar's error list and the MCP tool `recent_errors` show the latest errors with
   stacks.
-- Report bugs as described in [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SUPPORT.md), and security issues privately as in
-  [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SECURITY.md#reporting-a-vulnerability).
+- Report bugs as described in [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SUPPORT.md), and security issues privately as in
+  [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SECURITY.md#reporting-a-vulnerability).

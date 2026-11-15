@@ -4,9 +4,9 @@ source: "docs/reference/README.md"
 generated: true
 ---
 
-Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Every page here is written by `node scripts/gen-reference.mjs` from the type declarations, the `api/` snapshots and the code, and CI fails when they are out of date. To change a page, change its source (usually a `.d.ts` doc comment or `scripts/gen-reference-data.mjs`) and regenerate: see [CONTRIBUTING.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/CONTRIBUTING.md#api-reference).
+Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Every page here is written by `node scripts/gen-reference.mjs` from the type declarations, the `api/` snapshots and the code, and CI fails when they are out of date. To change a page, change its source (usually a `.d.ts` doc comment or `scripts/gen-reference-data.mjs`) and regenerate: see [CONTRIBUTING.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/CONTRIBUTING.md#api-reference).
 
-What is covered by semver, and what is not: [STABILITY.md](/docs/stability/). The exact list of stable names: [`api/`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/api/README.md).
+What is covered by semver, and what is not: [STABILITY.md](/docs/stability/). The exact list of stable names: [`api/`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/api/README.md).
 
 ## Packages
 

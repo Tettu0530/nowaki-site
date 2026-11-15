@@ -4,7 +4,7 @@ source: "docs/reference/runtime-jsx-runtime.md"
 generated: true
 ---
 
-Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/jsx-runtime.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/packages/nowaki-runtime/jsx-runtime.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
+Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/jsx-runtime.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/packages/nowaki-runtime/jsx-runtime.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
 
 JSX types for `"jsxImportSource": "@nowaki-dev/runtime"` (the scaffolded tsconfig.json): Preact's JSX with `<form action>` also taking a server function. Types only for Nowaki itself, whose transform always imports `preact/jsx-runtime`; the JS module re-exports Preact's for other tools that read jsxImportSource (a test runner, say).  Preact types `action` as a string, and a module augmentation can't widen a property's type, so this is a JSX namespace of its own built from Preact's: augmentations of `preact`'s JSX (the `client:*` attributes in nowaki-jsx.d.ts) still apply.
 
