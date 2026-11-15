@@ -450,7 +450,7 @@ export default function Landing({ locale }: { locale: Locale }) {
                 {s.fit.roadmap}
                 <Arrow />
               </a>
-              <a class="tlink" href="/docs/migrate-astro/">
+              <a class="tlink" href="/docs/migrate-from-astro/">
                 {h.astro}
                 <Arrow />
               </a>

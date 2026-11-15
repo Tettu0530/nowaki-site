@@ -72,7 +72,7 @@ export const STRINGS = {
       h2: "Write a route. Mark an island. Ship.",
       more: "All features in the docs",
       tiles: [
-        { t: "File-based routing", d: "Layouts, middleware, loaders, actions and API routes, one file each.", href: "/docs/routing/" },
+        { t: "File-based routing", d: "Layouts, middleware, loaders, actions and API routes, one file each.", href: "/docs/guides/routing/" },
         { t: "Islands, zero JS by default", d: "Pages render to HTML. Only the components you mark ship JavaScript.", href: "/docs/" },
         { t: "A Rust toolchain", d: "oxc parses, bundles and hashes. Node renders with Preact, so npm packages work.", href: "/architecture/" },
       ],
@@ -146,7 +146,7 @@ export const STRINGS = {
     },
     copy: { copy: "copy", copied: "copied" },
     home: {
-      release: { label: "Latest release", name: "", summary: "the API freeze, the last release with breaking changes before 1.0. Release candidates come next." },
+      release: { label: "Latest release", name: "", summary: "the API freeze, the last release with breaking changes before 1.0. The 1.0 release candidate is on npm next." },
       mapLabel: "A page as an island map: the sea is HTML with no JavaScript; Search hydrates on load, Comments when it scrolls into view; Likes is a Jetstream island whose events go to nowaki start and come back as HTML.",
       server: "Rust front, Node renderer",
       proofLead: "The copy buttons are the only code that runs when the page loads. The page router waits until you point at a link. Every animation on this page is CSS.",
@@ -292,7 +292,7 @@ export const STRINGS = {
       h2: "ルートを書いてから​公開するまで",
       more: "すべての機能を見る（英語）",
       tiles: [
-        { t: "ファイルベースのルーティング", d: "レイアウト、ミドルウェア、loader、action、API ルートを、それぞれ1つのファイルで定義します。", href: "/docs/routing/" },
+        { t: "ファイルベースのルーティング", d: "レイアウト、ミドルウェア、loader、action、API ルートを、それぞれ1つのファイルで定義します。", href: "/docs/guides/routing/" },
         { t: "デフォルトで JS ゼロ", d: "ページは HTML で返し、JavaScript を送るのは指定したコンポーネントだけです。", href: "/docs/" },
         { t: "Rust 製のツールチェーン", d: "パース、バンドル、ハッシュ化は oxc が担当します。レンダリングは Node 上の Preact で行うので、npm パッケージがそのまま使えます。", href: "/ja/architecture/" },
       ],
@@ -366,7 +366,7 @@ export const STRINGS = {
     },
     copy: { copy: "コピー", copied: "コピーしました" },
     home: {
-      release: { label: "最新リリース", name: "", summary: "公開 API を凍結しました。1.0 の前で、破壊的変更を含む最後のリリースです。次は 1.0 のリリース候補です。" },
+      release: { label: "最新リリース", name: "", summary: "公開 API を凍結しました。1.0 の前で、破壊的変更を含む最後のリリースです。1.0 のリリース候補は npm の next タグで公開しています。" },
       mapLabel: "ページをアイランドの地図として描いた図。海の部分は JavaScript のない HTML です。Search は読み込み時に、Comments は画面に入ったときにハイドレートします。Likes は Jetstream アイランドで、イベントは nowaki start に送られ、HTML になって戻ってきます。",
       server: "Rust フロントと Node レンダラー",
       proofLead: "ページを読み込んだときに実行されるのは、コピーボタンのコードだけです。ページルーターは、リンクにカーソルを合わせたときなどに読み込みます。ページ上のアニメーションは、すべて CSS で実装しています。",

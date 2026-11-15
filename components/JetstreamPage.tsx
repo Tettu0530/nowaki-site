@@ -65,7 +65,7 @@ export default function JetstreamPage({ locale }: { locale: Locale }) {
       <Opener
         h1={s.h1}
         lead={s.lead}
-        docs={{ href: "/docs/jetstream/", label: s.ctaDocs }}
+        docs={{ href: "/docs/guides/jetstream/", label: s.ctaDocs }}
         other={{ href: `${base}architecture/`, label: s.ctaOther }}
         island={{ name: "LiveCounter", directive: "live", c: 9, r: 4, w: 7, h: 4, t: 1.2, live: true, wide: true }}
       />
@@ -173,7 +173,7 @@ export default function JetstreamPage({ locale }: { locale: Locale }) {
         <FitLists forTitle={s.fit.forTitle} items={s.fit.for} notTitle={s.fit.notTitle} not={s.fit.not} />
       </Sec>
 
-      <Close h2={s.close.h2} docs={{ href: "/docs/jetstream/", label: s.close.docs }} />
+      <Close h2={s.close.h2} docs={{ href: "/docs/guides/jetstream/", label: s.close.docs }} />
     </Page>
   );
 }

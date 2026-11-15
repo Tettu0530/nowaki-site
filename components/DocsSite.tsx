@@ -83,7 +83,7 @@ export default function DocsSite({ locale }: { locale: Locale }) {
           {t.method}
           <Arrow />
         </a>
-        <a class="tlink bench__src" href={locale === "ja" ? "/docs/migrate-astro/" : "/docs/migrate-astro/"}>
+        <a class="tlink bench__src" href={locale === "ja" ? "/docs/migrate-from-astro/" : "/docs/migrate-from-astro/"}>
           {t.guide}
           <Arrow />
         </a>

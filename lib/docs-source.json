@@ -1,0 +1,313 @@
+{
+  "repo": "Tettu0530/nowaki",
+  "ref": "v1.0.0-rc.1",
+  "commit": "19e861bf770c8b8e188e540dba56f36bd986f612",
+  "pages": [
+    {
+      "slug": "stability",
+      "title": "Stability and versioning",
+      "source": "docs/STABILITY.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy",
+      "title": "Deploying Nowaki",
+      "source": "docs/deploy/README.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/bun",
+      "title": "Deploy to Bun (bun adapter)",
+      "source": "docs/deploy/bun.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/cloudflare",
+      "title": "Deploy to Cloudflare Workers (cloudflare adapter)",
+      "source": "docs/deploy/cloudflare.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/deno",
+      "title": "Deploy to Deno (deno adapter)",
+      "source": "docs/deploy/deno.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/node",
+      "title": "Deploy to Node (node adapter)",
+      "source": "docs/deploy/node.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/self-hosted",
+      "title": "Self-hosting with `nowaki start`",
+      "source": "docs/deploy/self-hosted.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/static",
+      "title": "Deploy as a static site (static adapter)",
+      "source": "docs/deploy/static.md",
+      "generated": false
+    },
+    {
+      "slug": "deploy/vercel",
+      "title": "Deploy to Vercel (vercel adapter)",
+      "source": "docs/deploy/vercel.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/caching",
+      "title": "Caching: ISR, tags and revalidation",
+      "source": "docs/guides/caching.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/content",
+      "title": "Content: collections, Markdown, MDX and Markdoc",
+      "source": "docs/guides/content.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/data",
+      "title": "Data: loaders, actions, API routes and server functions",
+      "source": "docs/guides/data.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/dev-experience",
+      "title": "Dev experience: HMR, the toolbar, MCP and upgrades",
+      "source": "docs/guides/dev-experience.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/i18n",
+      "title": "i18n: localized routing",
+      "source": "docs/guides/i18n.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/images-and-fonts",
+      "title": "Images and fonts",
+      "source": "docs/guides/images-and-fonts.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/islands",
+      "title": "Islands and hydration",
+      "source": "docs/guides/islands.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/jetstream",
+      "title": "Jetstream live islands",
+      "source": "docs/guides/jetstream.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/layouts-and-middleware",
+      "title": "Layouts and middleware",
+      "source": "docs/guides/layouts-and-middleware.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/observability",
+      "title": "Observability: Server-Timing, logs, traces and health",
+      "source": "docs/guides/observability.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/plugins",
+      "title": "Plugins",
+      "source": "docs/guides/plugins.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/routing-config",
+      "title": "Routing config: redirects, rewrites, headers, basePath, trailingSlash",
+      "source": "docs/guides/routing-config.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/routing",
+      "title": "Routing",
+      "source": "docs/guides/routing.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/security",
+      "title": "Security: CSP, CSRF, headers and proxies",
+      "source": "docs/guides/security.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/seo",
+      "title": "SEO, metadata and sitemaps",
+      "source": "docs/guides/seo.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/sessions-and-env",
+      "title": "Sessions and environment variables",
+      "source": "docs/guides/sessions-and-env.md",
+      "generated": false
+    },
+    {
+      "slug": "guides/view-transitions",
+      "title": "View Transitions",
+      "source": "docs/guides/view-transitions.md",
+      "generated": false
+    },
+    {
+      "slug": "migrate-from-astro",
+      "title": "Migrating from Astro",
+      "source": "docs/migrate-from-astro.md",
+      "generated": false
+    },
+    {
+      "slug": "migrate-from-nextjs",
+      "title": "Migrating from Next.js",
+      "source": "docs/migrate-from-nextjs.md",
+      "generated": false
+    },
+    {
+      "slug": "reference",
+      "title": "Nowaki reference",
+      "source": "docs/reference/README.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/cli",
+      "title": "CLI",
+      "source": "docs/reference/cli.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/client-events",
+      "title": "Client events and attributes",
+      "source": "docs/reference/client-events.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/config",
+      "title": "nowaki.config",
+      "source": "docs/reference/config.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/endpoints",
+      "title": "Endpoints",
+      "source": "docs/reference/endpoints.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/env-vars",
+      "title": "Environment variables",
+      "source": "docs/reference/env-vars.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/file-conventions",
+      "title": "File conventions",
+      "source": "docs/reference/file-conventions.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/headers",
+      "title": "Headers and cookies",
+      "source": "docs/reference/headers.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/markdoc-render",
+      "title": "@nowaki-dev/markdoc/render",
+      "source": "docs/reference/markdoc-render.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/markdoc",
+      "title": "@nowaki-dev/markdoc",
+      "source": "docs/reference/markdoc.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/route-exports",
+      "title": "Route and island module exports",
+      "source": "docs/reference/route-exports.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-config",
+      "title": "@nowaki-dev/runtime/config",
+      "source": "docs/reference/runtime-config.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-content",
+      "title": "@nowaki-dev/runtime/content",
+      "source": "docs/reference/runtime-content.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-env-server",
+      "title": "@nowaki-dev/runtime/env/server",
+      "source": "docs/reference/runtime-env-server.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-env",
+      "title": "@nowaki-dev/runtime/env",
+      "source": "docs/reference/runtime-env.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-image",
+      "title": "@nowaki-dev/runtime/image",
+      "source": "docs/reference/runtime-image.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-jsx-dev-runtime",
+      "title": "@nowaki-dev/runtime/jsx-dev-runtime",
+      "source": "docs/reference/runtime-jsx-dev-runtime.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-jsx-runtime",
+      "title": "@nowaki-dev/runtime/jsx-runtime",
+      "source": "docs/reference/runtime-jsx-runtime.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-navigation",
+      "title": "@nowaki-dev/runtime/navigation",
+      "source": "docs/reference/runtime-navigation.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime-session",
+      "title": "@nowaki-dev/runtime/session",
+      "source": "docs/reference/runtime-session.md",
+      "generated": true
+    },
+    {
+      "slug": "reference/runtime",
+      "title": "@nowaki-dev/runtime",
+      "source": "docs/reference/runtime.md",
+      "generated": true
+    },
+    {
+      "slug": "troubleshooting",
+      "title": "Troubleshooting",
+      "source": "docs/troubleshooting.md",
+      "generated": false
+    },
+    {
+      "slug": "upgrade-to-1.0",
+      "title": "Upgrading to 1.0",
+      "source": "docs/upgrade-to-1.0.md",
+      "generated": false
+    }
+  ]
+}
