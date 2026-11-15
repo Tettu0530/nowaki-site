@@ -4,7 +4,7 @@ source: "docs/reference/runtime-navigation.md"
 generated: true
 ---
 
-Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/navigation.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/packages/nowaki-runtime/navigation.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
+Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/navigation.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/packages/nowaki-runtime/navigation.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
 
 Types for `@nowaki-dev/runtime/navigation`: typed links and the i18n helpers. `nowaki typegen` augments NowakiRoutes in .nowaki/types.d.ts with the app's routes; until then RoutePath is string.
 

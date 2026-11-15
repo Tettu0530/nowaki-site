@@ -7,7 +7,7 @@ generated: false
 This guide takes an app from any 0.x release to 1.0. The breaking changes are listed by the
 release that made them, oldest first, each with code before and after and with what
 `nowaki upgrade --check` reports for it. It covers 0.17 through 0.20 in detail; changes from
-0.14 to 0.16 are summarized, and anything older is in [CHANGELOG.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/CHANGELOG.md).
+0.14 to 0.16 are summarized, and anything older is in [CHANGELOG.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/CHANGELOG.md).
 
 **1.0.0 itself breaks nothing.** 0.20.0 was the API freeze: it carried the last breaking
 changes, and from then on the public surface listed in [STABILITY.md](/docs/stability/) changes
@@ -446,7 +446,7 @@ npx nowaki upgrade --to 1.0.0
 
 The readiness report runs first (1.0 is a new version line) and should report nothing. After
 1.0.0, breaking changes wait for 2.0.0 and go through a deprecation in a 1.x minor first; see
-[STABILITY.md](/docs/stability/) and [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SUPPORT.md).
+[STABILITY.md](/docs/stability/) and [SUPPORT.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SUPPORT.md).
 
 ## Release candidates
 

@@ -4,7 +4,7 @@ source: "docs/reference/runtime-content.md"
 generated: true
 ---
 
-Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/content.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/packages/nowaki-runtime/content.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
+Generated from the source by `scripts/gen-reference.mjs`; do not edit by hand. Source: [`packages/nowaki-runtime/content.d.ts`](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/packages/nowaki-runtime/content.d.ts). All of it is covered by semver ([STABILITY.md](/docs/stability/)).
 
 Types for `@nowaki-dev/runtime/content`: content collections (content/config.ts, content/&lt;name>/).
 

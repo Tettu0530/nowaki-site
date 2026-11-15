@@ -153,4 +153,4 @@ basePath.
 
 - [Observability](/docs/guides/observability/) (JSON access logs, traces)
 - [Security](/docs/guides/security/#proxies-and-nowaki_trust_proxy)
-- [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.1/SECURITY.md) (trust boundaries: the renderer must stay on localhost)
+- [SECURITY.md](https://github.com/Tettu0530/nowaki/blob/v1.0.0-rc.2/SECURITY.md) (trust boundaries: the renderer must stay on localhost)
