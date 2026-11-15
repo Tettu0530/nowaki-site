@@ -29,9 +29,15 @@ npm install`} />
         <code>@latest</code> is 0.20.0, the stable release. The 1.0 release candidates are on the
         npm <code>next</code> tag; nothing breaks between 0.20.0 and them.
       </p>
-      <Code src={`npm create nowaki@next my-app       # a new app on the release candidate
-npx nowaki upgrade --to next --check  # an existing app: list what must change first
-npx nowaki upgrade --to next`} />
+      <Code src={`npm create nowaki@next my-app              # a new app on the release candidate
+npx nowaki@next upgrade --to next --check  # an existing app: list what must change first
+npx nowaki@next upgrade --to next`} />
+      <p>
+        Run the candidate's own CLI (<code>nowaki@next</code>): a plain <code>npx nowaki</code> uses
+        the app's installed CLI, whose older checks can flag things that are fine (0.20.0 flags a
+        catch-all page's <code>head</code> export). If npm answers <code>ETARGET</code> for a version
+        that exists, add <code>--prefer-online</code>.
+      </p>
 
       <h2>Develop</h2>
       <Code src={`npm run dev   # → nowaki dev`} />
