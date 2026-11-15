@@ -109,8 +109,7 @@ export default function Landing({ locale }: { locale: Locale }) {
                   {h.release.label}{" "}
                   <strong>
                     {NOWAKI_RELEASE}
-                    {locale === "ja" ? "" : " "}
-                    {h.release.name}
+                    {h.release.name ? (locale === "ja" ? "" : " ") + h.release.name : ""}
                   </strong>
                   {locale === "ja" ? "：" : ": "}
                   {h.release.summary}

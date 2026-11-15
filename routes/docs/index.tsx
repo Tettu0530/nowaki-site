@@ -7,7 +7,7 @@ export const head = DOCS_HEAD;
 export default function Overview() {
   return (
     <>
-      <h1>Nowaki <span class="badge">alpha</span></h1>
+      <h1>Nowaki <span class="badge">pre-1.0</span></h1>
       <p class="lead">
         A full-stack web framework with a Rust toolchain. Full-stack like Next.js, islands like
         Astro, installed with npm, no Rust required.
@@ -57,14 +57,17 @@ export default function Overview() {
         <li><strong><a href="/docs/routing/#view-transitions">View Transitions</a></strong> <span class="badge">v0.19</span>: opt-in per link (<code>&lt;Link viewTransition&gt;</code>) or per route, with <code>transitionName()</code> for elements that morph into the next page.</li>
         <li><strong><a href="/docs/observability/">Observability</a></strong> <span class="badge">v0.19</span>: Server-Timing, JSON logs, OpenTelemetry traces over OTLP and a health endpoint, all of it off unless asked for.</li>
         <li><strong><a href="/docs/quickstart/#hmr">HMR with state</a> and a <a href="/docs/quickstart/#dev-toolbar">dev toolbar</a></strong> <span class="badge">v0.19</span>: island edits keep their state, route and layout edits update the page in place, and the toolbar shows the page's route, islands, JS budget, ISR, live connections and errors.</li>
+        <li><strong><a href="/docs/stability/">A frozen API</a></strong> <span class="badge">v0.20</span>: the public surface is listed in <code>api/</code> and changes only in a new major from 1.0 on; <code>nowaki upgrade --check</code> lists what an app must change.</li>
+        <li><strong>Uploads and typed modules</strong> <span class="badge">v0.20</span>: <code>ctx.formData()</code> reads multipart file uploads, <code>PageModule</code> and friends type every route export, <code>defineConfig()</code> types nowaki.config, and <code>ctx.routePath</code> gives the path without basePath and locale.</li>
         <li><strong>Plugins</strong>: <code>transform</code> hooks and virtual modules (<code>resolveId</code> / <code>load</code>); a <code>.tsrx</code> bridge.</li>
         <li><strong>Images</strong>: <code>&lt;Image&gt;</code> and <code>?image</code> imports generate AVIF and the original format at several widths, with <code>width</code> and <code>height</code> from the file, encoded in pure Rust and cached (see <a href="/docs/content/">Content sites</a>).</li>
         <li><strong>Deploy anywhere</strong>: Node, Bun, Deno, static prerender, Cloudflare Workers, or Vercel via build adapters.</li>
       </ul>
 
       <div class="note">
-        Nowaki is <strong>alpha</strong>. The API may still change between minor versions. It's real
-        and published on npm and crates.io, but not yet recommended for production.
+        Nowaki is <strong>pre-1.0</strong>. Since 0.20 the public API is frozen, and 1.0 release
+        candidates come next (see <a href="/docs/stability/">Stability &amp; support</a>). It's
+        published on npm and crates.io, but not yet recommended for production-critical work.
       </div>
     </>
   );

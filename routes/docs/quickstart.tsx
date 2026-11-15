@@ -141,12 +141,16 @@ export default function Home({ data }) {
         Bump the CLI and runtime together with one command; it detects your package manager and
         rewrites the <code>package.json</code> ranges:
       </p>
-      <Code src={`npx nowaki upgrade              # nowaki + @nowaki-dev/runtime → latest
-npx nowaki upgrade --to 0.11.0  # or pin a version`} />
+      <Code src={`npx nowaki upgrade --check      # list what the app must change, install nothing
+npx nowaki upgrade              # nowaki + @nowaki-dev/runtime → latest
+npx nowaki upgrade --to 0.20.0  # or pin a version (or a tag: --to next)`} />
       <p>
         A plain <code>npm update</code> won't cross a <code>0.x</code> minor (caret locks the minor
         before 1.0), so reach for <code>nowaki upgrade</code>: or install <code>@latest</code> by
-        hand. Pre-1.0, skim the release notes first; a minor can carry breaking changes.
+        hand. Before 1.0 a minor can carry breaking changes, and 0.20 is the last one that does.
+        From 0.20, <code>nowaki upgrade</code> to a newer minor first prints what must change, with{" "}
+        <code>file:line</code> and the fix, and installs nothing until it is fixed;{" "}
+        <code>--check</code> only prints the report.
       </p>
 
       <p>
@@ -155,6 +159,44 @@ npx nowaki upgrade --to 0.11.0  # or pin a version`} />
         because <code>create-nowaki</code> had already published 0.19.2, so the CLI and runtime skip
         0.19.0 to 0.19.2.
       </p>
+
+      <h2 id="upgrading-to-0-20">Upgrading to 0.20</h2>
+      <p>
+        0.20.0 freezes the public API (see <a href="/docs/stability/">Stability &amp; support</a>) and
+        makes the breaking cleanups that had to land first. Run <code>npx nowaki upgrade --check</code>{" "}
+        to see which of these touch your app.
+      </p>
+      <ul>
+        <li><strong>Renamed and removed aliases.</strong> <code>routes/_error.tsx</code> is no longer the server error page: rename it to <code>_500.tsx</code>. <code>export const middleware</code> in <code>_middleware</code> and <code>export const config</code> in nowaki.config are no longer read: use <code>export default</code> (or <code>export default defineConfig({`{...}`})</code>). API method exports are uppercase only: rename <code>get</code> to <code>GET</code> and so on. Each now fails with an error that names the fix.</li>
+        <li><strong>Unknown top-level <code>nowaki.config</code> keys are an error</strong>, with a “did you mean” hint (<code>basepath</code> → <code>basePath</code>); nested keys already were. Move your own settings out of the default export. <code>plugins</code> must be an array, and <code>fonts</code> entries are checked: a Google font takes <code>weights</code>, a local font <code>weight</code> or an <code>src</code> array.</li>
+        <li><strong><code>ctx.formData()</code> always returns <code>FormData</code></strong>, for urlencoded bodies too (they returned <code>URLSearchParams</code>). <code>form.get()</code> is <code>string | File | null</code>; read text with <code>String(form.get("x") ?? "")</code>. <code>NOWAKI_FORM_BODY_LIMIT</code> (10 MiB) now also caps <code>bodyText()</code> and <code>bodyJson()</code>.</li>
+        <li><strong>CSP nonce only on what Nowaki emits.</strong> Under <code>NOWAKI_CSP</code>, an inline <code>&lt;script&gt;</code> or <code>&lt;style&gt;</code> that your app writes as raw HTML (an <code>export const head</code> string, <code>dangerouslySetInnerHTML</code>, Markdown or MDX output) gets no nonce, so <code>enforce</code> blocks it. Put <code>nonce={`{nonce()}`}</code> on the tag or move the code to a file. See <a href="/docs/security/#csp">Content Security Policy</a>.</li>
+        <li><strong><code>.env.local</code> overrides <code>.env</code> on the server too</strong>, as it already did for <code>PUBLIC_*</code> in the client: <code>.env</code>, then <code>.env.local</code>, then the real environment.</li>
+        <li><strong><code>nowaki dev</code> and <code>nowaki start</code> read <code>PORT</code></strong> when there is no <code>--port</code>, and <code>--host</code> takes an optional address (<code>--host 10.0.0.5</code>). Write the directory first: <code>nowaki dev my-app --host</code>.</li>
+        <li><strong>Behind a proxy on the same machine</strong> (nginx to <code>localhost:3000</code>), the node, bun and deno adapters no longer trust <code>x-forwarded-host</code> on their own: set <code>NOWAKI_TRUST_PROXY=1</code> or forward <code>Host</code>. <code>nowaki dev --host</code> answers only IP addresses, <code>localhost</code> and <code>*.local</code>; list a tunnel's name in <code>NOWAKI_DEV_ALLOWED_HOSTS</code>.</li>
+        <li><strong>Production <code>_500</code> pages get an empty <code>error.message</code></strong>, since it can name files or secrets. The error is still logged.</li>
+        <li><strong>The CLI refuses a runtime of another minor</strong>, not only an older one. Keep <code>nowaki</code> and <code>@nowaki-dev/runtime</code> on the same version.</li>
+      </ul>
+      <p>
+        New in 0.20: <code>nonce()</code>, multipart uploads in <code>ctx.formData()</code>, the route
+        module types (<code>PageModule</code>, <code>LayoutModule</code>, <code>ApiModule</code>,{" "}
+        <code>MiddlewareModule</code>, <code>IslandModule</code>),{" "}
+        <code>@nowaki-dev/runtime/config</code> with <code>defineConfig()</code>,{" "}
+        <code>ctx.routePath</code> and <code>routePath()</code>, and Node 26 support. The full list
+        is in the <a href="https://github.com/Tettu0530/nowaki/blob/main/CHANGELOG.md">CHANGELOG</a>.
+      </p>
+      <Code src={`// routes/blog/[slug].tsx
+import type { PageModule } from "@nowaki-dev/runtime";
+
+export const revalidate: PageModule["revalidate"] = 60;
+
+// routes/api/upload.ts
+export async function POST(ctx) {
+  const form = await ctx.formData();          // FormData, multipart included
+  const file = form.get("file");              // string | File | null
+  if (!(file instanceof File)) return ctx.json({ error: "no file" }, { status: 400 });
+  return ctx.json({ name: file.name, size: file.size });
+}`} />
 
       <h2>Upgrading to 0.19</h2>
       <ul>
@@ -196,7 +238,7 @@ export const csrf = false;   // a provider posts here; verify its signature inst
 
       <h2>Upgrading to 0.18</h2>
       <ul>
-        <li><strong>Unknown keys in <code>nowaki.config</code> are now an error.</strong> The config is validated at build (and dev) time, so a typo fails instead of being ignored.</li>
+        <li><strong>Unknown keys in <code>nowaki.config</code> are now an error.</strong> The config is validated at build (and dev) time, so a typo fails instead of being ignored. (This covered nested keys; unknown top-level keys followed in 0.20.)</li>
         <li>
           <strong>Copy the new type files from the template.</strong> <code>nowaki-env.d.ts</code> is
           ambient again (asset wildcards, <code>ImportMetaEnv</code>, <code>ImportMeta</code>), so{" "}
