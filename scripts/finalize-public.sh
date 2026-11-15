@@ -18,10 +18,14 @@ cat >> public/_headers <<'HEADERS'
   Access-Control-Allow-Origin: *
 HEADERS
 
-# nowaki prerender writes each config redirect once, without a trailing slash, and Cloudflare
-# Pages matches `_redirects` sources exactly, so /docs/routing/ would 404. Add the slash form of
-# every page-like source (reported upstream; drop this once the static output writes both).
+# Nowaki 0.20.0 writes each config redirect once, without a trailing slash, and Cloudflare Pages
+# matches `_redirects` sources exactly, so /docs/routing/ would 404. Add the slash form of every
+# page-like source that lacks one. 1.0.0-rc.2 writes both forms itself, so this adds nothing
+# there; delete it once the site builds on 1.0.
 if [ -f public/_redirects ]; then
-  awk '{ print } $1 !~ /\/$/ && $1 !~ /\.[a-z0-9]+$/ && $1 !~ /[*:]/ && NF >= 2 { print $1 "/", $2, $3 }' public/_redirects > public/_redirects.tmp
+  awk 'NR == FNR { have[$1] = 1; next }
+       { print }
+       $1 !~ /\/$/ && $1 !~ /\.[a-z0-9]+$/ && $1 !~ /[*:]/ && NF >= 2 && !(($1 "/") in have) { print $1 "/", $2, $3 }' \
+    public/_redirects public/_redirects > public/_redirects.tmp
   mv public/_redirects.tmp public/_redirects
 fi

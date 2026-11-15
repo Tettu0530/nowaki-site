@@ -69,8 +69,10 @@ const DOCS_CSS = `
 .doc__body td code{white-space:nowrap}
 
 /* Synced framework docs (content/docs/, rendered by comrak). The version line closes the
-   opener band like a lead. Code arrives highlighted with a light theme's inline colors; they
-   are mapped onto the plate's palette (keywords bright, comments grey, the rest body). */
+   opener band like a lead. Code arrives with GitHub light colors inline (from 1.0.0-rc.2 with
+   light-dark() GitHub dark ones too, which color-scheme:dark picks). By design the plates stay
+   near-monochrome like <Code> elsewhere on the site (one accent, DESIGN.md): the selectors match
+   the light hex, present in both forms, and map it onto the plate's palette. */
 .doc__body > h1:first-child + .docmeta{margin:14px 0 8px;padding-bottom:26px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:4px 18px;font-size:.88rem;color:var(--muted)}
 .docmeta b{color:var(--fg);font-weight:500}
 .doc__body .docmeta a{color:var(--muted)}
